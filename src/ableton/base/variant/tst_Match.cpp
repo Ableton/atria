@@ -23,6 +23,11 @@ public:
     return mName;
   }
 
+  void resetName()
+  {
+    mName = "resetted";
+  }
+
 private:
   std::string mName;
 };
@@ -80,9 +85,9 @@ TEST(Match, CanReturnSomething)
   auto thing = Thing(42);
   auto result = match(
     thing,
-    [] (const Person& x) -> std::string { return x.name(); },
-    [] (const std::string& x) -> std::string { return x; },
-    [] (int x) -> std::string { return boost::lexical_cast<std::string>(x); });
+    [] (const Person& x) { return x.name(); },
+    [] (const std::string& x) { return x; },
+    [] (int x) { return boost::lexical_cast<std::string>(x); });
 
   EXPECT_EQ(result, "42");
 }
@@ -95,16 +100,8 @@ TEST(Match, CanUseBindedFunctions)
 
   auto result = match(
     Number(42.5),
-    std::bind(&boost::lexical_cast<std::string, int>, _1),
-    // [jbo] The following line cause a compilation error when
-    // replaced by:
-    //
-    //    std::bind(&boost::lexical_cast<std::string, double>, _1)
-    //
-    // This is so because the binder functor is templated over the
-    // arguments, so the visitor call becomes ambiguous.
-    [](double x) { return boost::lexical_cast<std::string>(x); }
-    );
+    when<double>(std::bind(&boost::lexical_cast<std::string, double>, _1)),
+    when<int>(std::bind(&boost::lexical_cast<std::string, int>, _1)));
 
   EXPECT_EQ(result, "42.5");
 }
@@ -124,22 +121,64 @@ using People = boost::variant<GoodPerson, BadPerson>;
 TEST(Match, CanUseMemberFunctions)
 {
   auto result = match(
-    People { GoodPerson { "John" } },
-    // [jbo] This is is added just so it finds the correct type, since
-    // std::result_of seems to fail for the result of std::mem_fn.
-    [](std::nullptr_t) { return std::string(); },
-
-    std::mem_fn(&GoodPerson::doGoodThing),
-
-    // [jbo] Like with bind(), having more than one of these turns the
-    // whole thing ambiguous... so sad :(
-    //
-    //     std::mem_fn(&BadPerson::doBadThing)
-    //
-    [](const BadPerson& p) { return p.doBadThing(); }
-    );
+     People { GoodPerson { "John" } },
+     when<GoodPerson>(std::mem_fn(&GoodPerson::doGoodThing)),
+     when<BadPerson>(std::mem_fn(&BadPerson::doBadThing)));
 
   EXPECT_EQ(result, ":)");
+}
+
+TEST(Match, PolymorphicExampleWithBaseClass)
+{
+  auto person = People { GoodPerson { "John" } };
+  auto name = match(
+    person,
+    when<Person>(std::mem_fn(&Person::name)));
+
+  EXPECT_EQ(name, "John");
+}
+
+TEST(Match, ExplicitResultTypeForCaseWhereDeductionFails)
+{
+  auto person = People { GoodPerson { "John" } };
+
+  auto name = match(
+    person,
+    otherwise<std::string>(std::mem_fn(&Person::name)));
+  EXPECT_EQ(name, "John");
+
+  match(
+    person,
+    otherwise(std::mem_fn(&Person::resetName)));
+
+  auto newName = match(
+    person,
+    otherwise<std::string>(std::mem_fn(&Person::name)));
+  EXPECT_EQ(newName, "resetted");
+}
+
+TEST(Match, OtherwiseCanBeUsedAsCatchAll)
+{
+  auto person = People { GoodPerson { "John" } };
+
+  match(
+    person,
+    otherwise());
+
+  auto name = match(
+    person,
+    otherwise<std::string>());
+  EXPECT_EQ(name, "");
+}
+
+TEST(Match, TotallyIncompatibleReturnTypesCanBeUsed)
+{
+  auto person = People { GoodPerson { "John" } };
+
+  match(
+    person,
+    [] (BadPerson)  { return std::string(); },
+    [] (GoodPerson) { return int(); });
 }
 
 } // anonymous namespace

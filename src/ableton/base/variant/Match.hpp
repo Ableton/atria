@@ -1,5 +1,7 @@
 // Copyright: 2014, Ableton AG, Berlin. All rights reserved.
 
+#pragma once
+
 #include <ableton/base/variant/Visitor.hpp>
 #include <boost/variant/apply_visitor.hpp>
 #include <utility>
