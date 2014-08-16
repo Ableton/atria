@@ -2,12 +2,14 @@
 
 #pragma once
 
+#include <ableton/base/meta/Utils.hpp>
 #include <ableton/estd/type_traits.hpp>
 #include <ableton/estd/utility.hpp>
 #include <boost/fusion/adapted/std_tuple.hpp>
 #include <boost/fusion/include/reverse_fold.hpp>
 #include <tuple>
 #include <numeric>
+#include <algorithm>
 
 namespace ableton {
 namespace funken {
@@ -108,11 +110,11 @@ struct MapReducer
   ReducerT reducer;
   MappingT mapping;
 
-  template <typename State, typename Input>
-  auto operator() (State&& s, Input&& i) const
-    -> decltype(reducer(s, mapping(i)))
+  template <typename State, typename ...Inputs>
+  auto operator() (State&& s, Inputs&& ...is) const
+    -> decltype(reducer(s, mapping(is...)))
   {
-    return reducer(s, mapping(i));
+    return reducer(s, mapping(is...));
   }
 };
 
@@ -123,11 +125,11 @@ struct FilterReducer
   ReducerT reducer;
   PredicateT predicate;
 
-  template <typename State, typename Input>
-  auto operator() (State&& s, Input&& i) const
-    -> decltype(predicate(i) ? reducer(s, i) : s)
+  template <typename State, typename ...Inputs>
+  auto operator() (State&& s, Inputs&& ...is) const
+    -> decltype(predicate(is...) ? reducer(s, is...) : s)
   {
-    return predicate(i) ? reducer(s, i) : s;
+    return predicate(is...) ? reducer(s, is...) : s;
   }
 };
 
@@ -168,24 +170,114 @@ constexpr struct Identity
   }
 } identity {};
 
+//!
+// Function that forwards its argument if only one element passed,
+// otherwise it makes a tuple.
+//
+constexpr struct ZipF
+{
+  template <typename InputT>
+  constexpr auto operator() (InputT&& in) const
+    -> decltype(std::forward<InputT>(in))
+  {
+    return std::forward<InputT>(in);
+  }
+
+  template <typename ...InputTs>
+  constexpr auto operator() (InputTs&& ...ins) const
+    -> estd::enable_if_t<
+      (sizeof...(InputTs) > 1),
+      decltype(std::make_tuple(std::forward<InputTs>(ins)...))
+    >
+  {
+    return std::make_tuple(std::forward<InputTs>(ins)...);
+  }
+} zipF {};
 
 //!
-// Similar to clojure.core/transduce, but with parameter ordering more
-// similar to those convetional in the C++ standard library.
+// Reducer that collapses multiple inputs into tuples.  When used on a
+// single sequence it is an identity.
 //
-template <typename InputRangeT,
-          typename XformT,
-          typename ReducerT,
-          typename StateT>
-StateT transduce(InputRangeT&& range, XformT&& xform,
-                 ReducerT&& reducer, StateT&& state)
+constexpr struct ZipR
 {
-  auto xformed = xform(reducer);
+  template <typename StateT, typename ...InputTs>
+  constexpr auto operator() (StateT&&, InputTs&& ...ins) const
+    -> decltype(zipF(std::forward<InputTs>(ins)...))
+  {
+    return zipF(std::forward<InputTs>(ins)...);
+  }
+} zipR {};
+
+
+namespace detail {
+
+template <typename XformT,
+          typename ReducerT,
+          typename StateT,
+          std::size_t ...Indices,
+          typename ...InputRangeTs>
+StateT transduce(XformT&& xform, ReducerT&& reducer,
+               StateT state,
+               estd::index_sequence<Indices...>,
+               InputRangeTs&& ...ranges)
+{
+  auto xformed = std::forward<XformT>(xform)(
+    std::forward<ReducerT>(reducer));
+
+  for (auto firsts = std::make_tuple(std::begin(ranges)...),
+            lasts  = std::make_tuple(std::end(ranges)...);
+       std::min({ std::get<Indices>(firsts) !=
+                  std::get<Indices>(lasts)... });
+       base::meta::noop(++std::get<Indices>(firsts)...))
+  {
+    state = xformed(
+      state,
+      *std::get<Indices>(firsts)...);
+  }
+  return state;
+}
+
+} // namespace detail
+
+//!
+// Similar to clojure.core/transduce
+//
+template <typename XformT,
+          typename ReducerT,
+          typename StateT,
+          typename InputRangeT>
+StateT transduce(XformT&& xform, ReducerT&& reducer,
+                 StateT&& state, InputRangeT&& range)
+{
+  auto xformed = std::forward<XformT>(xform)(
+    std::forward<ReducerT>(reducer));
   return std::accumulate(
     std::begin(range),
     std::end(range),
     state,
     xformed);
+}
+
+//!
+// Similar to clojure.core/transduce, variadic version
+//
+template <typename XformT,
+          typename ReducerT,
+          typename StateT,
+          typename ...InputRangeTs>
+auto transduce(XformT&& xform, ReducerT&& reducer,
+               StateT&& state, InputRangeTs&& ...ranges)
+  -> estd::enable_if_t<
+    (sizeof...(InputRangeTs) > 1),
+    StateT
+  >
+{
+  return detail::transduce(
+    std::forward<XformT>(xform),
+    std::forward<ReducerT>(reducer),
+    std::forward<StateT>(state),
+    estd::make_index_sequence<sizeof...(InputRangeTs)> {},
+    std::forward<InputRangeTs>(ranges)...);
 }
 
 } // namespace funken

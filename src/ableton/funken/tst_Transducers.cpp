@@ -1,5 +1,6 @@
 // Copyright: 2014, Ableton AG, Berlin. All rights reserved.
 
+#include <ableton/estd/memory.hpp>
 #include <ableton/funken/Transducers.hpp>
 #include <gtest/gtest.h>
 
@@ -46,21 +47,21 @@ TEST(Compose, VariousTypes)
 TEST(Transduce, Identity)
 {
   auto v = std::vector<int> { 1, 2, 3, 6 };
-  EXPECT_EQ(transduce(v, identity, std::plus<int>{}, 1), 13);
+  EXPECT_EQ(transduce(identity, std::plus<int>{}, 1, v), 13);
 }
 
 TEST(Transduce, Mapping)
 {
   auto v = std::vector<int> { 1, 2, 3, 6 };
   auto times2 = [] (int x) { return x * 2; };
-  EXPECT_EQ(transduce(v, map(times2), std::plus<int>{}, 1), 25);
+  EXPECT_EQ(transduce(map(times2), std::plus<int>{}, 1, v), 25);
 }
 
 TEST(Transduce, Filter)
 {
   auto v = std::vector<int> { 1, 2, 3, 6 };
   auto odd = [] (int x) { return x % 2 == 0; };
-  EXPECT_EQ(transduce(v, filter(odd), std::plus<int>{}, 1), 9);
+  EXPECT_EQ(transduce(filter(odd), std::plus<int>{}, 1, v), 9);
 }
 
 TEST(Transduce, Composition)
@@ -75,8 +76,20 @@ TEST(Transduce, Composition)
   //   foldl (+) $ map times2 $ filter odd $ v
   //
   auto res = transduce(
-    v, comp(filter(odd), map(times2)), std::plus<int>{}, 1);
+    comp(filter(odd), map(times2)), std::plus<int>{}, 1, v);
   EXPECT_EQ(res, 17);
+}
+
+TEST(Transduce, Variadic)
+{
+  auto v1 = std::vector<int> { 1, 2, 3, 6 };
+  auto v2 = std::vector<int> { 1, 2, 1, 2 };
+
+  EXPECT_EQ(transduce(map(std::multiplies<int>{}),
+                      std::plus<int>{},
+                      1,
+                      v1, v2),
+            21);
 }
 
 } // namespace funken
