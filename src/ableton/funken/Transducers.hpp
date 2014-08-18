@@ -10,6 +10,7 @@
 #include <tuple>
 #include <numeric>
 #include <algorithm>
+#include <iterator>
 
 namespace ableton {
 namespace funken {
@@ -122,6 +123,24 @@ struct MapReducer
   };
 };
 
+struct FlatMapReducer
+{
+  template <typename ReducerT,
+            typename MappingT>
+  struct Reducer
+  {
+    ReducerT reducer;
+    MappingT mapping;
+
+    template <typename State, typename ...Inputs>
+    auto operator() (State&& s, Inputs&& ...is) const
+      -> decltype(reducer(s, mapping(is...)))
+    {
+      return reduce(reducer, s, mapping(is...));
+    }
+  };
+};
+
 template <typename ResultT=void>
 struct FilterReducer
 {
@@ -177,6 +196,16 @@ auto map(MappingT&& mapping)
 }
 
 //!
+// Similar to clojure.core/flatmap$1
+//
+template <typename MappingT>
+auto flatMap(MappingT&& mapping)
+  -> detail::Transducer<detail::FlatMapReducer, estd::decay_t<MappingT> >
+{
+  return std::forward<MappingT>(mapping);
+}
+
+//!
 // Similar to clojure.core/filter$1
 // If no `ResultT` is given, the resulting reducers will try to deduce
 // it from (true ? reducer(inputs...) : state), which might no be
@@ -195,11 +224,11 @@ auto filter(PredicateT&& predicate)
 //
 constexpr struct Identity
 {
-  template <typename FirstT, typename ...RestT>
-  constexpr auto operator() (FirstT&& x, RestT&&...) const
-    -> decltype(std::forward<FirstT>(x))
+  template <typename ArgT>
+  constexpr auto operator() (ArgT&& x) const
+    -> decltype(std::forward<ArgT>(x))
   {
-    return std::forward<FirstT>(x);
+    return std::forward<ArgT>(x);
   }
 } identity {};
 
@@ -241,29 +270,38 @@ constexpr struct ZipR
   }
 } zipR {};
 
+//!
+// Reducer that outputs to the iterator that is passed as state.
+//
+constexpr struct OutputR
+{
+  template <typename OutputItT, typename ...InputTs>
+  auto operator() (OutputItT it, InputTs&& ...ins) const
+    -> OutputItT
+  {
+    *it = zipF(std::forward<InputTs>(ins)...);
+    return ++it;
+  }
+} outputR {};
 
 namespace detail {
 
-template <typename XformT,
-          typename ReducerT,
+template <typename ReducerT,
           typename StateT,
           std::size_t ...Indices,
           typename ...InputRangeTs>
-StateT transduce(XformT&& xform, ReducerT&& reducer,
-               StateT state,
-               estd::index_sequence<Indices...>,
-               InputRangeTs&& ...ranges)
+StateT reduce(ReducerT&& reducer,
+              StateT state,
+              estd::index_sequence<Indices...>,
+              InputRangeTs&& ...ranges)
 {
-  auto xformed = std::forward<XformT>(xform)(
-    std::forward<ReducerT>(reducer));
-
   for (auto firsts = std::make_tuple(std::begin(ranges)...),
             lasts  = std::make_tuple(std::end(ranges)...);
        std::min({ std::get<Indices>(firsts) !=
                   std::get<Indices>(lasts)... });
        base::meta::noop(++std::get<Indices>(firsts)...))
   {
-    state = xformed(
+    state = std::forward<ReducerT>(reducer)(
       state,
       *std::get<Indices>(firsts)...);
   }
@@ -273,44 +311,75 @@ StateT transduce(XformT&& xform, ReducerT&& reducer,
 } // namespace detail
 
 //!
+// Similar to clojure.core/reduce.  Unlike `std::accumulate`, this
+// reduces over a range (doesn't take to distinct iterators) and can
+// reduce over several ranges at the same time.
+//
+template <typename ReducerT,
+          typename StateT,
+          typename InputRangeT>
+auto reduce(ReducerT&& reducer, StateT&& state, InputRangeT&& range)
+  -> estd::decay_t<StateT>
+{
+  return std::accumulate(
+    std::begin(range),
+    std::end(range),
+    std::forward<StateT>(state),
+    std::forward<ReducerT>(reducer));
+}
+
+//!
+// Variadic overload of `reduce()`
+//
+template <typename ReducerT,
+          typename StateT,
+          typename ...InputRangeTs>
+auto reduce(ReducerT&& reducer, StateT&& state, InputRangeTs&& ...ranges)
+  -> estd::enable_if_t<
+    (sizeof...(InputRangeTs) > 1),
+    estd::decay_t<StateT>
+  >
+{
+  return detail::reduce(
+    std::forward<ReducerT>(reducer),
+    std::forward<StateT>(state),
+    estd::make_index_sequence<sizeof...(InputRangeTs)> {},
+    std::forward<InputRangeTs>(ranges)...);
+}
+
+//!
 // Similar to clojure.core/transduce
 //
 template <typename XformT,
           typename ReducerT,
           typename StateT,
-          typename InputRangeT>
+          typename ...InputRangeTs>
 StateT transduce(XformT&& xform, ReducerT&& reducer,
-                 StateT&& state, InputRangeT&& range)
+                 StateT&& state, InputRangeTs&& ...ranges)
 {
   auto xformed = std::forward<XformT>(xform)(
     std::forward<ReducerT>(reducer));
-  return std::accumulate(
-    std::begin(range),
-    std::end(range),
+  return reduce(
+    xformed,
     state,
-    xformed);
+    std::forward<InputRangeTs>(ranges)...);
 }
 
 //!
-// Similar to clojure.core/transduce, variadic version
+// Similar to clojure.core/transduce$4
 //
-template <typename XformT,
-          typename ReducerT,
-          typename StateT,
+template <typename CollectionT,
+          typename XformT,
           typename ...InputRangeTs>
-auto transduce(XformT&& xform, ReducerT&& reducer,
-               StateT&& state, InputRangeTs&& ...ranges)
-  -> estd::enable_if_t<
-    (sizeof...(InputRangeTs) > 1),
-    StateT
-  >
+auto into(CollectionT&& col, XformT&& xform, InputRangeTs&& ...ranges)
+  -> decltype(std::forward<CollectionT>(col))
 {
-  return detail::transduce(
+  transduce(
     std::forward<XformT>(xform),
-    std::forward<ReducerT>(reducer),
-    std::forward<StateT>(state),
-    estd::make_index_sequence<sizeof...(InputRangeTs)> {},
+    outputR,
+    std::back_inserter(col),
     std::forward<InputRangeTs>(ranges)...);
+  return std::forward<CollectionT>(col);
 }
 
 } // namespace funken

@@ -92,5 +92,65 @@ TEST(Transduce, Variadic)
             21);
 }
 
+TEST(Into, Mutation)
+{
+  auto v = std::vector<int> { 1, 2, 3 };
+  auto res = std::vector<int> { };
+
+  auto& res2 = into(res, identity, v);
+  EXPECT_EQ(res, (std::vector<int> { 1, 2, 3 }));
+  EXPECT_EQ(&res, &res2);
+}
+
+TEST(Into, NonMutation)
+{
+  auto v = std::vector<int> { 1, 2, 3 };
+
+  auto res = into(std::vector<int> {}, identity, v);
+  EXPECT_EQ(res, (std::vector<int> { 1, 2, 3 }));
+}
+
+TEST(Into, Appends)
+{
+  auto v = std::vector<int> { 1, 2, 3 };
+
+  auto res = into(std::vector<int> { 0 }, identity, v);
+  EXPECT_EQ(res, (std::vector<int> { 0, 1, 2, 3 }));
+}
+
+TEST(Into, Transduction)
+{
+  auto v = std::vector<int> { 1, 2, 3, 4 };
+
+  auto res = into(
+    std::vector<std::string> {},
+    comp(filter([] (int x) { return x % 2 == 0; }),
+         map([] (int x) { return std::to_string(x); })),
+    v);
+  EXPECT_EQ(res, (std::vector<std::string> { "2", "4" }));
+}
+
+TEST(Into, Zipping)
+{
+  auto v1 = std::vector<int> { 1, 2, 3, 4 };
+  auto v2 = std::vector<std::string> { "a", "b" };
+
+  using tup = std::tuple<int, std::string>;
+
+  auto res = into(
+    std::vector<tup> {},
+    identity,
+    v1, v2);
+  EXPECT_EQ(res, (std::vector<tup> { tup(1, "a"), tup(2, "b") }));
+}
+
+TEST(Into, flatMap)
+{
+  auto v = std::vector<std::vector<int>> { { 1, 2 }, { 3 }, { 4, 5, 6 } };
+
+  auto res = into(std::vector<int> {}, flatMap(identity), v);
+  EXPECT_EQ(res, (std::vector<int> { 1, 2, 3, 4, 5, 6 }));
+}
+
 } // namespace funken
 } // namespace ableton
