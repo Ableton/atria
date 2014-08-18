@@ -3,10 +3,9 @@
 #pragma once
 
 #include <ableton/base/meta/CommonType.hpp>
-
+#include <ableton/base/meta/Utils.hpp>
+#include <ableton/estd/type_traits.hpp>
 #include <boost/variant/static_visitor.hpp>
-
-#include <type_traits>
 #include <cassert>
 #include <utility>
 
@@ -32,20 +31,34 @@ struct VisitorImpl : public Fns...
 // General visitor based on a set of function objects.
 //
 template <typename ReturnType, typename ...Fns>
-struct Visitor : public boost::static_visitor<ReturnType>
+class Visitor : public boost::static_visitor<ReturnType>
 {
+  detail::VisitorImpl<Fns...> mImpl;
+
+public:
   Visitor(Fns&& ...fns)
     : mImpl(std::forward<Fns>(fns)...)
   {}
 
-  template<typename T>
-  ReturnType operator() (T&& x)
+template<typename T, typename U=ReturnType>
+  auto operator() (T&& x)
+    -> estd::enable_if_t<
+        !std::is_void<decltype(mImpl(std::forward<T>(x)))>{} ||
+         std::is_void<U>{},
+      ReturnType>
   {
     return mImpl(std::forward<T>(x));
   }
 
-private:
-  detail::VisitorImpl<Fns...> mImpl;
+  template<typename T, typename U=ReturnType>
+  auto operator() (T&& x)
+    -> estd::enable_if_t<
+         std::is_void<decltype(mImpl(std::forward<T>(x)))>{} &&
+        !std::is_void<U>{},
+      ReturnType>
+  {
+    return mImpl(std::forward<T>(x)), meta::fromVoid;
+  }
 };
 
 namespace detail

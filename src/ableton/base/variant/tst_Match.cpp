@@ -181,6 +181,16 @@ TEST(Match, TotallyIncompatibleReturnTypesCanBeUsed)
     [] (GoodPerson) { return int(); });
 }
 
+TEST(Match, TotallyIncompatibleReturnTypesCanBeUsedAndOneCanBeVoid)
+{
+  auto person = People { GoodPerson { "John" } };
+
+  match(
+    person,
+    [] (BadPerson)  { return std::string(); },
+    [] (GoodPerson) {});
+}
+
 } // anonymous namespace
 
 } // namespace variant
