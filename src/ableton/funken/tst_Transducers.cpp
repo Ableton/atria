@@ -152,5 +152,47 @@ TEST(Into, flatMap)
   EXPECT_EQ(res, (std::vector<int> { 1, 2, 3, 4, 5, 6 }));
 }
 
+TEST(Into, take)
+{
+  auto v = std::vector<int> { 1, 2, 3, 4, 5 };
+
+  auto res = into(std::vector<int> {}, take(3), v);
+  EXPECT_EQ(res, (std::vector<int> { 1, 2, 3 }));
+}
+
+TEST(Into, takeStopsEarlyEnough)
+{
+  auto v = std::vector<int> { 1, 2, 3, 4, 5, 6 };
+
+  auto res = into(
+    std::vector<int> {},
+    comp(
+      map([](int x) {
+          if (x > 4)
+            throw std::runtime_error("bad!");
+          return x;
+        }),
+      take(3)),
+    v);
+  EXPECT_EQ(res, (std::vector<int> { 1, 2, 3 }));
+}
+
+TEST(Into, takeStopsEarlyEnough2)
+{
+  auto v = std::vector<int> { 1, 2, 3, 4, 5, 6 };
+
+  auto res = into(
+    std::vector<int> {},
+    comp(
+      take(3),
+      map([](int x) {
+          if (x > 4)
+            throw std::runtime_error("bad!");
+          return x;
+        })),
+    v);
+  EXPECT_EQ(res, (std::vector<int> { 1, 2, 3 }));
+}
+
 } // namespace funken
 } // namespace ableton
