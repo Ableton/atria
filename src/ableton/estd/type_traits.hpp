@@ -2,17 +2,11 @@
 
 #pragma once
 
+#include <ableton/base/meta/Utils.hpp>
 #include <type_traits>
 
 namespace ableton {
 namespace estd {
-
-//!
-// Very stupid implementation of C++14 Value_type, for a better one
-// see the Origin library: https://code.google.com/p/origin/
-//
-template <typename T>
-using Value_type = typename T::value_type;
 
 //!
 // Similar to C++14 std::decay_t
@@ -31,6 +25,45 @@ using conditional_t = typename std::conditional<X, T, F>::type;
 //
 template <bool X, typename T=void>
 using enable_if_t = typename std::enable_if<X, T>::type;
+
+namespace detail {
+
+template <typename T, typename Enable=void>
+struct has_value_type : std::false_type {};
+template <typename T>
+struct has_value_type<T, base::meta::EnableIfType_t<
+                           typename T::value_type> >
+  : std::true_type {};
+
+template <typename T, typename Enable=void>
+struct has_dereference : std::false_type {};
+template <typename T>
+struct has_dereference<T, base::meta::EnableIfType_t<
+                            decltype(*std::declval<T>())> >
+  : std::true_type {};
+
+template <typename T, typename Enable=void>
+struct get_value_type {};
+template <typename T>
+struct get_value_type<T, estd::enable_if_t<has_value_type<T>::value> >
+{
+  using type = typename T::value_type;
+};
+template <typename T>
+struct get_value_type<T, estd::enable_if_t<!has_value_type<T>::value &&
+                                           has_dereference<T>::value> >
+{
+  using type = estd::decay_t<decltype(*std::declval<T>())>;
+};
+
+} // namespace detail
+
+//!
+// Very stupid implementation of C++14 Value_type, for a better one
+// see the Origin library: https://code.google.com/p/origin/
+//
+template <typename T>
+using Value_type = typename detail::get_value_type<T>::type;
 
 } // namespace estd
 } // namespace ableton
