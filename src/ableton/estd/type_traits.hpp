@@ -15,6 +15,12 @@ template <typename T>
 using decay_t = typename std::decay<T>::type;
 
 //!
+// Similar to C++14 std::result_of_t
+//
+template <typename T>
+using result_of_t = typename std::result_of<T>::type;
+
+//!
 // Similar to C++14 std::conditional_t
 //
 template <bool X, typename T, typename F>
