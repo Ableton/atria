@@ -2,159 +2,17 @@
 
 #pragma once
 
+#include <ableton/funken/Reduce.hpp>
+#include <ableton/funken/Functional.hpp>
 #include <ableton/base/meta/Utils.hpp>
 #include <ableton/base/meta/CommonType.hpp>
-#include <ableton/estd/type_traits.hpp>
 #include <ableton/estd/utility.hpp>
-#include <boost/fusion/adapted/std_tuple.hpp>
-#include <boost/fusion/include/reverse_fold.hpp>
-#include <tuple>
-#include <numeric>
+#include <ableton/estd/type_traits.hpp>
 #include <algorithm>
 #include <iterator>
 
-//!
-// When defined to 1, std::accumulate will be used as an
-// implementation for reduce() over one single collection.  In that
-// case, halting reducers (e.g. take) might not work.
-//
-#define ABL_REDUCE_WITH_ACCUMULATE 0
-
 namespace ableton {
 namespace funken {
-
-//!
-// Box for a value that is `finished` reducing. It might be returned
-// by reducers that might know that they are done before processing
-// all the input, for example, when the state reaches an idempotent
-// value.
-//
-// @see take
-//
-template <typename T>
-struct Reduced
-{
-  T value;
-};
-
-//!
-// Constructs a reduced value for `value`
-//
-template <typename T>
-auto reduced(T&& value) -> Reduced<estd::decay_t<T> >
-{
-  return { std::forward<T>(value) };
-}
-
-//!
-// Unwraps the value in a potentially *reduced* box.
-// @see Reduced
-// @see MaybeReduced
-//
-template <typename T>
-auto fromReduced(T& v) -> T& { return v; }
-template <typename T>
-auto fromReduced(const T& v) -> const T& { return v; }
-template <typename T>
-auto fromReduced(Reduced<T>& v) -> T& { return v.value; }
-template <typename T>
-auto fromReduced(const Reduced<T>& v) -> const T& { return v.value; }
-
-//!
-// Returns whether all values of a type are finished reducing.
-// @see Reduced
-//
-template <typename T>
-struct TypeIsReduced : std::false_type {};
-template <typename T>
-struct TypeIsReduced<Reduced<T>> : std::true_type {};
-
-//!
-// Returns whether a value `v` is a finished reduction.
-// @see Reduced
-//
-template <typename T>
-auto isReduced(const T&)
-  -> estd::enable_if_t<!TypeIsReduced<T>::value, bool>
-{
-  return false;
-}
-
-template <typename T>
-auto isReduced(const T&)
-  -> estd::enable_if_t<TypeIsReduced<T>::value, bool>
-{
-  return true;
-}
-
-//!
-// Holds a value that may or may not be a finished reduction.  It
-// is convertible from any other type that may be reduced.
-// @see Reduced
-//
-template <typename T>
-struct MaybeReduced
-{
-  bool reduced;
-  T value;
-
-  template <typename U>
-  MaybeReduced(U x)
-    : reduced(isReduced(x))
-    , value(std::move(fromReduced(x)))
-  {}
-};
-
-template <typename T>
-auto isReduced(const MaybeReduced<T>& v) -> bool { return v.reduced; }
-template <typename T>
-auto fromReduced(MaybeReduced<T>& v) -> T& { return v.value; }
-template <typename T>
-auto fromReduced(const MaybeReduced<T>& v) -> const T& { return v.value; }
-
-namespace detail {
-
-struct ComposedReducer
-{
-  template <typename State, typename Fn>
-  auto operator()(State&& state, Fn&& next)
-    -> decltype(next(std::forward<State>(state)))
-  {
-    return next(std::forward<State>(state));
-  }
-};
-
-template<typename Fn, typename ...Fns>
-struct Composed : std::tuple<Fn, Fns...>
-{
-  using std::tuple<Fn, Fns...>::tuple;
-
-  std::tuple<Fn, Fns...>& asTuple() { return *this; }
-  const std::tuple<Fn, Fns...>& asTuple() const { return *this; }
-
-  template <typename Arg>
-  auto operator() (Arg&& arg) const
-    -> decltype(boost::fusion::reverse_fold(
-                  asTuple(), arg, ComposedReducer{}))
-  {
-    return boost::fusion::reverse_fold(
-      asTuple(), arg, ComposedReducer{});
-  }
-};
-
-} // namespace detail
-
-//!
-// Returns an object *g* that composes all the given functions *f_i*,
-// such that:
-//                 g(x) = f_1(f_2(...f_n(x)))
-//
-template <typename Fn, typename ...Fns>
-auto comp(Fn&& fn, Fns&& ...fns)
-  -> detail::Composed<estd::decay_t<Fn>, estd::decay_t<Fns>...>
-{
-  return { std::forward<Fn>(fn), std::forward<Fns>(fns)... };
-};
 
 namespace detail {
 
@@ -370,46 +228,9 @@ auto filter(PredicateT&& predicate)
 }
 
 //!
-// Similar to clojure.core/identity
-//
-constexpr struct Identity
-{
-  template <typename ArgT>
-  constexpr auto operator() (ArgT&& x) const
-    -> decltype(std::forward<ArgT>(x))
-  {
-    return std::forward<ArgT>(x);
-  }
-} identity {};
-
-//!
-// Function that forwards its argument if only one element passed,
-// otherwise it makes a tuple.
-//
-constexpr struct ZipF
-{
-  template <typename InputT>
-  constexpr auto operator() (InputT&& in) const
-    -> decltype(std::forward<InputT>(in))
-  {
-    return std::forward<InputT>(in);
-  }
-
-  template <typename ...InputTs>
-  constexpr auto operator() (InputTs&& ...ins) const
-    -> estd::enable_if_t<
-      (sizeof...(InputTs) > 1),
-      decltype(std::make_tuple(std::forward<InputTs>(ins)...))
-    >
-  {
-    return std::make_tuple(std::forward<InputTs>(ins)...);
-  }
-} tuplify {};
-
-//!
 // Reducer that returns the last input of the sequence.
 //
-constexpr struct ZipR
+constexpr struct lastR
 {
   template <typename StateT, typename ...InputTs>
   constexpr auto operator() (StateT&&, InputTs&& ...ins) const
@@ -440,77 +261,6 @@ constexpr struct OutputR
   }
 } outputR {};
 
-namespace detail {
-
-template <typename ReducerT,
-          typename StateT,
-          std::size_t ...Indices,
-          typename ...InputRangeTs>
-auto reduce(ReducerT&& reducer,
-            StateT&& initial,
-            estd::index_sequence<Indices...>,
-            InputRangeTs&& ...ranges)
-  -> estd::decay_t<StateT>
-{
-  using FinalStateT = estd::decay_t<decltype(
-    reducer(initial, *ranges.begin()...))>;
-
-  auto state = FinalStateT(std::forward<StateT>(initial));
-
-  for (auto firsts = std::make_tuple(std::begin(ranges)...),
-            lasts  = std::make_tuple(std::end(ranges)...);
-       !isReduced(state) &&
-         std::min({ std::get<Indices>(firsts) !=
-                    std::get<Indices>(lasts)... });
-       base::meta::noop(++std::get<Indices>(firsts)...))
-  {
-    state = reducer(fromReduced(state),
-                    *std::get<Indices>(firsts)...);
-  }
-
-  return fromReduced(state);
-}
-
-} // namespace detail
-
-//!
-// Similar to clojure.core/reduce.  Unlike `std::accumulate`, this
-// reduces over a range (doesn't take to distinct iterators) and can
-// reduce over several ranges at the same time.
-//
-template <typename ReducerT,
-          typename StateT,
-          typename InputRangeT>
-auto reduce(ReducerT&& reducer, StateT&& state, InputRangeT&& range)
-  -> estd::enable_if_t<
-  ABL_REDUCE_WITH_ACCUMULATE,
-  estd::decay_t<StateT> >
-{
-  return std::accumulate(
-    std::begin(range),
-    std::end(range),
-    std::forward<StateT>(state),
-    std::forward<ReducerT>(reducer));
-}
-
-//!
-// Variadic overload of `reduce()`
-//
-template <typename ReducerT,
-          typename StateT,
-          typename ...InputRangeTs>
-auto reduce(ReducerT&& reducer, StateT&& state, InputRangeTs&& ...ranges)
-  -> estd::enable_if_t<
-    (sizeof...(InputRangeTs) > 1) || !ABL_REDUCE_WITH_ACCUMULATE,
-    estd::decay_t<StateT>
-  >
-{
-  return detail::reduce(
-    std::forward<ReducerT>(reducer),
-    std::forward<StateT>(state),
-    estd::make_index_sequence<sizeof...(InputRangeTs)> {},
-    std::forward<InputRangeTs>(ranges)...);
-}
 
 //!
 // Similar to clojure.core/transduce
