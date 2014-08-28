@@ -176,6 +176,13 @@ public:
     return mObservers.connect(std::forward<Fn>(f));
   }
 
+  auto observers()
+    -> boost::signals2::signal<void(const value_type&,
+                                    const value_type&)>&
+  {
+    return mObservers;
+  }
+
 private:
   void collect()
   {
