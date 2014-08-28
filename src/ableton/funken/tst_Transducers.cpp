@@ -57,11 +57,11 @@ TEST(Transduce, Mapping)
   EXPECT_EQ(transduce(map(times2), std::plus<int>{}, 1, v), 25);
 }
 
-TEST(Transduce, Filter)
+TEST(Transduce, FilterFixedType)
 {
   auto v = std::vector<int> { 1, 2, 3, 6 };
   auto odd = [] (int x) { return x % 2 == 0; };
-  EXPECT_EQ(transduce(filter(odd), std::plus<int>{}, 1, v), 9);
+  EXPECT_EQ(transduce(filter<float>(odd), std::plus<int>{}, 1, v), 9.0);
 }
 
 TEST(Transduce, Composition)

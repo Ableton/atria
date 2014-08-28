@@ -73,14 +73,15 @@ namespace detail {
 // Writing functions that return functions without erasing their type
 // is very cumbersome in C++11 (this is not true with decltype(auto)
 // in the next standard).  The `Transducer` type implements the first
-// two calls. The `ResultReducerT` parameter should implement the last
-// call.  It will be constructed `reducer, params...` and it should be
-// callable with `state, input`.
+// two calls. The `ReducerGenT` parameter should have a nested
+// template `Reducer` that implements the last call.  It will be
+// constructed `reducer, params...` and it should be callable with
+// `state, input`.
 //
 // @see map
 // @see filter
 //
-template<template <class, class...> class ResultReducerT,
+template<typename ReducerGenT,
          typename ...ParamTs>
 struct Transducer : std::tuple<ParamTs...>
 {
@@ -88,7 +89,7 @@ struct Transducer : std::tuple<ParamTs...>
 
   template<typename ReducerT>
   auto operator() (ReducerT&& reducer) const
-    -> ResultReducerT<ReducerT, ParamTs...>
+    -> typename ReducerGenT::template Reducer<ReducerT, ParamTs...>
   {
     using Indexes = estd::make_index_sequence<sizeof...(ParamTs)>;
     return this->make(std::forward<ReducerT>(reducer), Indexes());
@@ -96,41 +97,70 @@ struct Transducer : std::tuple<ParamTs...>
 
   template<typename ReducerT, std::size_t...Indexes>
   auto make(ReducerT&& reducer, estd::index_sequence<Indexes...>) const
-    -> ResultReducerT<ReducerT, ParamTs...>
+    -> typename ReducerGenT::template Reducer<ReducerT, ParamTs...>
   {
     return { std::forward<ReducerT>(reducer),
              std::get<Indexes>(*this)... };
   }
 };
 
-template <typename ReducerT,
-          typename MappingT>
 struct MapReducer
 {
-  ReducerT reducer;
-  MappingT mapping;
-
-  template <typename State, typename ...Inputs>
-  auto operator() (State&& s, Inputs&& ...is) const
-    -> decltype(reducer(s, mapping(is...)))
+  template <typename ReducerT,
+            typename MappingT>
+  struct Reducer
   {
-    return reducer(s, mapping(is...));
-  }
+    ReducerT reducer;
+    MappingT mapping;
+
+    template <typename State, typename ...Inputs>
+    auto operator() (State&& s, Inputs&& ...is) const
+      -> decltype(reducer(s, mapping(is...)))
+    {
+      return reducer(s, mapping(is...));
+    }
+  };
 };
 
-template <typename ReducerT,
-          typename PredicateT>
+template <typename ResultT=void>
 struct FilterReducer
 {
-  ReducerT reducer;
-  PredicateT predicate;
-
-  template <typename State, typename ...Inputs>
-  auto operator() (State&& s, Inputs&& ...is) const
-    -> decltype(predicate(is...) ? reducer(s, is...) : s)
+  template <typename ReducerT,
+            typename PredicateT>
+  struct Reducer
   {
-    return predicate(is...) ? reducer(s, is...) : s;
-  }
+    ReducerT reducer;
+    PredicateT predicate;
+
+    using result_type = ResultT;
+
+    template <typename State, typename ...Inputs>
+    result_type operator() (State&& s, Inputs&& ...is) const
+    {
+      if (predicate(is...))
+        return reducer(s, is...);
+      return s;
+    }
+  };
+};
+
+template <>
+struct FilterReducer<void>
+{
+  template <typename ReducerT,
+            typename PredicateT>
+  struct Reducer
+  {
+    ReducerT reducer;
+    PredicateT predicate;
+
+    template <typename State, typename ...Inputs>
+    auto operator() (State&& s, Inputs&& ...is) const
+      -> decltype(predicate(is...) ? reducer(s, is...) : s)
+    {
+      return predicate(is...) ? reducer(s, is...) : s;
+    }
+  };
 };
 
 } // namespace detail
@@ -148,12 +178,15 @@ auto map(MappingT&& mapping)
 
 //!
 // Similar to clojure.core/filter$1
+// If no `ResultT` is given, the resulting reducers will try to deduce
+// it from (true ? reducer(inputs...) : state), which might no be
+// possible if state and inputs are incompatible.
 //
-template <typename PredicateT>
+template <typename ResultT=void, typename PredicateT>
 auto filter(PredicateT&& predicate)
-  -> detail::Transducer<detail::FilterReducer, PredicateT>
+  -> detail::Transducer<detail::FilterReducer<ResultT>, PredicateT>
 {
-  return detail::Transducer<detail::FilterReducer, PredicateT> {
+  return detail::Transducer<detail::FilterReducer<ResultT>, PredicateT> {
     std::forward<PredicateT>(predicate) };
 }
 
