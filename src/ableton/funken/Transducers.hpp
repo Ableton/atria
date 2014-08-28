@@ -21,9 +21,9 @@ struct ComposedReducer
 {
   template <typename State, typename Fn>
   auto operator()(State&& state, Fn&& next)
-    -> decltype(std::forward<Fn>(next)(std::forward<State>(state)))
+    -> decltype(next(std::forward<State>(state)))
   {
-    return std::forward<Fn>(next)(std::forward<State>(state));
+    return next(std::forward<State>(state));
   }
 };
 
@@ -53,7 +53,8 @@ struct Composed : std::tuple<Fn, Fns...>
 //                 g(x) = f_1(f_2(...f_n(x)))
 //
 template <typename Fn, typename ...Fns>
-detail::Composed<Fn, Fns...> comp(Fn&& fn, Fns&& ...fns)
+auto comp(Fn&& fn, Fns&& ...fns)
+  -> detail::Composed<estd::decay_t<Fn>, estd::decay_t<Fns>...>
 {
   return { std::forward<Fn>(fn), std::forward<Fns>(fns)... };
 };
@@ -90,7 +91,10 @@ struct Transducer : std::tuple<ParamTs...>
 
   template<typename ReducerT>
   auto operator() (ReducerT&& reducer) const
-    -> typename ReducerGenT::template Reducer<ReducerT, ParamTs...>
+    -> typename ReducerGenT::template Reducer<
+      estd::decay_t<ReducerT>,
+      estd::decay_t<ParamTs>...
+    >
   {
     using Indexes = estd::make_index_sequence<sizeof...(ParamTs)>;
     return this->make(std::forward<ReducerT>(reducer), Indexes());
@@ -98,7 +102,10 @@ struct Transducer : std::tuple<ParamTs...>
 
   template<typename ReducerT, std::size_t...Indexes>
   auto make(ReducerT&& reducer, estd::index_sequence<Indexes...>) const
-    -> typename ReducerGenT::template Reducer<ReducerT, ParamTs...>
+    -> typename ReducerGenT::template Reducer<
+      estd::decay_t<ReducerT>,
+      estd::decay_t<ParamTs>...
+    >
   {
     return { std::forward<ReducerT>(reducer),
              std::get<Indexes>(*this)... };
@@ -115,10 +122,12 @@ struct MapReducer
     MappingT mapping;
 
     template <typename State, typename ...Inputs>
-    auto operator() (State&& s, Inputs&& ...is) const
-      -> decltype(reducer(s, mapping(is...)))
+    auto operator() (State&& s, Inputs&& ...is)
+      -> decltype(reducer(std::forward<State>(s),
+                          mapping(std::forward<Inputs>(is)...)))
     {
-      return reducer(s, mapping(is...));
+      return reducer(std::forward<State>(s),
+                     mapping(std::forward<Inputs>(is)...));
     }
   };
 };
@@ -133,10 +142,12 @@ struct FlatMapReducer
     MappingT mapping;
 
     template <typename State, typename ...Inputs>
-    auto operator() (State&& s, Inputs&& ...is) const
-      -> decltype(reducer(s, mapping(is...)))
+    auto operator() (State&& s, Inputs&& ...is)
+      -> decltype(reduce(reducer, std::forward<State>(s),
+                         mapping(std::forward<Inputs>(is)...)))
     {
-      return reduce(reducer, s, mapping(is...));
+      return reduce(reducer, std::forward<State>(s),
+                    mapping(std::forward<Inputs>(is)...));
     }
   };
 };
@@ -154,10 +165,11 @@ struct FilterReducer
     using result_type = ResultT;
 
     template <typename State, typename ...Inputs>
-    result_type operator() (State&& s, Inputs&& ...is) const
+    result_type operator() (State&& s, Inputs&& ...is)
     {
-      if (predicate(is...))
-        return reducer(s, is...);
+      if (predicate(std::forward<Inputs>(is)...))
+        return reducer(std::forward<State>(s),
+                       std::forward<Inputs>(is)...);
       return s;
     }
   };
@@ -174,10 +186,16 @@ struct FilterReducer<void>
     PredicateT predicate;
 
     template <typename State, typename ...Inputs>
-    auto operator() (State&& s, Inputs&& ...is) const
-      -> decltype(predicate(is...) ? reducer(s, is...) : s)
+    auto operator() (State&& s, Inputs&& ...is)
+      -> decltype(true
+                  ? reducer(std::forward<State>(s),
+                            std::forward<Inputs>(is)...)
+                  : std::forward<State>(s))
     {
-      return predicate(is...) ? reducer(s, is...) : s;
+      return predicate(std::forward<Inputs>(is)...)
+        ? reducer(std::forward<State>(s),
+                  std::forward<Inputs>(is)...)
+        : std::forward<State>(s);
     }
   };
 };
@@ -189,14 +207,13 @@ struct FilterReducer<void>
 //
 template <typename MappingT>
 auto map(MappingT&& mapping)
-  -> detail::Transducer<detail::MapReducer, MappingT>
+  -> detail::Transducer<detail::MapReducer, estd::decay_t<MappingT> >
 {
-  return detail::Transducer<detail::MapReducer, MappingT> {
-    std::forward<MappingT>(mapping) };
+  return { std::forward<MappingT>(mapping) };
 }
 
 //!
-// Similar to clojure.core/flatmap$1
+// Similar to clojure.core/mapcat$1
 //
 template <typename MappingT>
 auto flatMap(MappingT&& mapping)
@@ -213,10 +230,9 @@ auto flatMap(MappingT&& mapping)
 //
 template <typename ResultT=void, typename PredicateT>
 auto filter(PredicateT&& predicate)
-  -> detail::Transducer<detail::FilterReducer<ResultT>, PredicateT>
+  -> detail::Transducer<detail::FilterReducer<ResultT>, estd::decay_t<PredicateT> >
 {
-  return detail::Transducer<detail::FilterReducer<ResultT>, PredicateT> {
-    std::forward<PredicateT>(predicate) };
+  return std::forward<PredicateT>(predicate);
 }
 
 //!
@@ -357,8 +373,7 @@ template <typename XformT,
 StateT transduce(XformT&& xform, ReducerT&& reducer,
                  StateT&& state, InputRangeTs&& ...ranges)
 {
-  auto xformed = std::forward<XformT>(xform)(
-    std::forward<ReducerT>(reducer));
+  auto xformed = xform(std::forward<ReducerT>(reducer));
   return reduce(
     xformed,
     state,
