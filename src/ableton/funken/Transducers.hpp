@@ -404,21 +404,27 @@ constexpr struct ZipF
   {
     return std::make_tuple(std::forward<InputTs>(ins)...);
   }
-} zipF {};
+} tuplify {};
 
 //!
-// Reducer that collapses multiple inputs into tuples.  When used on a
-// single sequence it is an identity.
+// Reducer that returns the last input of the sequence.
 //
 constexpr struct ZipR
 {
   template <typename StateT, typename ...InputTs>
   constexpr auto operator() (StateT&&, InputTs&& ...ins) const
-    -> decltype(zipF(std::forward<InputTs>(ins)...))
+    -> decltype(tuplify(std::forward<InputTs>(ins)...))
   {
-    return zipF(std::forward<InputTs>(ins)...);
+    return tuplify(std::forward<InputTs>(ins)...);
   }
-} zipR {};
+
+  template <typename StateT, typename ...InputTs>
+  constexpr auto operator() (StateT&& s) const
+    -> StateT
+  {
+    return std::forward<StateT>(s);
+  }
+} lastR {};
 
 //!
 // Reducer that outputs to the iterator that is passed as state.
@@ -429,7 +435,7 @@ constexpr struct OutputR
   auto operator() (OutputItT it, InputTs&& ...ins) const
     -> OutputItT
   {
-    *it = zipF(std::forward<InputTs>(ins)...);
+    *it = tuplify(std::forward<InputTs>(ins)...);
     return ++it;
   }
 } outputR {};
