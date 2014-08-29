@@ -51,6 +51,21 @@ constexpr struct
   }
 } sendDownR {};
 
+
+template <typename T, typename Err>
+auto defaultConstructOrThrow()
+  -> estd::enable_if_t<std::is_default_constructible<T>::value, T>
+{
+  return T();
+}
+
+template <typename T, typename Err>
+auto defaultConstructOrThrow()
+  -> estd::enable_if_t<!std::is_default_constructible<T>::value, T>
+{
+  throw Err();
+}
+
 //!
 // Implementation of a signal with a transducer.
 //
@@ -71,6 +86,8 @@ class XformDownSignal<XForm, base::meta::Pack<Parents...>, Base>
   std::tuple<std::shared_ptr<Parents>...> mParents;
 
 public:
+  using value_type = typename BaseT::value_type;
+
   XformDownSignal(XformDownSignal&&) = default;
   XformDownSignal(const XformDownSignal&) = delete;
   XformDownSignal& operator=(XformDownSignal&&) = default;
@@ -78,7 +95,14 @@ public:
 
   template <typename XForm2>
   XformDownSignal(XForm2&& xform, std::shared_ptr<Parents> ...parents)
-    : BaseT(xform(lastR)(detail::NoValue{}, parents->current()...))
+    : BaseT([&]() -> value_type {
+        try {
+          return xform(lastR)(detail::NoValue{}, parents->current()...);
+        }
+        catch (const NoValueError&) {
+          return defaultConstructOrThrow<value_type, NoValueError>();
+        }
+      }())
     , mParents(std::move(parents)...)
     , mDownReducer(xform(sendDownR))
   {
@@ -303,7 +327,7 @@ auto linkToParents(std::shared_ptr<SignalT> pSignal,
 //
 template <typename XForm, typename ...Parents>
 auto makeXformDownSignal(XForm&& xform,
-                    std::shared_ptr<Parents> ...parents)
+                         std::shared_ptr<Parents> ...parents)
   -> std::shared_ptr<
     XformDownSignal<estd::decay_t<XForm>,
                   base::meta::Pack<Parents...> >
