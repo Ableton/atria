@@ -36,9 +36,24 @@
 #include <ableton/estd/type_traits.hpp>
 #include <ableton/base/meta/Utils.hpp>
 #include <ableton/base/meta/Pack.hpp>
+#include <algorithm>
 
 namespace ableton {
 namespace estd {
+
+//!
+// Returns true if all the passed in values are true.
+//
+constexpr bool All()
+{
+  return true;
+}
+
+template <typename T, typename ...Ts>
+constexpr bool All(T x, Ts ...xs)
+{
+  return x && All(xs...);
+};
 
 //!
 // Concept that is always satisfied by the type or family of types
