@@ -69,7 +69,8 @@ struct get_value_type<T, estd::enable_if_t<!has_value_type<T>::value &&
 // see the Origin library: https://code.google.com/p/origin/
 //
 template <typename T>
-using Value_type = typename detail::get_value_type<T>::type;
+using Value_type = typename
+  detail::get_value_type<estd::decay_t<T> >::type;
 
 } // namespace estd
 } // namespace ableton
