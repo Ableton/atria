@@ -13,7 +13,16 @@
 // implementation for reduce() over one single collection.  In that
 // case, halting reducers (e.g. take) might not work.
 //
+#ifndef ABL_REDUCE_WITH_ACCUMULATE
 #define ABL_REDUCE_WITH_ACCUMULATE 0
+#endif
+//!
+// When defined to 1, reduce will be defined separately for the
+// non-variadic version.
+//
+#ifndef ABL_REDUCE_NON_VARIADIC
+#define ABL_REDUCE_NON_VARIADIC 1
+#endif
 
 namespace ableton {
 namespace funken {
@@ -145,13 +154,14 @@ auto reduce(ReducerT&& reducer,
 // reduces over a range (doesn't take to distinct iterators) and can
 // reduce over several ranges at the same time.
 //
+
+#if ABL_REDUCE_WITH_ACCUMULATE
+
 template <typename ReducerT,
           typename StateT,
           typename InputRangeT>
 auto reduce(ReducerT&& reducer, StateT&& state, InputRangeT&& range)
-  -> estd::enable_if_t<
-  ABL_REDUCE_WITH_ACCUMULATE,
-  estd::decay_t<StateT> >
+  -> estd::decay_t<StateT>
 {
   return std::accumulate(
     std::begin(range),
@@ -159,6 +169,32 @@ auto reduce(ReducerT&& reducer, StateT&& state, InputRangeT&& range)
     std::forward<StateT>(state),
     std::forward<ReducerT>(reducer));
 }
+
+#endif // ABL_REDUCE_WITH_ACCUMULATE
+
+#if !ABL_REDUCE_WITH_ACCUMULATE && ABL_REDUCE_NON_VARIADIC
+
+template <typename ReducerT,
+          typename StateT,
+          typename InputRangeT>
+auto reduce(ReducerT&& reducer, StateT&& initial, InputRangeT&& range)
+  -> estd::decay_t<StateT>
+{
+  using FinalStateT = estd::decay_t<decltype(
+    reducer(initial, *range.begin()))>;
+
+  auto state = FinalStateT(std::forward<StateT>(initial));
+  for (auto first = std::begin(range),
+            last  = std::end(range);
+       !isReduced(state) && first != last;
+       ++first)
+  {
+    state = reducer(fromReduced(state), *first);
+  }
+  return fromReduced(state);
+}
+
+#endif // !ABL_REDUCE_WITH_ACCUMULATE && ABL_REDUCE_NON_VARIADIC
 
 //!
 // Variadic overload of `reduce()`
@@ -168,7 +204,8 @@ template <typename ReducerT,
           typename ...InputRangeTs>
 auto reduce(ReducerT&& reducer, StateT&& state, InputRangeTs&& ...ranges)
   -> estd::enable_if_t<
-    (sizeof...(InputRangeTs) > 1) || !ABL_REDUCE_WITH_ACCUMULATE,
+    (sizeof...(InputRangeTs) > 1)
+    || !ABL_REDUCE_NON_VARIADIC,
     estd::decay_t<StateT>
   >
 {
