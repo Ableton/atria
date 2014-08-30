@@ -1,9 +1,10 @@
 // Copyright: 2014, Ableton AG, Berlin. All rights reserved.
 
-#include <ableton/funken/Xformed.hpp>
-#include <ableton/funken/State.hpp>
 #include <ableton/funken/Commit.hpp>
+#include <ableton/funken/State.hpp>
+#include <ableton/funken/Struct.hpp>
 #include <ableton/funken/Watch.hpp>
+#include <ableton/funken/Xformed.hpp>
 #include <gtest/gtest.h>
 #include <map>
 
@@ -207,6 +208,8 @@ TEST(Atted, AttedFromErasedInout)
   EXPECT_EQ(42, x.get());
 }
 
+namespace {
+
 struct Person
 {
   std::string name;
@@ -217,6 +220,8 @@ struct Person
   bool operator!=(const Person& x) const
   { return !(*this == x); }
 };
+
+} // namespace
 
 TEST(Atted, AccesingAttributes)
 {
@@ -238,6 +243,46 @@ TEST(Atted, AccesingAttributesInVersion)
 
   // Should not compile!
   // x.set(43);
+}
+
+struct Machine : Struct<Machine>
+{
+  std::string name;
+  std::size_t wheels;
+
+  Machine(std::string name = "",
+          std::size_t wheels = 0)
+    : name(name), wheels(wheels) {}
+};
+
+} // namespace funken
+} // namespace ableton
+
+ABL_FUNKEN_STRUCT(
+  ableton::funken::Machine,
+  (std::string, name)
+  (std::size_t, wheels));
+
+namespace ableton {
+namespace funken {
+
+TEST(Atted, ModifyingAttributesOfImmutable)
+{
+  auto st = state(Machine { "car", 4 });
+  auto x = attred(&Machine::name, st);
+  auto y = attred(&Machine::wheels, st);
+
+  y.set(3);
+  commit(st);
+  EXPECT_EQ(st.get(), (Machine { "car", 3 }));
+  EXPECT_EQ(x.get(), "car");
+  EXPECT_EQ(y.get(), 3);
+
+  x.set("tricar");
+  commit(st);
+  EXPECT_EQ(st.get(), (Machine { "tricar", 3 }));
+  EXPECT_EQ(x.get(), "tricar");
+  EXPECT_EQ(y.get(), 3);
 }
 
 } // namespace funken

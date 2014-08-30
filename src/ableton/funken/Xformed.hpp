@@ -206,6 +206,7 @@ struct SetAttr
   auto operator()(T x, U&& v) const -> T
   {
     x.*pAttr = v;
+    modified(x);
     return x;
   }
 };
