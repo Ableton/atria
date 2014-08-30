@@ -234,14 +234,14 @@ constexpr struct lastR
 {
   template <typename StateT, typename ...InputTs>
   constexpr auto operator() (StateT&&, InputTs&& ...ins) const
-    -> decltype(tuplify(std::forward<InputTs>(ins)...))
+    -> estd::decay_t<decltype(tuplify(std::forward<InputTs>(ins)...))>
   {
     return tuplify(std::forward<InputTs>(ins)...);
   }
 
   template <typename StateT, typename ...InputTs>
   constexpr auto operator() (StateT&& s) const
-    -> StateT
+    -> decltype(std::forward<StateT>(s))
   {
     return std::forward<StateT>(s);
   }
