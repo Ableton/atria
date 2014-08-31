@@ -66,6 +66,33 @@ constexpr struct Identity
 } identity {};
 
 //!
+// @see constantly
+//
+template <typename T>
+struct Constantly
+{
+  using result_type = const T&;
+  T value;
+
+  template <typename ArgT>
+  constexpr auto operator() (ArgT&& x) const
+    -> result_type
+  {
+    return value;
+  }
+};
+
+//!
+// Similar to clojure.core/constantly
+//
+template <typename T>
+auto constantly(T&& value)
+  -> Constantly<estd::decay_t<T> >
+{
+  return Constantly<estd::decay_t<T> >{ std::forward<T>(value) };
+}
+
+//!
 // Function that forwards its argument if only one element passed,
 // otherwise it makes a tuple.
 //
