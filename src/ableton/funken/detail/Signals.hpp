@@ -156,7 +156,8 @@ public:
       mLastNotified = mLast;
 
       auto garbage = false;
-      for (auto& wpChild : mChildren)
+      auto children = mChildren;
+      for (auto& wpChild : children)
       {
         if (auto pChild = wpChild.lock())
           pChild->notify();
