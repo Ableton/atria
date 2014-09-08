@@ -105,18 +105,15 @@ public:
   const value_type& current() const { return mCurrent; }
   const value_type& last() const { return mLast; }
 
-  const value_type& peek() const
-  {
-    return mCurrent;
-  }
-
   void link(std::weak_ptr<IDown> pChild)
   {
     using namespace std;
     using std::placeholders::_1;
-    if (find_if(begin(mChildren), end(mChildren),
-                bind(ownerEquals, pChild, _1)) == end(mChildren))
-      mChildren.push_back(pChild);
+    assert(find_if(begin(mChildren), end(mChildren),
+                   bind(ownerEquals, pChild, _1))
+           == end(mChildren) &&
+           "Child signal must not be linked twice");
+    mChildren.push_back(pChild);
   }
 
   template <typename U>
