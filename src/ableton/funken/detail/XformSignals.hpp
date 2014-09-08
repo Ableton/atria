@@ -108,23 +108,6 @@ public:
   {
   }
 
-  template <std::size_t ...Indices>
-  auto peekParents(estd::index_sequence<Indices...>)
-    -> decltype(tuplify(std::get<Indices>(mParents)->peek()...))
-  {
-    return tuplify(std::get<Indices>(mParents)->peek()...);
-  }
-
-  template <std::size_t ...Indices>
-  auto peekParents(estd::index_sequence<>) -> void
-  {}
-
-  auto peekParents()
-    -> decltype(peekParents(estd::make_index_sequence<sizeof...(Parents)>{}))
-  {
-    return peekParents(estd::make_index_sequence<sizeof...(Parents)>{});
-  }
-
   void recompute() final
   { recompute(estd::make_index_sequence<sizeof...(Parents)>{}); }
 
@@ -147,7 +130,7 @@ private:
   void recomputeDeep(estd::index_sequence<Indices...>)
   {
     base::meta::noop(
-      (std::get<Indices>(mParents)->recompute(), 42)...
+      (std::get<Indices>(mParents)->recomputeDeep(), 42)...
       );
     recompute();
   }
@@ -186,8 +169,18 @@ struct UpdateReducer
     auto operator () (XformUpSignalPtr s, Inputs&& ...is) const
       -> XformUpSignalPtr
     {
-      return reducer(s, updater(s->peekParents(),
+      auto indices = estd::make_index_sequence<
+        std::tuple_size<estd::decay_t<decltype(s->parents())> >::value > {};
+      return reducer(s, updater(peekParents(s, indices),
                                 std::forward<Inputs>(is)...));
+    }
+
+    template <typename XformUpSignalPtr, std::size_t ...Indices>
+    auto peekParents(XformUpSignalPtr s, estd::index_sequence<Indices...>) const
+      -> decltype(tuplify(std::get<Indices>(s->parents())->current()...))
+    {
+      s->recomputeDeep();
+      return tuplify(std::get<Indices>(s->parents())->current()...);
     }
   };
 };

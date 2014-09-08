@@ -6,6 +6,7 @@
 #include <ableton/funken/Watch.hpp>
 #include <ableton/funken/Xformed.hpp>
 #include <gtest/gtest.h>
+#include <array>
 #include <map>
 
 namespace ableton {
@@ -222,6 +223,34 @@ struct Person
 };
 
 } // namespace
+
+
+TEST(Atted, UpdatesDontOverwriteNewDataInComplexScenario)
+{
+  auto st = state(std::array<Person, 2> {{
+        { "john", 42 },
+        { "emil", 2 }
+      }});
+  auto x1 = atted(0, st);
+  auto x2 = atted(1, xformed(identity, identity, st));
+  auto x3 = atted(1, st);
+  auto x4 = attred(&Person::name, x2);
+  auto x5 = attred(&Person::age, x3);
+  auto x6 = attred(&Person::age, x1);
+
+  x6.set(43);
+  x5.set(3);
+  x4.set("emily");
+  commit(st);
+
+  EXPECT_EQ(st.get(), (std::array<Person, 2> {{
+          { "john",  43 },
+          { "emily", 3 }
+        }}));
+  EXPECT_EQ(x6.get(), 43);
+  EXPECT_EQ(x4.get(), "emily");
+  EXPECT_EQ(x5.get(), 3);
+}
 
 TEST(Atted, AccesingAttributes)
 {

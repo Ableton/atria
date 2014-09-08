@@ -98,6 +98,12 @@ auto constantly(T&& value)
 //
 constexpr struct Tuplify
 {
+  constexpr auto operator() () const
+    -> std::tuple<>
+  {
+    return std::tuple<>{};
+  }
+
   template <typename InputT>
   constexpr auto operator() (InputT&& in) const
     -> decltype(std::forward<InputT>(in))
@@ -105,14 +111,13 @@ constexpr struct Tuplify
     return std::forward<InputT>(in);
   }
 
-  template <typename ...InputTs>
-  constexpr auto operator() (InputTs&& ...ins) const
-    -> estd::enable_if_t<
-      (sizeof...(InputTs) > 1),
-      decltype(std::make_tuple(std::forward<InputTs>(ins)...))
-    >
+  template <typename InputT, typename ...InputTs>
+  constexpr auto operator() (InputT&& in, InputTs&& ...ins) const
+    -> decltype(std::make_tuple(std::forward<InputT>(in),
+                                std::forward<InputTs>(ins)...))
   {
-    return std::make_tuple(std::forward<InputTs>(ins)...);
+    return std::make_tuple(std::forward<InputT>(in),
+                           std::forward<InputTs>(ins)...);
   }
 } tuplify {};
 
