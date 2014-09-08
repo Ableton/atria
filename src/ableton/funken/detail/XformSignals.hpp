@@ -152,11 +152,6 @@ private:
     recompute();
   }
 
-  template <std::size_t ...Indices>
-  auto sendDown(estd::index_sequence<Indices...>)
-    -> estd::enable_if_t<(sizeof...(Indices) == 0)>
-  {}
-
   DownReducerT mDownReducer;
 };
 
