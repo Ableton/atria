@@ -155,10 +155,9 @@ public:
       mLastNotified = mLast;
 
       auto garbage = false;
-      auto children = mChildren;
-      for (auto& wpChild : children)
+      for (std::size_t i = 0, size = mChildren.size(); i < size; ++i)
       {
-        if (auto pChild = wpChild.lock())
+        if (auto pChild = mChildren[i].lock())
         {
           pChild->notify();
         }
