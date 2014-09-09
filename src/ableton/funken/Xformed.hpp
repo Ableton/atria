@@ -205,7 +205,7 @@ struct SetAttr
   template <typename T, typename U>
   auto operator()(T x, U&& v) const -> T
   {
-    x.*pAttr = v;
+    x.*pAttr = std::forward<U>(v);
     modified(x);
     return x;
   }
