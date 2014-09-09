@@ -51,8 +51,8 @@ struct Inout_value
   template <typename T>
   auto requires(T&& x) -> decltype(
     meta::expressions(
-      estd::enable_if_t<(In_value<T>()), int>(),
-      estd::enable_if_t<(Out_value<T>()), int>()));
+      meta::Require<(In_value<T>())>(),
+      meta::Require<(Out_value<T>())>()));
 };
 
 

@@ -64,6 +64,26 @@ constexpr bool Valid()
 }
 
 //!
+// Utility to define concepts in terms of other concepts or other
+// kinds boolean requirements. For example:
+//
+// @code{.cpp}
+// template <typename Arg>
+// struct Inout_value
+//   : meta::Concept<Inout_value<Arg> >
+// {
+//   template <typename T>
+//   auto requires(T&& x) -> decltype(
+//     meta::expressions(
+//       meta::Require<(In_value<T>())>(),
+//       meta::Require<(Out_value<T>())>()));
+// };
+// @endcode
+//
+template <bool Requirement, typename Result=int>
+using Require = estd::enable_if_t<Requirement, Result>;
+
+//!
 // Allows to validate a sequence of expressions in a single decltype.
 // Useful in combination with Valid. Not defined, use only in
 // non-evaluated contexts.
