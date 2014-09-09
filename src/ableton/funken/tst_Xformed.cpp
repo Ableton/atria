@@ -14,9 +14,9 @@ namespace funken {
 
 TEST(Xformed, Concepts)
 {
-  EXPECT_TRUE(estd::check<In_value<
+  EXPECT_TRUE(meta::check<In_value<
               decltype(xformed(identity, state(0)))>>());
-  EXPECT_TRUE(estd::check<Inout_value<
+  EXPECT_TRUE(meta::check<Inout_value<
               decltype(xformed(identity, identity, state(0)))>>());
   EXPECT_FALSE(Out_value<decltype(xformed(identity, state(0)))>());
 }

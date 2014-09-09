@@ -20,9 +20,9 @@ struct NoDefaultCtr
 
 TEST(State, Concepts)
 {
-  EXPECT_TRUE(estd::check<In_value<State<int>>>());
-  EXPECT_TRUE(estd::check<Out_value<State<int>>>());
-  EXPECT_TRUE(estd::check<Root_value<State<int>>>());
+  EXPECT_TRUE(meta::check<In_value<State<int>>>());
+  EXPECT_TRUE(meta::check<Out_value<State<int>>>());
+  EXPECT_TRUE(meta::check<Root_value<State<int>>>());
 }
 
 TEST(State, HoldsAValue)

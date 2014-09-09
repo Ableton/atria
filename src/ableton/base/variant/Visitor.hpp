@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include <ableton/base/meta/CommonType.hpp>
-#include <ableton/base/meta/Utils.hpp>
+#include <ableton/meta/CommonType.hpp>
+#include <ableton/meta/Utils.hpp>
 #include <ableton/estd/type_traits.hpp>
 #include <boost/variant/static_visitor.hpp>
 #include <cassert>

@@ -4,8 +4,8 @@
 
 #include <ableton/funken/Reduce.hpp>
 #include <ableton/funken/Functional.hpp>
-#include <ableton/base/meta/Utils.hpp>
-#include <ableton/base/meta/CommonType.hpp>
+#include <ableton/meta/Utils.hpp>
+#include <ableton/meta/CommonType.hpp>
 #include <ableton/estd/utility.hpp>
 #include <ableton/estd/type_traits.hpp>
 #include <algorithm>
@@ -167,7 +167,7 @@ struct TakeReducer
     template <typename State, typename ...Inputs>
     auto operator() (State&& s, Inputs&& ...is)
       -> MaybeReduced<estd::decay_t<
-           base::meta::CommonType_t<
+           meta::CommonType_t<
              decltype(s),
              decltype(reducer(s, is...)) > > >
     {

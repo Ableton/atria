@@ -3,7 +3,7 @@
 #pragma once
 
 #include <ableton/funken/detail/Access.hpp>
-#include <ableton/base/meta/Utils.hpp>
+#include <ableton/meta/Utils.hpp>
 
 namespace ableton {
 namespace funken {
@@ -11,12 +11,12 @@ namespace funken {
 template <typename ...RootValueTs>
 void commit(RootValueTs&& ...roots)
 {
-  base::meta::noop(
+  meta::noop(
     (detail::Access::roots(std::forward<RootValueTs>(roots))->sendDown(),
-     42)...);
-  base::meta::noop(
+     meta::canBeVoid)...);
+  meta::noop(
     (detail::Access::roots(std::forward<RootValueTs>(roots))->notify(),
-     42)...);
+     meta::canBeVoid)...);
 }
 
 } // namespace funken

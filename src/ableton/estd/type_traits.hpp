@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <ableton/base/meta/Utils.hpp>
+#include <ableton/meta/Utils.hpp>
 #include <type_traits>
 
 namespace ableton {
@@ -37,15 +37,13 @@ namespace detail {
 template <typename T, typename Enable=void>
 struct has_value_type : std::false_type {};
 template <typename T>
-struct has_value_type<T, base::meta::EnableIfType_t<
-                           typename T::value_type> >
+struct has_value_type<T, meta::EnableIfType_t<typename T::value_type> >
   : std::true_type {};
 
 template <typename T, typename Enable=void>
 struct has_dereference : std::false_type {};
 template <typename T>
-struct has_dereference<T, base::meta::EnableIfType_t<
-                            decltype(*std::declval<T>())> >
+struct has_dereference<T, meta::EnableIfType_t<decltype(*std::declval<T>())> >
   : std::true_type {};
 
 template <typename T, typename Enable=void>

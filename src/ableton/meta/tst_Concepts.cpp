@@ -1,10 +1,10 @@
 // Copyright: 2014, Ableton AG, Berlin. All rights reserved.
 
-#include <ableton/estd/ConceptsLite.hpp>
+#include <ableton/meta/Concept.hpp>
 #include <gtest/gtest.h>
 
 namespace ableton {
-namespace estd {
+namespace meta {
 
 //!
 // This is a example concept kinda compatible with C++1y concepts
@@ -22,9 +22,9 @@ constexpr bool Example_concept()
       // Dereferenceable
       *declval<T>(),
       // Has value type
-      declval<Value_type<T>>(),
+      declval<estd::Value_type<T>>(),
       // Can forward dereferenced to value type
-      forward<Value_type<T>>( *declval<T>() ),
+      forward<estd::Value_type<T>>( *declval<T>() ),
       // Has an action() method that may return void
       (declval<T>().action(), canBeVoid)
       ))>();
@@ -80,33 +80,33 @@ struct Example_concept_two : Concept<Example_concept_two<_>>
       // Dereferenceable
       *x,
       // Has value type
-      std::declval<Value_type<T>>(),
+      std::declval<estd::Value_type<T>>(),
       // Can forward dereferenced to value type
-      std::forward<Value_type<T>>( *x ),
+      std::forward<estd::Value_type<T>>( *x ),
       // Has an action() method that may return void
       (x.action(), canBeVoid)
       ));
 };
 
-TEST(ConceptSpec, CanBeEvaluatedLikeAConceptLite)
+TEST(Concept, CanBeEvaluatedLikeAConceptLite)
 {
   EXPECT_TRUE(Example_concept_two<ExampleModel>());
   EXPECT_FALSE(Example_concept_two<ExampleNonModel>());
 }
 
-TEST(ConceptSpec, CanBeUsedWithConceptAssert)
+TEST(Concept, CanBeUsedWithConceptAssert)
 {
   ABL_ASSERT_CONCEPT(Example_concept_two, ExampleModel);
   ABL_ASSERT_NOT_CONCEPT(Example_concept_two, ExampleNonModel);
 }
 
-TEST(ConceptSpec, CanUseSatisfiesWithConceptSpec)
+TEST(Concept, CanUseSatisfiesWithConceptSpec)
 {
   EXPECT_TRUE(satisfies<Example_concept_two<void>(ExampleModel)>());
   EXPECT_FALSE(satisfies<Example_concept_two<void>(ExampleNonModel)>());
 }
 
-TEST(ConceptSpec, CanUseCheckWithConceptSpec)
+TEST(Concept, CanUseCheckWithConceptSpec)
 {
   EXPECT_TRUE(check<Example_concept_two<void>(ExampleModel)>());
   // This should fail to compiler, rising an error in the line of
@@ -126,9 +126,9 @@ struct Example_concept_spec
       // Dereferenceable
       *x,
       // Has value type
-      std::declval<Value_type<T>>(),
+      std::declval<estd::Value_type<T>>(),
       // Can forward dereferenced to value type
-      std::forward<Value_type<T>>( *x ),
+      std::forward<estd::Value_type<T>>( *x ),
       // Has an action() method that may return void
       (x.action(), canBeVoid)
       ));
@@ -137,11 +137,32 @@ struct Example_concept_spec
 template <typename T>
 using Example_concept_three = Concept<Example_concept_spec(T)>;
 
-TEST(ConceptSpec, CanBeDefinedInTwoSteps)
+TEST(Concept, CanBeDefinedInTwoSteps)
 {
   EXPECT_TRUE(Example_concept_three<ExampleModel>());
   EXPECT_FALSE(Example_concept_three<ExampleNonModel>());
 }
 
-} // namespace estd
+template <typename Arg1, typename Arg2=Arg1>
+struct AdlSwapable : Concept<AdlSwapable<Arg1, Arg2>>
+{
+  template <typename T, typename U>
+  auto requires(T&& x, U&& y) -> decltype(
+    expressions(
+      (swap(x, y), canBeVoid),
+      (swap(y, x), canBeVoid)));
+};
+
+void swap(ExampleModel&, ExampleModel&);
+void swap(ExampleModel&, int&);
+void swap(int&, ExampleModel&);
+
+TEST(Concept, OptionalMultipleArguments)
+{
+  EXPECT_TRUE((AdlSwapable<ExampleModel>()));
+  EXPECT_TRUE((AdlSwapable<ExampleModel, int>()));
+  EXPECT_FALSE((AdlSwapable<ExampleModel, float>()));
+}
+
+} // namespace meta
 } // namespace ableton

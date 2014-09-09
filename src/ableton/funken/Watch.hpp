@@ -3,7 +3,6 @@
 #pragma once
 
 #include <ableton/funken/detail/Access.hpp>
-#include <ableton/base/meta/Utils.hpp>
 
 namespace ableton {
 namespace funken {

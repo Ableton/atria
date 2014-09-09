@@ -21,9 +21,9 @@ struct Counter
 
 TEST(Sensor, Concepts)
 {
-  EXPECT_TRUE(estd::check<In_value<Sensor<Counter>>>());
-  EXPECT_TRUE(estd::check<Out_value<Sensor<Counter>>>());
-  EXPECT_TRUE(estd::check<Root_value<Sensor<Counter>>>());
+  EXPECT_TRUE(meta::check<In_value<Sensor<Counter>>>());
+  EXPECT_TRUE(meta::check<Out_value<Sensor<Counter>>>());
+  EXPECT_TRUE(meta::check<Root_value<Sensor<Counter>>>());
 }
 
 TEST(Sensor, Basic)

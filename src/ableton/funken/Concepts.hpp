@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <ableton/estd/ConceptsLite.hpp>
+#include <ableton/meta/Concept.hpp>
 #include <ableton/estd/type_traits.hpp>
 #include <utility>
 
@@ -12,14 +12,14 @@ namespace funken {
 //!
 // Concept for objects that provide values via a getter.
 //
-template <typename _>
+template <typename Arg>
 struct In_value
-  : estd::Concept<In_value<_> >
+  : meta::Concept<In_value<Arg> >
 {
   template <typename T,
             typename V = estd::decay_t<estd::Value_type<T> > >
   auto requires(T&& x, V& v = std::declval<V&>()) -> decltype(
-    estd::expressions(
+    meta::expressions(
       v = x.get(),
       v = ((const T&&) x).get()));
 };
@@ -27,16 +27,16 @@ struct In_value
 //!
 // Concept for objects that provide values via a setter.
 //
-template <typename _>
+template <typename Arg>
 struct Out_value
-  : estd::Concept<Out_value<_> >
+  : meta::Concept<Out_value<Arg> >
 {
   template <typename T,
             typename V = estd::Value_type<T> >
   auto requires(T&& x, V& v = std::declval<V&>()) -> decltype(
-    estd::expressions(
-      (x.set(v), estd::canBeVoid),
-      (x.set((const V&&) v), estd::canBeVoid)));
+    meta::expressions(
+      (x.set(v), meta::canBeVoid),
+      (x.set((const V&&) v), meta::canBeVoid)));
 };
 
 //!
@@ -44,13 +44,13 @@ struct Out_value
 // @see In_value
 // @see Out_value
 //
-template <typename _>
+template <typename Arg>
 struct Inout_value
-  : estd::Concept<Inout_value<_> >
+  : meta::Concept<Inout_value<Arg> >
 {
   template <typename T>
   auto requires(T&& x) -> decltype(
-    estd::expressions(
+    meta::expressions(
       estd::enable_if_t<(In_value<T>()), int>(),
       estd::enable_if_t<(Out_value<T>()), int>()));
 };
@@ -59,14 +59,14 @@ struct Inout_value
 //!
 // Concept for values that can be commited.
 //
-template <typename _>
+template <typename Arg>
 struct Root_value
-  : estd::Concept<Root_value<_> >
+  : meta::Concept<Root_value<Arg> >
 {
   template <typename T>
   auto requires(T&& x) -> decltype(
-    estd::expressions(
-      (commit(x), estd::canBeVoid)));
+    meta::expressions(
+      (commit(x), meta::canBeVoid)));
 };
 
 } // namespace funken

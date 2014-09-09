@@ -16,9 +16,6 @@
 // namespace provides some utilities that make concepts easier to
 // define and use.
 //
-// These utilities are in `estd` as opposed to `base` because they
-// should be deprecated by C++14.
-//
 // Here are some references where most of these techniques where
 // borrowed from:
 //
@@ -34,12 +31,12 @@
 #pragma once
 
 #include <ableton/estd/type_traits.hpp>
-#include <ableton/base/meta/Utils.hpp>
-#include <ableton/base/meta/Pack.hpp>
+#include <ableton/meta/Utils.hpp>
+#include <ableton/meta/Pack.hpp>
 #include <algorithm>
 
 namespace ableton {
-namespace estd {
+namespace meta {
 
 //!
 // Returns true if all the passed in values are true.
@@ -74,11 +71,6 @@ constexpr bool Valid()
 template <typename ...Ts>
 void expressions(Ts&&...);
 
-//!
-// Use to allow `void` statements inside `expressions`.
-//
-constexpr int canBeVoid = 42;
-
 namespace detail {
 
 template <typename ConceptSig, typename Enable=void>
@@ -87,7 +79,7 @@ struct Satisfies : std::false_type {};
 template <typename ConceptSpecT, typename ...Ts>
 struct Satisfies<
     ConceptSpecT(Ts...),
-    base::meta::EnableIfType_t<
+    EnableIfType_t<
         decltype(std::declval<ConceptSpecT>().requires(std::declval<Ts>()...))
       >
     >
@@ -141,11 +133,11 @@ constexpr bool satisfies()
 template<typename ConceptSig>
 constexpr bool check()
 {
-  return check(base::meta::Pack<ConceptSig>{});
+  return check(Pack<ConceptSig>{});
 }
 
 template<typename ConceptSpecT, typename ...Ts>
-constexpr bool check(base::meta::Pack<ConceptSpecT(Ts...)>)
+constexpr bool check(Pack<ConceptSpecT(Ts...)>)
 {
   return Valid<decltype(
     std::declval<ConceptSpecT>().requires(
@@ -153,7 +145,7 @@ constexpr bool check(base::meta::Pack<ConceptSpecT(Ts...)>)
 }
 
 template<template<typename...>class ConceptSpecT, typename ...Ts>
-constexpr bool check(base::meta::Pack<ConceptSpecT<Ts...> >)
+constexpr bool check(Pack<ConceptSpecT<Ts...> >)
 {
   return Valid<decltype(
     std::declval<ConceptSpecT<Ts...> >().requires(
@@ -243,5 +235,5 @@ struct Concept<ConceptSpecT(Ts...)>
     " must not be satisfied by types: " #types)    \
   /**/
 
-} // namespace estd
+} // namespace meta
 } // namespace ableton

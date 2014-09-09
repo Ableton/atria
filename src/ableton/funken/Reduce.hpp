@@ -138,7 +138,7 @@ auto reduce(ReducerT&& reducer,
        !isReduced(state) &&
          std::min({ std::get<Indices>(firsts) !=
                     std::get<Indices>(lasts)... });
-       base::meta::noop(++std::get<Indices>(firsts)...))
+       meta::noop(++std::get<Indices>(firsts)...))
   {
     state = reducer(fromReduced(state),
                     *std::get<Indices>(firsts)...);

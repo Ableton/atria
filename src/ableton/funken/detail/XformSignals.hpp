@@ -70,14 +70,14 @@ auto defaultConstructOrThrow()
 // Implementation of a signal with a transducer.
 //
 template <typename XForm            = decltype(identity),
-          typename ParentsPack      = base::meta::Pack<>,
+          typename ParentsPack      = meta::Pack<>,
           template<class>class Base = DownSignal>
 class XformDownSignal;
 
 template <typename XForm,
           typename ...Parents,
           template<class>class Base>
-class XformDownSignal<XForm, base::meta::Pack<Parents...>, Base>
+class XformDownSignal<XForm, meta::Pack<Parents...>, Base>
   : public Base<GetXformResult_t<XForm, Parents...> >
 {
   using BaseT = Base<GetXformResult_t<XForm, Parents...> >;
@@ -129,9 +129,9 @@ private:
   template <std::size_t ...Indices>
   void recomputeDeep(estd::index_sequence<Indices...>)
   {
-    base::meta::noop(
-      (std::get<Indices>(mParents)->recomputeDeep(), 42)...
-      );
+    meta::noop(
+      (std::get<Indices>(mParents)->recomputeDeep(),
+       meta::canBeVoid)...);
     recompute();
   }
 
@@ -208,7 +208,7 @@ auto update(UpdateT&& updater)
 //
 template <typename XForm            = decltype(identity),
           typename SetXForm         = decltype(identity),
-          typename ParentsPack      = base::meta::Pack<>,
+          typename ParentsPack      = meta::Pack<>,
           template<class>class Base = UpDownSignal>
 class XformUpDownSignal;
 
@@ -216,10 +216,10 @@ template <typename XForm,
           typename SetXForm,
           typename ...Parents,
           template<class>class Base>
-class XformUpDownSignal<XForm, SetXForm, base::meta::Pack<Parents...>, Base>
-  : public XformDownSignal<XForm, base::meta::Pack<Parents...>, Base>
+class XformUpDownSignal<XForm, SetXForm, meta::Pack<Parents...>, Base>
+  : public XformDownSignal<XForm, meta::Pack<Parents...>, Base>
 {
-  using BaseT = XformDownSignal<XForm, base::meta::Pack<Parents...>, Base>;
+  using BaseT = XformDownSignal<XForm, meta::Pack<Parents...>, Base>;
   using UpReducerT = decltype(std::declval<SetXForm>()(sendUpR));
 
 public:
@@ -268,10 +268,10 @@ private:
   void pushUp(T&& value, estd::index_sequence<Indices...>)
   {
     auto& parents = this->parents();
-    base::meta::noop(
+    meta::noop(
       (std::get<Indices>(parents)->sendUp(
         std::get<Indices>(std::forward<T>(value))),
-       42)...);
+       meta::canBeVoid)...);
   }
 
   template <typename T>
@@ -304,8 +304,9 @@ auto linkToParents(std::shared_ptr<SignalT> pSignal,
   -> std::shared_ptr<SignalT>
 {
   auto& parents = pSignal->parents();
-  base::meta::noop(
-    (std::get<Indices>(parents)->link(pSignal), 42)...);
+  meta::noop(
+    (std::get<Indices>(parents)->link(pSignal),
+     meta::canBeVoid)...);
   return pSignal;
 }
 
@@ -318,14 +319,14 @@ auto makeXformDownSignal(XForm&& xform,
                          std::shared_ptr<Parents> ...parents)
   -> std::shared_ptr<
     XformDownSignal<estd::decay_t<XForm>,
-                  base::meta::Pack<Parents...> >
+                    meta::Pack<Parents...> >
     >
 {
   using SignalT = XformDownSignal<estd::decay_t<XForm>,
-                              base::meta::Pack<Parents...> >;
+                                  meta::Pack<Parents...> >;
   return linkToParents(
     std::make_shared<SignalT>(std::forward<XForm>(xform),
-                            std::move(parents)...));
+                              std::move(parents)...));
 }
 
 //!
@@ -339,13 +340,13 @@ auto makeXformUpDownSignal(XForm&& xform,
                       std::shared_ptr<Parents> ...parents)
   -> std::shared_ptr<
     XformUpDownSignal<estd::decay_t<XForm>,
-                    estd::decay_t<SetXForm>,
-                    base::meta::Pack<Parents...> >
+                      estd::decay_t<SetXForm>,
+                      meta::Pack<Parents...> >
     >
 {
   using SignalT = XformUpDownSignal<estd::decay_t<XForm>,
-                                estd::decay_t<SetXForm>,
-                                base::meta::Pack<Parents...> >;
+                                    estd::decay_t<SetXForm>,
+                                    meta::Pack<Parents...> >;
   return linkToParents(
     std::make_shared<SignalT>(std::forward<XForm>(xform),
                             std::forward<SetXForm>(setXform),

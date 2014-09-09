@@ -14,16 +14,16 @@ namespace funken {
 
 TEST(Values, TypesConcepts)
 {
-  estd::check<In_value<In<int>>>();
-  estd::check<Out_value<Out<int>>>();
-  estd::check<Inout_value<Inout<int>>>();
+  meta::check<In_value<In<int>>>();
+  meta::check<Out_value<Out<int>>>();
+  meta::check<Inout_value<Inout<int>>>();
 }
 
 TEST(Values, FactoriesConcepts)
 {
-  estd::check<In_value<decltype(in(state(0)))>>();
-  estd::check<Out_value<decltype(out(state(0)))>>();
-  estd::check<Inout_value<decltype(inout(state(0)))>>();
+  meta::check<In_value<decltype(in(state(0)))>>();
+  meta::check<Out_value<decltype(out(state(0)))>>();
+  meta::check<Inout_value<decltype(inout(state(0)))>>();
 }
 
 TEST(In, ConstructionAndAssignmentFromTemporary)
