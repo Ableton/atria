@@ -35,7 +35,7 @@ void xformBenchmark(FnT&& fn)
 TEST(Transduce_Benchmark, FilterMapCopy_BoostRange)
 {
   xformBenchmark(
-    [&](const std::vector<int>& data)
+    [](const std::vector<int>& data)
     {
       using namespace boost::adaptors;
       auto result = std::vector<int>{};
@@ -51,7 +51,7 @@ TEST(Transduce_Benchmark, FilterMapCopy_BoostRange)
 TEST(Transduce_Benchmark, FilterMapCopy_Stl)
 {
   xformBenchmark(
-    [&](const std::vector<int>& data)
+    [](const std::vector<int>& data)
     {
       std::vector<int> result;
       std::remove_copy_if(
@@ -68,7 +68,7 @@ TEST(Transduce_Benchmark, FilterMapCopy_Stl)
 TEST(Transduce_Benchmark, FilterMapCopy_Transduce)
 {
   xformBenchmark(
-    [&](const std::vector<int>& data)
+    [](const std::vector<int>& data)
     {
       return into(
         std::vector<int>{},
@@ -81,7 +81,7 @@ TEST(Transduce_Benchmark, FilterMapCopy_Transduce)
 TEST(Transduce_Benchmark, FilterMapReduce_BoostRange)
 {
   xformBenchmark(
-    [&](const std::vector<int>& data)
+    [](const std::vector<int>& data)
     {
       using namespace boost::adaptors;
       return boost::accumulate(
@@ -96,7 +96,7 @@ TEST(Transduce_Benchmark, FilterMapReduce_BoostRange)
 TEST(Transduce_Benchmark, FilterMapReduce_Stl)
 {
   xformBenchmark(
-    [&](const std::vector<int>& data)
+    [](const std::vector<int>& data)
     {
       std::vector<int> result;
       std::remove_copy_if(
@@ -136,7 +136,7 @@ TEST(Transduce_Benchmark, FilterMapReduce_Accumulate)
 TEST(Transduce_Benchmark, FilterMapReduce_Transduce)
 {
   xformBenchmark(
-    [&](const std::vector<int>& data)
+    [](const std::vector<int>& data)
     {
       return transduce(
         comp(filter([](int x) { return x % 2 == 0; }),
