@@ -19,9 +19,7 @@ public:
 
   State()
     : mpSignal(detail::makeStateSignal(T())) {}
-  State(const T& value)
-    : mpSignal(detail::makeStateSignal(value)) {}
-  State(T&& value)
+  State(T value)
     : mpSignal(detail::makeStateSignal(std::move(value))) {}
 
   State(const State&) = delete;

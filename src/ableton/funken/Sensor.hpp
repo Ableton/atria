@@ -20,9 +20,7 @@ public:
 
   Sensor()
     : mpSignal(detail::makeSensorSignal(SensorFnT())) {}
-  Sensor(const SensorFnT& fn)
-    : mpSignal(detail::makeSensorSignal(fn)) {}
-  Sensor(SensorFnT&& fn)
+  Sensor(SensorFnT fn)
     : mpSignal(detail::makeSensorSignal(std::move(fn))) {}
 
   Sensor(const Sensor&) = delete;
