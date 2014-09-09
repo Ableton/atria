@@ -30,12 +30,6 @@ public:
   Sensor& operator=(const Sensor&) = delete;
   Sensor& operator=(Sensor&&) = default;
 
-  template <typename T2>
-  void set(T2&& value)
-  {
-    mpSignal->pushDown(std::forward<T2>(value));
-  }
-
   const value_type& get() const
   {
     return mpSignal->last();

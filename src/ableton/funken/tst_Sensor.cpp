@@ -22,7 +22,7 @@ struct Counter
 TEST(Sensor, Concepts)
 {
   EXPECT_TRUE(meta::check<In_value<Sensor<Counter>>>());
-  EXPECT_TRUE(meta::check<Out_value<Sensor<Counter>>>());
+  EXPECT_FALSE(Out_value<Sensor<Counter>>());
   EXPECT_TRUE(meta::check<Root_value<Sensor<Counter>>>());
 }
 
