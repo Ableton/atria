@@ -58,8 +58,7 @@ auto comp(Fn&& fn, Fns&& ...fns)
 constexpr struct Identity
 {
   template <typename ArgT>
-  constexpr auto operator() (ArgT&& x) const
-    -> decltype(std::forward<ArgT>(x))
+  constexpr auto operator() (ArgT&& x) const -> ArgT&&
   {
     return std::forward<ArgT>(x);
   }
@@ -105,8 +104,7 @@ constexpr struct Tuplify
   }
 
   template <typename InputT>
-  constexpr auto operator() (InputT&& in) const
-    -> decltype(std::forward<InputT>(in))
+  constexpr auto operator() (InputT&& in) const -> InputT&&
   {
     return std::forward<InputT>(in);
   }

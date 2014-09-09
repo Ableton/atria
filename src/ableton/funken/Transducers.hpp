@@ -240,8 +240,7 @@ constexpr struct lastR
   }
 
   template <typename StateT, typename ...InputTs>
-  constexpr auto operator() (StateT&& s) const
-    -> decltype(std::forward<StateT>(s))
+  constexpr auto operator() (StateT&& s) const -> StateT&&
   {
     return std::forward<StateT>(s);
   }
@@ -286,7 +285,7 @@ template <typename CollectionT,
           typename XformT,
           typename ...InputRangeTs>
 auto into(CollectionT&& col, XformT&& xform, InputRangeTs&& ...ranges)
-  -> decltype(std::forward<CollectionT>(col))
+  -> CollectionT&&
 {
   transduce(
     std::forward<XformT>(xform),
