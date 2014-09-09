@@ -10,7 +10,8 @@ namespace funken {
 template <typename InputValueT, typename CallbackT>
 auto watch(InputValueT&& value, CallbackT&& callback)
   -> decltype(
-    detail::Access::watchers(value).connect(callback))
+    detail::Access::watchers(std::forward<InputValueT>(value))
+    .connect(std::forward<CallbackT>(callback)))
 {
   auto& watchers = detail::Access::watchers(
     std::forward<InputValueT>(value));
