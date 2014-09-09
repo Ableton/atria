@@ -18,11 +18,11 @@ class Watchable
 
 public:
   Watchable() = default;
-  Watchable(Watchable&& other)
+  Watchable(Watchable&& other) noexcept
   {
     mWatchers.swap(other.mWatchers);
   }
-  Watchable& operator=(Watchable&& other)
+  Watchable& operator=(Watchable&& other) noexcept
   {
     mWatchers.swap(other.mWatchers);
     return *this;
