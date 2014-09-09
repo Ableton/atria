@@ -114,6 +114,25 @@ TEST(Transduce_Benchmark, FilterMapReduce_Stl)
     });
 }
 
+TEST(Transduce_Benchmark, FilterMapReduce_Accumulate)
+{
+  xformBenchmark(
+    [](const std::vector<int>& data)
+    {
+      return std::accumulate(
+        data.begin(),
+        data.end(),
+        0,
+        [](int state, int input) {
+          if (input % 2 == 0)
+          {
+            return state + input * 2;
+          }
+          return state;
+        });
+    });
+}
+
 TEST(Transduce_Benchmark, FilterMapReduce_Transduce)
 {
   xformBenchmark(
