@@ -138,7 +138,9 @@ public:
       for (auto& wpChild : mChildren)
       {
         if (auto pChild = wpChild.lock())
+        {
           pChild->sendDown();
+        }
       }
     }
   }
@@ -157,13 +159,19 @@ public:
       for (auto& wpChild : children)
       {
         if (auto pChild = wpChild.lock())
+        {
           pChild->notify();
+        }
         else
+        {
           garbage = true;
+        }
       }
 
       if (garbage)
+      {
         collect();
+      }
     }
   }
 
