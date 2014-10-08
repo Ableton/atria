@@ -23,7 +23,7 @@ class InImpl
   using SignalPtrT = std::shared_ptr<SignalT>;
 
   SignalPtrT mpSignal;
-  const SignalPtrT& signal() const { return mpSignal; };
+  const SignalPtrT& signal() const { return mpSignal; }
 
 public:
   using value_type = estd::Value_type<SignalT>;
@@ -49,7 +49,7 @@ public:
   {}
 
   InImpl(SignalPtrT sig)
-    : mpSignal(std::move(sig)) {};
+    : mpSignal(std::move(sig)) {}
 
   auto get() const
     -> decltype(mpSignal->last())

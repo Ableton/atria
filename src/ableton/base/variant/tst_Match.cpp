@@ -2,9 +2,12 @@
 
 #include <ableton/base/variant/Match.hpp>
 #include <ableton/testing/Spies.hpp>
-#include <gtest/gtest.h>
+#include <ableton/testing/gtest.hpp>
+#include <ableton/build_system/Warnings.hpp>
+ABL_DISABLE_WARNINGS
 #include <boost/variant.hpp>
 #include <boost/lexical_cast.hpp>
+ABL_RESTORE_WARNINGS
 #include <functional>
 
 namespace ableton {
@@ -108,12 +111,12 @@ TEST(Match, CanUseBindedFunctions)
 
 struct BadPerson : Person {
   using Person::Person;
-  std::string doBadThing() const { return ":("; };
+  std::string doBadThing() const { return ":("; }
 };
 
 struct GoodPerson : Person{
   using Person::Person;
-  std::string doGoodThing() const { return ":)"; };
+  std::string doGoodThing() const { return ":)"; }
 };
 
 using People = boost::variant<GoodPerson, BadPerson>;

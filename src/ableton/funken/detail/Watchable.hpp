@@ -2,7 +2,10 @@
 
 #pragma once
 
+#include <ableton/build_system/Warnings.hpp>
+ABL_DISABLE_WARNINGS
 #include <boost/signals2/signal.hpp>
+ABL_RESTORE_WARNINGS
 
 namespace ableton {
 namespace funken {

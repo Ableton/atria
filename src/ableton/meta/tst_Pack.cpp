@@ -1,8 +1,9 @@
 // Copyright: 2014, Ableton AG, Berlin. All rights reserved.
 
 #include <ableton/meta/Pack.hpp>
-#include <gtest/gtest.h>
-
+#include <ableton/testing/gtest.hpp>
+#include <ableton/build_system/Warnings.hpp>
+ABL_DISABLE_WARNINGS
 #include <boost/mpl/pop_front.hpp>
 #include <boost/mpl/push_front.hpp>
 #include <boost/mpl/push_back.hpp>
@@ -15,6 +16,7 @@
 #include <boost/mpl/pop_back.hpp>
 #include <boost/mpl/contains.hpp>
 #include <boost/mpl/assert.hpp>
+ABL_RESTORE_WARNINGS
 
 #include <type_traits>
 
@@ -27,6 +29,7 @@ TEST(Pack, CanBeUsedAsMPLSequence)
   using namespace boost::mpl;
   using SomePack = Pack<int, char, bool>;
 
+ABL_DISABLE_WARNINGS
   BOOST_MPL_ASSERT((is_same<front<SomePack>::type,
                             int>));
   BOOST_MPL_ASSERT_RELATION(size<SomePack>::type::value, ==, 3);
@@ -55,6 +58,7 @@ TEST(Pack, CanBeUsedAsMPLSequence)
   BOOST_MPL_ASSERT((contains<SomePack, char>));
   BOOST_MPL_ASSERT((contains<SomePack, bool>));
   BOOST_MPL_ASSERT_NOT((contains<SomePack, unsigned>));
+ABL_RESTORE_WARNINGS
 }
 
 } // namespace meta

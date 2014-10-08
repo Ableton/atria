@@ -21,7 +21,7 @@ struct In_value
   auto requires(T&& x, V& v = std::declval<V&>()) -> decltype(
     meta::expressions(
       v = x.get(),
-      v = ((const T&&) x).get()));
+      v = static_cast<const T&&>(x).get()));
 };
 
 //!
@@ -36,7 +36,7 @@ struct Out_value
   auto requires(T&& x, V& v = std::declval<V&>()) -> decltype(
     meta::expressions(
       (x.set(v), meta::canBeVoid),
-      (x.set((const V&&) v), meta::canBeVoid)));
+      (x.set(static_cast<const V&&>(v)), meta::canBeVoid)));
 };
 
 //!

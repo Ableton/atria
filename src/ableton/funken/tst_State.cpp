@@ -5,7 +5,7 @@
 #include <ableton/funken/State.hpp>
 #include <ableton/funken/Watch.hpp>
 #include <ableton/testing/Spies.hpp>
-#include <gtest/gtest.h>
+#include <ableton/testing/gtest.hpp>
 
 namespace ableton {
 namespace funken {
@@ -14,8 +14,8 @@ struct NoDefaultCtr
 {
   NoDefaultCtr() = delete;
   NoDefaultCtr(int) {}
-  bool operator==(NoDefaultCtr) const { return true; };
-  bool operator!=(NoDefaultCtr) const { return false; };
+  bool operator==(NoDefaultCtr) const { return true; }
+  bool operator!=(NoDefaultCtr) const { return false; }
 };
 
 TEST(State, Concepts)

@@ -5,7 +5,10 @@
 #include <ableton/meta/CommonType.hpp>
 #include <ableton/meta/Utils.hpp>
 #include <ableton/estd/type_traits.hpp>
+#include <ableton/build_system/Warnings.hpp>
+ABL_DISABLE_WARNINGS
 #include <boost/variant/static_visitor.hpp>
+ABL_RESTORE_WARNINGS
 #include <cassert>
 #include <utility>
 
@@ -88,7 +91,7 @@ struct Otherwise
 
   Otherwise(Fn&& fn)
     : mImpl(std::forward<Fn>(fn))
-  {};
+  {}
 
   template <typename ...Args>
   result_type operator() (Args&& ...args)
@@ -132,7 +135,7 @@ struct When
 
   When(Fn&& fn)
     : mImpl(std::forward<Fn>(fn))
-  {};
+  {}
 
   result_type operator() (Args&& ...args)
   {

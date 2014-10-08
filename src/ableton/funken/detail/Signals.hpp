@@ -2,7 +2,10 @@
 
 #pragma once
 
+#include <ableton/build_system/Warnings.hpp>
+ABL_DISABLE_WARNINGS
 #include <boost/signals2/signal.hpp>
+ABL_RESTORE_WARNINGS
 #include <memory>
 #include <vector>
 #include <functional>
@@ -60,7 +63,7 @@ constexpr struct
 //
 struct IDown
 {
-  virtual ~IDown() {};
+  virtual ~IDown() {}
   virtual void sendDown() = 0;
   virtual void notify() = 0;
 };
@@ -71,7 +74,7 @@ struct IDown
 template <typename T>
 struct IUp
 {
-  virtual ~IUp() {};
+  virtual ~IUp() {}
   virtual void sendUp(const T&) = 0;
   virtual void sendUp(T&&) = 0;
 };

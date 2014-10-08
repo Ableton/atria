@@ -14,15 +14,15 @@ namespace funken {
 struct NoValueError : std::exception
 {
   const char* what() const noexcept override
-  { return "No value in funken object"; };
+  { return "No value in funken object"; }
 };
 
 namespace detail {
 
 struct NoValue
 {
-  template <typename T> operator T&() { throw NoValueError{}; };
-  template <typename T> operator const T&() { throw NoValueError{}; };
+  template <typename T> operator T&() { throw NoValueError{}; }
+  template <typename T> operator const T&() { throw NoValueError{}; }
 };
 
 } // namespace detail

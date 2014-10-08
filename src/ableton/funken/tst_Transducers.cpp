@@ -2,7 +2,7 @@
 
 #include <ableton/estd/memory.hpp>
 #include <ableton/funken/Transducers.hpp>
-#include <gtest/gtest.h>
+#include <ableton/testing/gtest.hpp>
 
 namespace ableton {
 namespace funken {

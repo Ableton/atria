@@ -3,11 +3,14 @@
 #pragma once
 
 #include <ableton/estd/type_traits.hpp>
+#include <ableton/build_system/Warnings.hpp>
+ABL_DISABLE_WARNINGS
 #include <boost/operators.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/fusion/include/fold.hpp>
 #include <boost/fusion/include/comparison.hpp>
 #include <boost/fusion/include/out.hpp>
+ABL_RESTORE_WARNINGS
 #include <atomic>
 #include <functional>
 #include <iosfwd>
@@ -122,7 +125,7 @@ auto operator<<(std::ostream& os, const T& x)
   os << typeid(x).name();
   boost::fusion::out(os, x);
   return os;
-};
+}
 
 //!
 // Call this on an `Struct` value to indicate that is has indeed
@@ -156,7 +159,7 @@ struct hash<ableton::funken::Struct<T> >
 } // namespace std
 
 #define ABL_FUNKEN_STRUCT(StructFullName, StructMembers)                \
-  BOOST_FUSION_ADAPT_STRUCT(StructFullName, StructMembers);             \
+  BOOST_FUSION_ADAPT_STRUCT(StructFullName, StructMembers)              \
   namespace std {                                                       \
   template<>                                                            \
   struct hash<StructFullName>                                           \

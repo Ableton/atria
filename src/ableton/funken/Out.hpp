@@ -20,7 +20,7 @@ class OutImpl
 
   using SignalPtrT = std::shared_ptr<SignalT>;
   SignalPtrT mpSignal;
-  const SignalPtrT& signal() const { return mpSignal; };
+  const SignalPtrT& signal() const { return mpSignal; }
 
 public:
   using value_type = estd::Value_type<SignalT>;
@@ -44,7 +44,7 @@ public:
   {}
 
   OutImpl(SignalPtrT sig)
-    : mpSignal(std::move(sig)) {};
+    : mpSignal(std::move(sig)) {}
 
   template <typename T>
   void set(T&& value)

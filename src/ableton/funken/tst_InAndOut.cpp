@@ -7,7 +7,7 @@
 #include <ableton/funken/State.hpp>
 #include <ableton/funken/Watch.hpp>
 #include <ableton/testing/Spies.hpp>
-#include <gtest/gtest.h>
+#include <ableton/testing/gtest.hpp>
 
 namespace ableton {
 namespace funken {
@@ -122,7 +122,7 @@ TEST(Values, ScopedWatching)
   st.set(52);
   commit(st);
   EXPECT_EQ(2, s.count());
-};
+}
 
 TEST(Inout, StrentheningRequirementsDoesntWork)
 {

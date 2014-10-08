@@ -50,7 +50,7 @@ template <typename T, typename ...Ts>
 constexpr bool All(T x, Ts ...xs)
 {
   return x && All(xs...);
-};
+}
 
 //!
 // Concept that is always satisfied by the type or family of types
@@ -221,7 +221,7 @@ struct Concept<ConceptSpecTplT<Ts...>>
 {
   constexpr operator bool() const {
     return satisfies<ConceptSpecTplT<Ts...>(Ts...)>();
-  };
+  }
 };
 
 template <typename ConceptSpecT, typename ...Ts>
@@ -229,7 +229,7 @@ struct Concept<ConceptSpecT(Ts...)>
 {
   constexpr operator bool() const {
     return satisfies<ConceptSpecT(Ts...)>();
-  };
+  }
 };
 
 //!

@@ -9,13 +9,13 @@
 #include <ableton/build_system/Warnings.hpp>
 #include <ableton/funken/Transducers.hpp>
 #include <ableton/testing/Benchmark.hpp>
+#include <ableton/testing/gtest.hpp>
 ABL_DISABLE_WARNINGS
 #include <boost/range/adaptors.hpp>
 #include <boost/range/numeric.hpp>
 #include <boost/range/algorithm.hpp>
 #include <boost/range/algorithm_ext/iota.hpp>
 ABL_RESTORE_WARNINGS
-#include <gtest/gtest.h>
 
 namespace ableton {
 namespace funken {

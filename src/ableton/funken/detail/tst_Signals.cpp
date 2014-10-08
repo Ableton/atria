@@ -4,7 +4,7 @@
 #include <ableton/funken/detail/XformSignals.hpp>
 #include <ableton/funken/detail/RootSignals.hpp>
 #include <ableton/testing/Spies.hpp>
-#include <gtest/gtest.h>
+#include <ableton/testing/gtest.hpp>
 #include <array>
 
 namespace ableton {

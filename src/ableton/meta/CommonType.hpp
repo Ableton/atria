@@ -4,14 +4,15 @@
 
 #include <ableton/meta/Utils.hpp>
 #include <ableton/meta/Pack.hpp>
-
+#include <ableton/build_system/Warnings.hpp>
+ABL_DISABLE_WARNINGS
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/identity.hpp>
-
+ABL_RESTORE_WARNINGS
 #include <type_traits>
 #include <utility>
 
@@ -28,8 +29,8 @@ template <typename ...Ts>
 struct CouldNotFindCommonType
 {
   template <typename T>
-  CouldNotFindCommonType(T&&) {};
-  CouldNotFindCommonType(FromVoid&&) {};
+  CouldNotFindCommonType(T&&) {}
+  CouldNotFindCommonType(FromVoid&&) {}
 };
 
 namespace detail {

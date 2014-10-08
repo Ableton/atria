@@ -2,8 +2,9 @@
 
 #pragma once
 
+#include <ableton/build_system/Warnings.hpp>
+ABL_DISABLE_WARNINGS
 #include <boost/mpl/sequence_tag.hpp>
-
 #include <boost/mpl/pop_front_fwd.hpp>
 #include <boost/mpl/push_front_fwd.hpp>
 #include <boost/mpl/push_back_fwd.hpp>
@@ -18,7 +19,7 @@
 #include <boost/mpl/next_prior.hpp>
 #include <boost/mpl/deref.hpp>
 #include <boost/mpl/begin_end_fwd.hpp>
-
+ABL_RESTORE_WARNINGS
 #include <tuple>
 
 namespace ableton {

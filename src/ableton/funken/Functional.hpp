@@ -1,8 +1,11 @@
 // Copyright: 2014, Ableton AG, Berlin. All rights reserved.
 
 #include <ableton/estd/type_traits.hpp>
+#include <ableton/build_system/Warnings.hpp>
+ABL_DISABLE_WARNINGS
 #include <boost/fusion/adapted/std_tuple.hpp>
 #include <boost/fusion/include/reverse_fold.hpp>
+ABL_RESTORE_WARNINGS
 #include <tuple>
 
 namespace ableton {
@@ -50,7 +53,7 @@ auto comp(Fn&& fn, Fns&& ...fns)
   -> detail::Composed<estd::decay_t<Fn>, estd::decay_t<Fns>...>
 {
   return { std::forward<Fn>(fn), std::forward<Fns>(fns)... };
-};
+}
 
 //!
 // Similar to clojure.core/identity

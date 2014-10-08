@@ -1,11 +1,15 @@
 // Copyright: 2014, Ableton AG, Berlin. All rights reserved.
 
-#include <iostream>
+
 #include <ableton/funken/Struct.hpp>
+#include <ableton/testing/gtest.hpp>
+#include <ableton/build_system/Warnings.hpp>
+ABL_DISABLE_WARNINGS
 #include <boost/fusion/include/adapt_struct.hpp>
+ABL_RESTORE_WARNINGS
+#include <iostream>
 #include <unordered_set>
 #include <string>
-#include <gtest/gtest.h>
 
 namespace ableton {
 namespace funken {
@@ -28,7 +32,7 @@ struct Person : Struct<Person>
 ABL_FUNKEN_STRUCT(
   ableton::funken::test::Person,
   (std::string, name)
-  (std::size_t, age));
+  (std::size_t, age))
 
 namespace ableton {
 namespace funken {

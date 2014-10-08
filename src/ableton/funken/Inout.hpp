@@ -23,13 +23,13 @@ class InoutImpl
 
   using SignalPtrT = std::shared_ptr<SignalT>;
   SignalPtrT mpSignal;
-  const SignalPtrT& signal() const { return mpSignal; };
+  const SignalPtrT& signal() const { return mpSignal; }
 
 public:
   using value_type = estd::Value_type<SignalT>;
 
   InoutImpl(SignalPtrT sig)
-    : mpSignal(std::move(sig)) {};
+    : mpSignal(std::move(sig)) {}
 
   InoutImpl() = default;
   InoutImpl(InoutImpl&&) = default;

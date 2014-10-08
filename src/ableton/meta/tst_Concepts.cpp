@@ -1,7 +1,7 @@
 // Copyright: 2014, Ableton AG, Berlin. All rights reserved.
 
 #include <ableton/meta/Concept.hpp>
-#include <gtest/gtest.h>
+#include <ableton/testing/gtest.hpp>
 
 namespace ableton {
 namespace meta {
@@ -37,8 +37,8 @@ constexpr bool Example_concept()
 struct ExampleModel
 {
   typedef int value_type;
-  int operator*() { return 0; };
-  void action() {};
+  int operator*() { return 0; }
+  void action() {}
 };
 
 //!
@@ -47,8 +47,8 @@ struct ExampleModel
 struct ExampleNonModel
 {
   typedef int value_type;
-  std::string operator*() { return 0; };
-  void action() {};
+  std::string operator*() { return 0; }
+  void action() {}
 };
 
 TEST(SimpleConcept, CanBeEvaluatedLikeAConceptLite)

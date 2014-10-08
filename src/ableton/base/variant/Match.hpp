@@ -3,7 +3,10 @@
 #pragma once
 
 #include <ableton/base/variant/Visitor.hpp>
+#include <ableton/build_system/Warnings.hpp>
+ABL_DISABLE_WARNINGS
 #include <boost/variant/apply_visitor.hpp>
+ABL_RESTORE_WARNINGS
 #include <utility>
 
 namespace ableton {

@@ -5,7 +5,7 @@
 #include <ableton/funken/Sensor.hpp>
 #include <ableton/funken/Watch.hpp>
 #include <ableton/testing/Spies.hpp>
-#include <gtest/gtest.h>
+#include <ableton/testing/gtest.hpp>
 
 namespace ableton {
 namespace funken {

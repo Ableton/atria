@@ -5,7 +5,7 @@
 #include <ableton/funken/Struct.hpp>
 #include <ableton/funken/Watch.hpp>
 #include <ableton/funken/Xformed.hpp>
-#include <gtest/gtest.h>
+#include <ableton/testing/gtest.hpp>
 #include <array>
 #include <map>
 
@@ -290,7 +290,7 @@ struct Machine : Struct<Machine>
 ABL_FUNKEN_STRUCT(
   ableton::funken::Machine,
   (std::string, name)
-  (std::size_t, wheels));
+  (std::size_t, wheels))
 
 namespace ableton {
 namespace funken {
