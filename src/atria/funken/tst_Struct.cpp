@@ -20,9 +20,9 @@ struct Person : Struct<Person>
   std::string name;
   std::size_t age;
 
-  Person(std::string name = "",
-         std::size_t age  = 0)
-    : name(name), age(age) {}
+  Person(std::string name_ = "",
+         std::size_t age_  = 0)
+    : name(name_), age(age_) {}
 };
 
 } // namespace test

@@ -48,7 +48,7 @@ TEST(Xformed, IdentityTwoArgsIsZipping)
 TEST(Xformed, OneArgMapping)
 {
   auto s = State<int> { 42 };
-  auto x = xformed(map([] (int x) { return x + 1; }), s);
+  auto x = xformed(map([] (int a) { return a + 1; }), s);
   EXPECT_EQ(x.get(), 43);
 }
 
@@ -63,21 +63,21 @@ TEST(Xformed, TwoArgMapping)
 TEST(Xformed, OneArgFilterWithValue)
 {
   auto s = State<int> { 42 };
-  auto x = xformed(filter([] (int x) { return x % 2 == 0; }), s);
+  auto x = xformed(filter([] (int a) { return a % 2 == 0; }), s);
   EXPECT_EQ(x.get(), 42);
 }
 
 TEST(Xformed, OneArgFilterWithoutValue)
 {
   auto s = State<int> { 43 };
-  auto x = xformed(filter([] (int x) { return x % 2 == 0; }), s);
+  auto x = xformed(filter([] (int a) { return a % 2 == 0; }), s);
   EXPECT_EQ(x.get(), 0);
 }
 
 struct NonDefault {
   int v = 0;
   NonDefault() = delete;
-  NonDefault(int v) : v(v) {}
+  NonDefault(int v_) : v(v_) {}
   bool operator==(NonDefault x) const { return v == x.v; }
   bool operator!=(NonDefault x) const { return v != x.v; }
 };
@@ -92,7 +92,7 @@ TEST(Xformed, OneArgFilterWithoutValueNonDefaultCtr)
 TEST(Xformed, OneArgFilterWithoutValueNonDefaultCtrOkIfFirstValuePasses)
 {
   auto s = State<NonDefault>{ 42 };
-  auto x = xformed(filter([] (NonDefault x) { return x.v % 2 == 0; }), s);
+  auto x = xformed(filter([] (NonDefault a) { return a.v % 2 == 0; }), s);
   s.set(NonDefault{43});
   commit(s);
   EXPECT_EQ(x.get().v, 42); // old value still visible
@@ -139,7 +139,7 @@ TEST(Xformed, IdentitySetterTwoParents)
 TEST(Xformed, Mapping)
 {
   auto st = state(0);
-  auto x = xformed(map([] (int x) { return x + 2; }), st);
+  auto x = xformed(map([] (int a) { return a + 2; }), st);
   EXPECT_EQ(2, x.get());
 
   st.set(42);
@@ -150,8 +150,8 @@ TEST(Xformed, Mapping)
 TEST(Xformed, Bidirectional)
 {
   auto st = state(0);
-  auto x = xformed(map([] (int x) { return x + 2; }),
-                   map([] (int x) { return x - 2; }),
+  auto x = xformed(map([] (int a) { return a + 2; }),
+                   map([] (int a) { return a - 2; }),
                    st);
   EXPECT_EQ(2, x.get());
 
@@ -281,9 +281,9 @@ struct Machine : Struct<Machine>
   std::string name;
   std::size_t wheels;
 
-  Machine(std::string name = "",
-          std::size_t wheels = 0)
-    : name(name), wheels(wheels) {}
+  Machine(std::string name_ = "",
+          std::size_t wheels_ = 0)
+    : name(name_), wheels(wheels_) {}
 };
 
 } // namespace funken
