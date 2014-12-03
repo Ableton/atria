@@ -233,15 +233,15 @@ TEST(Atted, UpdatesDontOverwriteNewDataInComplexScenario)
         { "john", 42 },
         { "emil", 2 }
       }});
-  auto x1 = atted(0, st);
-  auto x2 = atted(1, xformed(identity, identity, st));
-  auto x3 = atted(1, st);
+  auto x1 = atted(0u, st);
+  auto x2 = atted(1u, xformed(identity, identity, st));
+  auto x3 = atted(1u, st);
   auto x4 = attred(&Person::name, x2);
   auto x5 = attred(&Person::age, x3);
   auto x6 = attred(&Person::age, x1);
 
-  x6.set(43);
-  x5.set(3);
+  x6.set(43u);
+  x5.set(3u);
   x4.set("emily");
   commit(st);
 
@@ -260,7 +260,7 @@ TEST(Atted, AccesingAttributes)
   auto x = attred(&Person::age, st);
   EXPECT_EQ(42, x.get());
 
-  x.set(43);
+  x.set(43u);
   commit(st);
   EXPECT_EQ(43, x.get()); // Happy birthday John!
   EXPECT_EQ((Person{ "john", 43 }), st.get());
@@ -303,7 +303,7 @@ TEST(Atted, ModifyingAttributesOfImmutable)
   auto x = attred(&Machine::name, st);
   auto y = attred(&Machine::wheels, st);
 
-  y.set(3);
+  y.set(3u);
   commit(st);
   EXPECT_EQ(st.get(), (Machine { "car", 3 }));
   EXPECT_EQ(x.get(), "car");
