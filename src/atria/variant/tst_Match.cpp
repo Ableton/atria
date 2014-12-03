@@ -13,6 +13,8 @@ ABL_RESTORE_WARNINGS
 namespace atria {
 namespace variant {
 
+namespace {
+
 class Person
 {
 public:
@@ -45,8 +47,6 @@ std::ostream& operator<<(std::ostream& os, const Person& b)
 {
   return os << "Person: " << b.name();
 }
-
-namespace {
 
 TEST(Match, CanBeUsedWithLambdasAndRValues)
 {
