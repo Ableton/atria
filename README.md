@@ -5,14 +5,15 @@ Extends core language and standard library capabilities and provide
 mostly header-only libraries in the spirit of the STL, Boost, Adobe
 Source Libraries or Facebook's Folly and Fatal.
 
-For now, the library is C++11 compatible, but will try to move to
-C++14 and upper as compilers catch up.
+The library is written in C++11.  In the spirit of using modern C++
+techniques, we will use C++14 and newer features as compilers catch up.
 
 While not yet, we plan to release this library as **open source**.
 
 ## Modules
 
-* `atria::variant` provides tools for better usability of
+* `atria::variant` provides tools for better usability of Boost.Variant
+  and potentially other implementations of sum types.
 
 * `atria::meta` provides several metaprogramming tools, including some
   Booost.MPL adaptors and concept checking facilities.
