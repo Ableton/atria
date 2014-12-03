@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include <ableton/funken/Reduce.hpp>
-#include <ableton/funken/Functional.hpp>
+#include <ableton/xform/Reduce.hpp>
+#include <ableton/xform/Functional.hpp>
 #include <ableton/meta/Utils.hpp>
 #include <ableton/meta/CommonType.hpp>
 #include <ableton/estd/utility.hpp>
@@ -12,7 +12,7 @@
 #include <iterator>
 
 namespace ableton {
-namespace funken {
+namespace xform {
 
 namespace detail {
 
@@ -295,5 +295,5 @@ auto into(CollectionT&& col, XformT&& xform, InputRangeTs&& ...ranges)
   return std::forward<CollectionT>(col);
 }
 
-} // namespace funken
+} // namespace xform
 } // namespace ableton

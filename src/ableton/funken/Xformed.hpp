@@ -136,7 +136,7 @@ struct AtUpdater
 //
 template <typename KeyT>
 auto xat(KeyT&& key)
-  -> detail::Transducer<detail::AtReducer, estd::decay_t<KeyT> >
+  -> xform::detail::Transducer<detail::AtReducer, estd::decay_t<KeyT> >
 {
   return std::forward<KeyT>(key);
 }
@@ -236,10 +236,10 @@ template <typename AttrPtrT, typename ...Ins>
 auto attred(AttrPtrT pAttr, Ins&& ...ins)
   -> estd::enable_if_t<
     meta::All(In_value<Ins>() && !Out_value<Ins>()...),
-    decltype(xformed(map(getAttr(pAttr)), ins...))
+          decltype(xformed(xform::map(getAttr(pAttr)), ins...))
     >
 {
-  return xformed(map(getAttr(pAttr)),
+  return xformed(xform::map(getAttr(pAttr)),
                  std::forward<Ins>(ins)...);
 }
 
@@ -247,11 +247,11 @@ template <typename AttrPtrT, typename ...Ins>
 auto attred(AttrPtrT pAttr, Ins&& ...ins)
   -> estd::enable_if_t<
     meta::All(Inout_value<Ins>()...),
-    decltype(xformed(map(getAttr(pAttr)),
-                     update(setAttr(pAttr)), ins...))
+          decltype(xformed(xform::map(getAttr(pAttr)),
+                           update(setAttr(pAttr)), ins...))
     >
 {
-  return xformed(map(getAttr(pAttr)),
+  return xformed(xform::map(getAttr(pAttr)),
                  update(setAttr(pAttr)),
                  std::forward<Ins>(ins)...);
 }

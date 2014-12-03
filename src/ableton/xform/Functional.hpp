@@ -9,7 +9,7 @@ ABL_RESTORE_WARNINGS
 #include <tuple>
 
 namespace ableton {
-namespace funken {
+namespace xform {
 
 namespace detail {
 
@@ -122,5 +122,5 @@ constexpr struct Tuplify
   }
 } tuplify {};
 
-} // namespace funken
+} // namespace xform
 } // namespace ableton

@@ -1,11 +1,11 @@
 // Copyright: 2014, Ableton AG, Berlin. All rights reserved.
 
 #include <ableton/estd/memory.hpp>
-#include <ableton/funken/Transducers.hpp>
+#include <ableton/xform/Transducers.hpp>
 #include <ableton/testing/gtest.hpp>
 
 namespace ableton {
-namespace funken {
+namespace xform {
 
 TEST(Compose, ComposeOneFn)
 {
@@ -194,5 +194,5 @@ TEST(Into, takeStopsEarlyEnough2)
   EXPECT_EQ(res, (std::vector<int> { 1, 2, 3 }));
 }
 
-} // namespace funken
+} // namespace xform
 } // namespace ableton

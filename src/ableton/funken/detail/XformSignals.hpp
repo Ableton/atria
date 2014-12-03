@@ -4,7 +4,7 @@
 
 #include <ableton/funken/detail/Signals.hpp>
 #include <ableton/funken/detail/NoValue.hpp>
-#include <ableton/funken/Transducers.hpp>
+#include <ableton/xform/Transducers.hpp>
 #include <ableton/estd/utility.hpp>
 #include <ableton/estd/type_traits.hpp>
 
@@ -23,7 +23,7 @@ struct GetXformResult
 {
   using type = estd::decay_t<
     decltype(
-      std::declval<XForm>()(lastR)(
+      std::declval<XForm>()(xform::lastR)(
         std::declval<detail::NoValue>(),
         std::declval<estd::Value_type<Sources> >()...))
     >;
@@ -39,7 +39,7 @@ constexpr struct
   auto operator () (DownSignalPtr s, Inputs&& ...is) const
     -> DownSignalPtr
   {
-    s->pushDown(tuplify(std::forward<Inputs>(is)...));
+    s->pushDown(xform::tuplify(std::forward<Inputs>(is)...));
     return s;
   }
 
@@ -69,7 +69,7 @@ auto defaultConstructOrThrow()
 //!
 // Implementation of a signal with a transducer.
 //
-template <typename XForm            = decltype(identity),
+template <typename XForm            = decltype(xform::identity),
           typename ParentsPack      = meta::Pack<>,
           template<class>class Base = DownSignal>
 class XformDownSignal;
@@ -97,7 +97,7 @@ public:
   XformDownSignal(XForm2&& xform, std::shared_ptr<Parents> ...parents)
     : BaseT([&]() -> value_type {
         try {
-          return xform(lastR)(detail::NoValue{}, parents->current()...);
+          return xform(xform::lastR)(detail::NoValue{}, parents->current()...);
         }
         catch (const NoValueError&) {
           return defaultConstructOrThrow<value_type, NoValueError>();
@@ -149,7 +149,7 @@ constexpr struct
   auto operator () (UpSignalPtr s, Inputs&& ...is) const
     -> UpSignalPtr
   {
-    s->pushUp(tuplify(std::forward<Inputs>(is)...));
+    s->pushUp(xform::tuplify(std::forward<Inputs>(is)...));
     return s;
   }
 } sendUpR {};
@@ -177,10 +177,10 @@ struct UpdateReducer
 
     template <typename XformUpSignalPtr, std::size_t ...Indices>
     auto peekParents(XformUpSignalPtr s, estd::index_sequence<Indices...>) const
-      -> decltype(tuplify(std::get<Indices>(s->parents())->current()...))
+      -> decltype(xform::tuplify(std::get<Indices>(s->parents())->current()...))
     {
       s->recomputeDeep();
-      return tuplify(std::get<Indices>(s->parents())->current()...);
+      return xform::tuplify(std::get<Indices>(s->parents())->current()...);
     }
   };
 };
@@ -198,7 +198,7 @@ struct UpdateReducer
 //
 template <typename UpdateT>
 auto update(UpdateT&& updater)
-  -> Transducer<UpdateReducer, estd::decay_t<UpdateT> >
+  -> xform::detail::Transducer<UpdateReducer, estd::decay_t<UpdateT> >
 {
   return std::forward<UpdateT>(updater);
 }
@@ -206,8 +206,8 @@ auto update(UpdateT&& updater)
 //!
 // Implementation of a signal with a transducer.
 //
-template <typename XForm            = decltype(identity),
-          typename SetXForm         = decltype(identity),
+template <typename XForm            = decltype(xform::identity),
+          typename SetXForm         = decltype(xform::identity),
           typename ParentsPack      = meta::Pack<>,
           template<class>class Base = UpDownSignal>
 class XformUpDownSignal;

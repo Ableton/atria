@@ -12,6 +12,8 @@
 namespace ableton {
 namespace funken {
 
+using namespace xform;
+
 TEST(Xformed, Concepts)
 {
   EXPECT_TRUE(meta::check<In_value<

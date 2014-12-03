@@ -7,7 +7,7 @@
 // #define ABL_REDUCE_NON_VARIADIC 0
 
 #include <ableton/build_system/Warnings.hpp>
-#include <ableton/funken/Transducers.hpp>
+#include <ableton/xform/Transducers.hpp>
 #include <ableton/testing/Benchmark.hpp>
 #include <ableton/testing/gtest.hpp>
 ABL_DISABLE_WARNINGS
@@ -19,6 +19,8 @@ ABL_RESTORE_WARNINGS
 
 namespace ableton {
 namespace funken {
+
+using namespace xform;
 
 constexpr auto DATA_SIZE  = 1000;
 constexpr auto ITERATIONS = 1000;

@@ -25,7 +25,7 @@
 #endif
 
 namespace ableton {
-namespace funken {
+namespace xform {
 
 //!
 // Box for a value that is `finished` reducing. It might be returned
@@ -216,5 +216,5 @@ auto reduce(ReducerT&& reducer, StateT&& state, InputRangeTs&& ...ranges)
     std::forward<InputRangeTs>(ranges)...);
 }
 
-} // namespace funken
+} // namespace xform
 } // namespace ableton
