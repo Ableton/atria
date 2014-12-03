@@ -1,0 +1,12 @@
+*.config            text
+*.cpp               text diff=cpp
+*.gyp               text
+*.gypi              text
+*.hpp               text diff=cpp
+*.tpp               text diff=cpp
+*.md                text
+*.txt               text
+.gitattributes      text
+.gitignore          text
+data-example        eol=lf
+qmldir              text

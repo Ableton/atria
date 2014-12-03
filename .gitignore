@@ -1,0 +1,9 @@
+*.pyc
+*.pyo
+.DS_Store
+Thumbs.db
+build/
+ide/
+output/
+output-doc/
+temp/
