@@ -13,7 +13,6 @@ ABL_RESTORE_WARNINGS
 #include <utility>
 
 namespace ableton {
-namespace base {
 namespace variant {
 
 namespace detail {
@@ -178,5 +177,4 @@ visitor(Fns&& ...fns)
 }
 
 } // namespace variant
-} // namespace base
 } // namespace ableton

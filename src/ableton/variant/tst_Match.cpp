@@ -1,6 +1,6 @@
 // Copyright: 2014, Ableton AG, Berlin. All rights reserved.
 
-#include <ableton/base/variant/Match.hpp>
+#include <ableton/variant/Match.hpp>
 #include <ableton/testing/Spies.hpp>
 #include <ableton/testing/gtest.hpp>
 #include <ableton/build_system/Warnings.hpp>
@@ -11,7 +11,6 @@ ABL_RESTORE_WARNINGS
 #include <functional>
 
 namespace ableton {
-namespace base {
 namespace variant {
 
 class Person
@@ -197,5 +196,4 @@ TEST(Match, TotallyIncompatibleReturnTypesCanBeUsedAndOneCanBeVoid)
 } // anonymous namespace
 
 } // namespace variant
-} // namespace base
 } // namespace ableton

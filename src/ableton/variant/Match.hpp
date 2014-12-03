@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <ableton/base/variant/Visitor.hpp>
+#include <ableton/variant/Visitor.hpp>
 #include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
 #include <boost/variant/apply_visitor.hpp>
@@ -10,7 +10,6 @@ ABL_RESTORE_WARNINGS
 #include <utility>
 
 namespace ableton {
-namespace base {
 namespace variant {
 
 template <typename VariantT, typename ...Fns>
@@ -30,5 +29,4 @@ match(const VariantT& variant, Fns&& ...fns)
 }
 
 } // namespace variant
-} // namespace base
 } // namespace ableton
