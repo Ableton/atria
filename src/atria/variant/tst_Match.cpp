@@ -54,13 +54,13 @@ TEST(Match, CanBeUsedWithLambdasAndRValues)
 
   match(
     Thing(42),
-    [] (const Person& x) {
+    [] (const Person&) {
       throw std::exception();
     },
-    [] (const std::string& x) {
+    [] (const std::string&) {
       throw std::exception();
     },
-    [&f] (int x) {
+    [&f] (int) {
       f();
     });
 
@@ -73,8 +73,8 @@ TEST(Match, CanMutateVisited)
 
   match(
     thing,
-    [] (const Person& x) {},
-    [] (const std::string& x) {},
+    [] (const Person&) {},
+    [] (const std::string&) {},
     [] (int& x) {
       x = 21;
     });

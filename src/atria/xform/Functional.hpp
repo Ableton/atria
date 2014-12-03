@@ -77,7 +77,7 @@ struct Constantly
   T value;
 
   template <typename ArgT>
-  constexpr auto operator() (ArgT&& x) const
+  constexpr auto operator() (ArgT&&) const
     -> result_type
   {
     return value;

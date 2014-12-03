@@ -38,7 +38,7 @@ TEST(Compose, VariousTypes)
 {
   auto fn = comp(
     [](double x) { return x + 1; },
-    [](std::string x) { return 42.0; },
+    [](std::string) { return 42.0; },
     [](int x) { return std::to_string(x); });
   EXPECT_EQ(fn(3), 43.0);
   EXPECT_EQ(fn(42), 43.0);

@@ -64,7 +64,7 @@ template<typename T>
 struct Default
 {
   template <typename... Args>
-  T operator() (Args&& ...args) { return T(); }
+  T operator() (Args&&...) { return T(); }
 };
 
 template<typename T>
@@ -78,7 +78,7 @@ struct Return
   {}
 
   template <typename... Args>
-  T operator() (Args&& ...args) {
+  T operator() (Args&& ...) {
     return mMock();
   }
 
