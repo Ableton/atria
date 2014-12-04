@@ -108,7 +108,7 @@ template<typename ReturnT>
 struct Default
 {
   template <typename ...Args>
-  ReturnT operator() (Args&& ...args)
+  ReturnT operator() (Args&& ...)
   {
     return ReturnT();
   }

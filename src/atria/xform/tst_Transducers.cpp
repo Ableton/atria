@@ -38,7 +38,7 @@ TEST(Compose, VariousTypes)
 {
   auto fn = comp(
     [](double x) { return x + 1; },
-    [](std::string x) { return 42.0; },
+    [](std::string) { return 42.0; },
     [](int x) { return std::to_string(x); });
   EXPECT_EQ(fn(3), 43.0);
   EXPECT_EQ(fn(42), 43.0);
@@ -55,13 +55,6 @@ TEST(Transduce, Mapping)
   auto v = std::vector<int> { 1, 2, 3, 6 };
   auto times2 = [] (int x) { return x * 2; };
   EXPECT_EQ(transduce(map(times2), std::plus<int>{}, 1, v), 25);
-}
-
-TEST(Transduce, FilterFixedType)
-{
-  auto v = std::vector<int> { 1, 2, 3, 6 };
-  auto odd = [] (int x) { return x % 2 == 0; };
-  EXPECT_EQ(transduce(filter<float>(odd), std::plus<int>{}, 1, v), 9.0);
 }
 
 TEST(Transduce, Composition)

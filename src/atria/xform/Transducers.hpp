@@ -107,31 +107,7 @@ struct FlatMapReducer
   };
 };
 
-template <typename ResultT=void>
 struct FilterReducer
-{
-  template <typename ReducerT,
-            typename PredicateT>
-  struct Reducer
-  {
-    ReducerT reducer;
-    PredicateT predicate;
-
-    using result_type = ResultT;
-
-    template <typename State, typename ...Inputs>
-    result_type operator() (State&& s, Inputs&& ...is)
-    {
-      if (predicate(std::forward<Inputs>(is)...))
-        return reducer(std::forward<State>(s),
-                       std::forward<Inputs>(is)...);
-      return s;
-    }
-  };
-};
-
-template <>
-struct FilterReducer<void>
 {
   template <typename ReducerT,
             typename PredicateT>
@@ -222,7 +198,7 @@ auto take(IntegralT&& n)
 //
 template <typename ResultT=void, typename PredicateT>
 auto filter(PredicateT&& predicate)
-  -> detail::Transducer<detail::FilterReducer<ResultT>, estd::decay_t<PredicateT> >
+  -> detail::Transducer<detail::FilterReducer, estd::decay_t<PredicateT> >
 {
   return std::forward<PredicateT>(predicate);
 }

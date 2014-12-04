@@ -237,22 +237,22 @@ struct Concept<ConceptSpecT(Ts...)>
 // generates a static assertion that checks the given concept for the
 // given set of types.
 //
-#define ABL_ASSERT_CONCEPT(concept, types...)  \
-  static_assert(                               \
-    concept<types>(),                          \
-    "Concept: " #concept                       \
-    " must be satisfied by types: " #types)    \
+#define ABL_ASSERT_CONCEPT(concept, ...)             \
+  static_assert(                                     \
+    concept<__VA_ARGS__>(),                          \
+    "Concept: " #concept                             \
+    " must be satisfied by types: " #__VA_ARGS__)    \
   /**/
 
 //!
 // Macro to check that a concept is not satisfied by some
 // types. Opposite of @a ABL_ASSERT_CONCEPT
 //
-#define ABL_ASSERT_NOT_CONCEPT(concept, types...)  \
-  static_assert(                                   \
-    !concept<types>(),                             \
-    "Concept: " #concept                           \
-    " must not be satisfied by types: " #types)    \
+#define ABL_ASSERT_NOT_CONCEPT(concept, ...)             \
+  static_assert(                                         \
+    !concept<__VA_ARGS__>(),                             \
+    "Concept: " #concept                                 \
+    " must not be satisfied by types: " #__VA_ARGS__)    \
   /**/
 
 } // namespace meta
