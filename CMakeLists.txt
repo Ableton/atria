@@ -2,7 +2,7 @@
 
 cmake_minimum_required(VERSION 2.8.12)
 
-project(Atria CXX)
+project(Atria C CXX)
 set(Atria_VERSION_MAJOR 0)
 set(Atria_VERSION_MINOR 0)
 
@@ -60,6 +60,7 @@ set(GTEST_FOUND FALSE)
 if(EXISTS "${GTEST_SOURCE}" AND IS_DIRECTORY "${GTEST_SOURCE}")
   get_filename_component(GTEST_SOURCE ${GTEST_SOURCE} ABSOLUTE)
   set(GTEST_FOUND TRUE)
+  find_package(Threads REQUIRED)
 endif()
 
 include(FeatureSummary)
@@ -117,7 +118,9 @@ if(GTEST_FOUND)
     )
 
   target_link_libraries(AtriaTest
-    AtriaLib gtest_internal)
+    AtriaLib
+    gtest_internal
+    ${CMAKE_THREAD_LIBS_INIT})
 
   add_test(AtriaTestCase AtriaTest)
 endif()
