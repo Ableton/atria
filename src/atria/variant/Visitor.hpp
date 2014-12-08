@@ -21,10 +21,33 @@ namespace detail {
 // General visitor based on a set of function objects.
 //
 template <typename ...Fns>
-struct VisitorImpl : public Fns...
+struct VisitorImpl;
+
+template <typename Fn, typename ...Fns>
+struct VisitorImpl<Fn, Fns...>
+  : Fn
+  , VisitorImpl<Fns...>
 {
-  VisitorImpl(Fns&& ...fns)
-    : Fns(std::forward<Fns>(fns))... { }
+  using Next = VisitorImpl<Fns...>;
+  using Fn::operator();
+  using Next::operator();
+
+  template <typename Fn2, typename ...Fns2>
+  VisitorImpl(Fn2&& fn, Fns2&& ...fns)
+    : Fn(std::forward<Fn2>(fn))
+    , Next(std::forward<Fns2>(fns)...)
+  {}
+};
+
+template <typename Fn>
+struct VisitorImpl<Fn> : Fn
+{
+  using Fn::operator();
+
+  template <typename Fn2>
+  VisitorImpl(Fn2&& fn)
+    : Fn(std::forward<Fn2>(fn))
+  {}
 };
 
 } // namespace detail
