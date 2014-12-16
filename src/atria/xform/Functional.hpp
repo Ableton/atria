@@ -2,10 +2,6 @@
 
 #include <atria/estd/type_traits.hpp>
 #include <ableton/build_system/Warnings.hpp>
-ABL_DISABLE_WARNINGS
-#include <boost/fusion/adapted/std_tuple.hpp>
-#include <boost/fusion/include/reverse_fold.hpp>
-ABL_RESTORE_WARNINGS
 #include <tuple>
 
 namespace atria {
@@ -13,31 +9,17 @@ namespace xform {
 
 namespace detail {
 
-struct ComposedReducer
+template <class F, class G>
+struct Composed
 {
-  template <typename State, typename Fn>
-  auto operator()(State&& state, Fn&& next)
-    -> decltype(next(std::forward<State>(state)))
+  F f;
+  G g;
+
+  template <class X, class ...Y >
+  auto operator() (X&& x, Y&& ...ys)
+    -> decltype(f(g(std::forward<X>(x)), std::forward<Y>(ys)...))
   {
-    return next(std::forward<State>(state));
-  }
-};
-
-template<typename Fn, typename ...Fns>
-struct Composed : std::tuple<Fn, Fns...>
-{
-  using std::tuple<Fn, Fns...>::tuple;
-
-  std::tuple<Fn, Fns...>& asTuple() { return *this; }
-  const std::tuple<Fn, Fns...>& asTuple() const { return *this; }
-
-  template <typename Arg>
-  auto operator() (Arg&& arg) const
-    -> decltype(boost::fusion::reverse_fold(
-                  asTuple(), arg, ComposedReducer{}))
-  {
-    return boost::fusion::reverse_fold(
-      asTuple(), arg, ComposedReducer{});
+    return f(g(std::forward<X>(x)), std::forward<Y>(ys)...);
   }
 };
 
@@ -48,11 +30,21 @@ struct Composed : std::tuple<Fn, Fns...>
 // such that:
 //                 g(x) = f_1(f_2(...f_n(x)))
 //
-template <typename Fn, typename ...Fns>
-auto comp(Fn&& fn, Fns&& ...fns)
-  -> detail::Composed<estd::decay_t<Fn>, estd::decay_t<Fns>...>
+template <typename F>
+auto comp(F&& f)
+  -> F&&
 {
-  return { std::forward<Fn>(fn), std::forward<Fns>(fns)... };
+  return std::forward<F>(f);
+}
+
+template <typename Fn, typename ...Fns>
+auto comp(Fn&& f, Fns&& ...fns)
+  -> detail::Composed<estd::decay_t<Fn>,
+                      decltype(comp(std::forward<Fns>(fns)...))>
+{
+  using ResultT = detail::Composed<estd::decay_t<Fn>,
+                                   decltype(comp(std::forward<Fns>(fns)...))>;
+  return ResultT { std::forward<Fn>(f), comp(std::forward<Fns>(fns)...)};
 }
 
 //!

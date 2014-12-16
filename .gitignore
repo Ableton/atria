@@ -2,8 +2,15 @@
 *.pyo
 .DS_Store
 Thumbs.db
-build/
 ide/
 output/
 output-doc/
 temp/
+build/
+*~
+*.cmake
+CMakeFiles/
+CMakeCache.txt
+Makefile
+Testing/
+*.a

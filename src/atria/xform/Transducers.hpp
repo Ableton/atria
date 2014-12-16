@@ -42,7 +42,13 @@ template<typename ReducerGenT,
          typename ...ParamTs>
 struct Transducer : std::tuple<ParamTs...>
 {
-  using std::tuple<ParamTs...>::tuple;
+  using Base = std::tuple<ParamTs...>;
+  using Base::Base;
+
+  template <typename ...Ts>
+  Transducer(Ts&& ...ts)
+    : Base(std::forward<Ts>(ts)...)
+  {}
 
   template<typename ReducerT>
   auto operator() (ReducerT&& reducer) const
@@ -167,7 +173,7 @@ template <typename MappingT>
 auto map(MappingT&& mapping)
   -> detail::Transducer<detail::MapReducer, estd::decay_t<MappingT> >
 {
-  return { std::forward<MappingT>(mapping) };
+  return std::forward<MappingT>(mapping);
 }
 
 //!
