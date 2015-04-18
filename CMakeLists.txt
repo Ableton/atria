@@ -72,8 +72,8 @@ feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 # Defining Atria
 add_library(AtriaLib
-  src/atria/variant/Match.hpp
-  src/atria/variant/Visitor.hpp
+  src/atria/variant/match.hpp
+  src/atria/variant/visitor.hpp
   src/atria/estd/memory.hpp
   src/atria/estd/type_traits.hpp
   src/atria/estd/utility.hpp
@@ -117,7 +117,7 @@ if(GTEST_FOUND)
     src/atria/testing/tst_Spies.cpp
     src/atria/xform/tst_Transducers.cpp
     src/atria/xform/tst_Transducers_Benchmark.cpp
-    src/atria/variant/tst_Match.cpp
+    src/atria/variant/tst_match.cpp
     )
 
   target_link_libraries(AtriaTest

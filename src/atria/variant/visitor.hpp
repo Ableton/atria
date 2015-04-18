@@ -21,31 +21,31 @@ namespace detail {
 // General visitor based on a set of function objects.
 //
 template <typename ...Fns>
-struct VisitorImpl;
+struct visitor_impl;
 
 template <typename Fn, typename ...Fns>
-struct VisitorImpl<Fn, Fns...>
+struct visitor_impl<Fn, Fns...>
   : Fn
-  , VisitorImpl<Fns...>
+  , visitor_impl<Fns...>
 {
-  using Next = VisitorImpl<Fns...>;
+  using next = visitor_impl<Fns...>;
   using Fn::operator();
-  using Next::operator();
+  using next::operator();
 
   template <typename Fn2, typename ...Fns2>
-  VisitorImpl(Fn2&& fn, Fns2&& ...fns)
+  visitor_impl(Fn2&& fn, Fns2&& ...fns)
     : Fn(std::forward<Fn2>(fn))
-    , Next(std::forward<Fns2>(fns)...)
+    , next(std::forward<Fns2>(fns)...)
   {}
 };
 
 template <typename Fn>
-struct VisitorImpl<Fn> : Fn
+struct visitor_impl<Fn> : Fn
 {
   using Fn::operator();
 
   template <typename Fn2>
-  VisitorImpl(Fn2&& fn)
+  visitor_impl(Fn2&& fn)
     : Fn(std::forward<Fn2>(fn))
   {}
 };
@@ -56,33 +56,33 @@ struct VisitorImpl<Fn> : Fn
 // General visitor based on a set of function objects.
 //
 template <typename ReturnType, typename ...Fns>
-class Visitor : public boost::static_visitor<ReturnType>
+class visitor_t : public boost::static_visitor<ReturnType>
 {
-  detail::VisitorImpl<Fns...> mImpl;
+  detail::visitor_impl<Fns...> impl_;
 
 public:
-  Visitor(Fns&& ...fns)
-    : mImpl(std::forward<Fns>(fns)...)
+  visitor_t(Fns&& ...fns)
+    : impl_(std::forward<Fns>(fns)...)
   {}
 
 template<typename T, typename U=ReturnType>
   auto operator() (T&& x)
     -> estd::enable_if_t<
-        !std::is_void<decltype(mImpl(std::forward<T>(x)))>{} ||
+        !std::is_void<decltype(impl_(std::forward<T>(x)))>{} ||
          std::is_void<U>{},
       ReturnType>
   {
-    return mImpl(std::forward<T>(x));
+    return impl_(std::forward<T>(x));
   }
 
   template<typename T, typename U=ReturnType>
   auto operator() (T&& x)
     -> estd::enable_if_t<
-         std::is_void<decltype(mImpl(std::forward<T>(x)))>{} &&
+         std::is_void<decltype(impl_(std::forward<T>(x)))>{} &&
         !std::is_void<U>{},
       ReturnType>
   {
-    return mImpl(std::forward<T>(x)), meta::fromVoid;
+    return impl_(std::forward<T>(x)), meta::fromVoid{};
   }
 };
 
@@ -107,28 +107,28 @@ struct Bottom
 // use to disambiguate cases of a variant visitor.
 //
 template <typename Fn, typename ReturnType=void>
-struct Otherwise
+struct otherwise_t
 {
   using result_type = ReturnType;
 
-  Otherwise(Fn&& fn)
-    : mImpl(std::forward<Fn>(fn))
+  otherwise_t(Fn&& fn)
+    : impl_(std::forward<Fn>(fn))
   {}
 
   template <typename ...Args>
   result_type operator() (Args&& ...args)
   {
-    return mImpl(std::forward<Args>(args)...);
+    return impl_(std::forward<Args>(args)...);
   }
 
 private:
-  Fn mImpl;
+  Fn impl_;
 };
 
 namespace detail {
 
 template<typename ReturnT>
-struct Default
+struct default_construct
 {
   template <typename ...Args>
   ReturnT operator() (Args&& ...)
@@ -139,8 +139,9 @@ struct Default
 
 } // namespace detail
 
-template <typename ReturnType=void, typename Fn=detail::Default<ReturnType>>
-Otherwise<Fn, ReturnType>
+template <typename ReturnType = void,
+          typename Fn = detail::default_construct<ReturnType>>
+otherwise_t<Fn, ReturnType>
 otherwise(Fn&& fn = Fn())
 {
   return { std::forward<Fn>(fn) };
@@ -151,21 +152,21 @@ otherwise(Fn&& fn = Fn())
 // use to disambiguate cases of a variant visitor.
 //
 template <typename Fn, typename ...Args>
-struct When
+struct when_t
 {
   using result_type = typename std::result_of<Fn(Args...)>::type;
 
-  When(Fn&& fn)
-    : mImpl(std::forward<Fn>(fn))
+  when_t(Fn&& fn)
+    : impl_(std::forward<Fn>(fn))
   {}
 
   result_type operator() (Args&& ...args)
   {
-    return mImpl(std::forward<Args>(args)...);
+    return impl_(std::forward<Args>(args)...);
   }
 
 private:
-  Fn mImpl;
+  Fn impl_;
 };
 
 //!
@@ -174,9 +175,9 @@ private:
 // `const&`, which eases use with `std::bind` and `std::mem_fn`.
 //
 template <typename ...Args, typename Fn>
-When<Fn,
-     typename boost::mpl::if_<std::is_reference<Args>,
-                              Args, const Args&>::type...>
+when_t<Fn,
+       typename boost::mpl::if_<std::is_reference<Args>,
+                                Args, const Args&>::type...>
 when(Fn&& fn)
 {
   return { std::forward<Fn>(fn) };
@@ -189,7 +190,7 @@ when(Fn&& fn)
 // first function passed.
 //
 template <typename... Fns>
-Visitor<
+visitor_t<
   typename meta::CommonType<
       typename std::result_of<Fns(detail::Bottom)>::type...
     >::type,

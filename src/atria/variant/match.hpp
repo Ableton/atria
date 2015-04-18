@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <atria/variant/Visitor.hpp>
+#include <atria/variant/visitor.hpp>
 #include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
 #include <boost/variant/apply_visitor.hpp>
