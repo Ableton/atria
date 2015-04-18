@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include <atria/funken/detail/Signals.hpp>
-#include <atria/funken/detail/Access.hpp>
-#include <atria/funken/detail/Watchable.hpp>
+#include <atria/funken/detail/signals.hpp>
+#include <atria/funken/detail/access.hpp>
+#include <atria/funken/detail/watchable.hpp>
 #include <atria/funken/Concepts.hpp>
 
 namespace atria {
@@ -16,7 +16,7 @@ template <typename SignalT>
 class OutImpl
 {
   template <typename T> friend class OutImpl;
-  friend class detail::Access;
+  friend class detail::access;
 
   using SignalPtrT = std::shared_ptr<SignalT>;
   SignalPtrT mpSignal;
@@ -49,7 +49,7 @@ public:
   template <typename T>
   void set(T&& value)
   {
-    return mpSignal->sendUp(std::forward<T>(value));
+    return mpSignal->send_up(std::forward<T>(value));
   }
 };
 
@@ -61,9 +61,9 @@ public:
 // @see `Input_value`
 //
 template <typename T>
-class Out : public detail::OutImpl<detail::UpDownSignal<T> >
+class Out : public detail::OutImpl<detail::up_down_signal<T> >
 {
-  using BaseT = detail::OutImpl<detail::UpDownSignal<T> >;
+  using BaseT = detail::OutImpl<detail::up_down_signal<T> >;
 public:
   using BaseT::BaseT;
   using BaseT::operator=;
@@ -77,9 +77,9 @@ template <typename OutT>
 auto out(OutT&& object)
   -> estd::enable_if_t<
     (Out_value<OutT>()),
-    detail::OutImpl<detail::SignalType_t<OutT> > >
+    detail::OutImpl<detail::signal_type_t<OutT> > >
 {
-  return detail::Access::signal(std::forward<OutT>(object));
+  return detail::access::signal(std::forward<OutT>(object));
 }
 
 } // namespace funken

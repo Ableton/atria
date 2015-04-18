@@ -15,7 +15,7 @@ namespace detail {
 // signal-based objects: don't make access to signals public, instead
 // friend this class.
 //
-class Access
+class access
 {
 public:
 
@@ -48,18 +48,18 @@ public:
 // Returns the signal type for an object
 //
 template <typename ObjectT>
-struct SignalType
+struct signal_type
 {
   using type =
     estd::decay_t<
       typename estd::decay_t<decltype(
-        Access::signal(std::declval<ObjectT>())
+        access::signal(std::declval<ObjectT>())
       )>::element_type
     >;
 };
 
 template <typename ObjectT>
-using SignalType_t = typename SignalType<ObjectT>::type;
+using signal_type_t = typename signal_type<ObjectT>::type;
 
 } // namespace detail
 

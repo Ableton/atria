@@ -13,25 +13,25 @@ namespace funken {
 namespace detail {
 
 template <typename ValueT>
-class Watchable
+class watchable
 {
   using WatchersT = boost::signals2::signal<
     void (const ValueT&, const ValueT&)>;
-  WatchersT mWatchers;
+  WatchersT watchers_;
 
 public:
-  Watchable() = default;
-  Watchable(Watchable&& other) noexcept
+  watchable() = default;
+  watchable(watchable&& other) noexcept
   {
-    mWatchers.swap(other.mWatchers);
+    watchers_.swap(other.watchers_);
   }
-  Watchable& operator=(Watchable&& other) noexcept
+  watchable& operator=(watchable&& other) noexcept
   {
-    mWatchers.swap(other.mWatchers);
+    watchers_.swap(other.watchers_);
     return *this;
   }
 
-  WatchersT& watchers() { return mWatchers; }
+  WatchersT& watchers() { return watchers_; }
 };
 
 } // namespace detail

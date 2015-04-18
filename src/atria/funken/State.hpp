@@ -2,25 +2,25 @@
 
 #pragma once
 
-#include <atria/funken/detail/RootSignals.hpp>
-#include <atria/funken/detail/Access.hpp>
-#include <atria/funken/detail/Watchable.hpp>
+#include <atria/funken/detail/root_signals.hpp>
+#include <atria/funken/detail/access.hpp>
+#include <atria/funken/detail/watchable.hpp>
 
 namespace atria {
 namespace funken {
 
 template <typename T>
-class State : private detail::Watchable<T>
+class State : private detail::watchable<T>
 {
   using SignalPtrT = decltype(
-    detail::makeStateSignal(std::declval<T>()));
+    detail::make_state_signal(std::declval<T>()));
 public:
   using value_type = T;
 
   State()
-    : mpSignal(detail::makeStateSignal(T())) {}
+    : mpSignal(detail::make_state_signal(T())) {}
   State(T value)
-    : mpSignal(detail::makeStateSignal(std::move(value))) {}
+    : mpSignal(detail::make_state_signal(std::move(value))) {}
 
   State(const State&) = delete;
   State(State&&) = default;
@@ -30,7 +30,7 @@ public:
   template <typename T2>
   void set(T2&& value)
   {
-    mpSignal->pushDown(std::forward<T2>(value));
+    mpSignal->push_down(std::forward<T2>(value));
   }
 
   const T& get() const
@@ -42,7 +42,7 @@ private:
   const SignalPtrT& signal() { return mpSignal; }
   const SignalPtrT& roots() { return mpSignal; }
 
-  friend class detail::Access;
+  friend class detail::access;
   SignalPtrT mpSignal;
 };
 

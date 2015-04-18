@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <atria/funken/detail/Access.hpp>
+#include <atria/funken/detail/access.hpp>
 #include <atria/meta/utils.hpp>
 #include <utility>
 
@@ -13,10 +13,10 @@ template <typename ...RootValueTs>
 void commit(RootValueTs&& ...roots)
 {
   meta::noop(
-    (detail::Access::roots(std::forward<RootValueTs>(roots))->sendDown(),
+    (detail::access::roots(std::forward<RootValueTs>(roots))->send_down(),
      meta::can_be_void)...);
   meta::noop(
-    (detail::Access::roots(std::forward<RootValueTs>(roots))->notify(),
+    (detail::access::roots(std::forward<RootValueTs>(roots))->notify(),
      meta::can_be_void)...);
 }
 

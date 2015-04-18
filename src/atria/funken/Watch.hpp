@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <atria/funken/detail/Access.hpp>
+#include <atria/funken/detail/access.hpp>
 
 namespace atria {
 namespace funken {
@@ -10,14 +10,14 @@ namespace funken {
 template <typename InputValueT, typename CallbackT>
 auto watch(InputValueT&& value, CallbackT&& callback)
   -> decltype(
-    detail::Access::watchers(std::forward<InputValueT>(value))
+    detail::access::watchers(std::forward<InputValueT>(value))
     .connect(std::forward<CallbackT>(callback)))
 {
-  auto& watchers = detail::Access::watchers(
+  auto& watchers = detail::access::watchers(
     std::forward<InputValueT>(value));
   if (watchers.empty())
   {
-    auto& observers = detail::Access::signal(
+    auto& observers = detail::access::signal(
       std::forward<InputValueT>(value))->observers();
     observers.connect(watchers);
   }

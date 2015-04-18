@@ -86,7 +86,7 @@ TEST(Xformed, OneArgFilterWithoutValueNonDefaultCtr)
 {
   auto s = State<NonDefault>{ NonDefault{ 43 } };
   EXPECT_THROW(xformed(filter([] (NonDefault x) { return x.v % 2 == 0; }), s),
-               NoValueError);
+               no_value_error);
 }
 
 TEST(Xformed, OneArgFilterWithoutValueNonDefaultCtrOkIfFirstValuePasses)

@@ -4,7 +4,7 @@
 
 #include <atria/funken/In.hpp>
 #include <atria/funken/Inout.hpp>
-#include <atria/funken/detail/XformSignals.hpp>
+#include <atria/funken/detail/xform_signals.hpp>
 
 namespace atria {
 namespace funken {
@@ -14,7 +14,7 @@ namespace detail {
 template <typename SignalT>
 struct XformedIn : private InImpl<SignalT>
 {
-  friend class Access;
+  friend class access;
   using ImplT = InImpl<SignalT>;
   using typename ImplT::value_type;
   using ImplT::ImplT;
@@ -24,7 +24,7 @@ struct XformedIn : private InImpl<SignalT>
 template <typename SignalT>
 struct XformedInout : private InoutImpl<SignalT>
 {
-  friend class Access;
+  friend class access;
   using ImplT = InoutImpl<SignalT>;
   using typename ImplT::value_type;
   using ImplT::ImplT;
@@ -46,15 +46,15 @@ auto xformed(Xform&& xform, InTs&& ...ins)
     meta::all(In_value<InTs>()...),
     detail::XformedIn<
       typename decltype(
-        detail::makeXformDownSignal(
-          xform, detail::Access::signal(ins)...)
+        detail::make_xform_down_signal(
+          xform, detail::access::signal(ins)...)
         )::element_type
       >
     >
 {
-  return detail::makeXformDownSignal(
+  return detail::make_xform_down_signal(
     std::forward<Xform>(xform),
-    detail::Access::signal(std::forward<InTs>(ins))...);
+    detail::access::signal(std::forward<InTs>(ins))...);
 }
 
 template <typename Xform, typename Xform2, typename ...InoutTs>
@@ -63,16 +63,16 @@ auto xformed(Xform&& xform, Xform2&& xform2, InoutTs&& ...ins)
   (!In_value<Xform2>() && meta::all(Inout_value<InoutTs>()...)),
   detail::XformedInout<
     typename decltype(
-      detail::makeXformUpDownSignal(
-        xform, xform2, detail::Access::signal(ins)...)
+      detail::make_xform_up_down_signal(
+        xform, xform2, detail::access::signal(ins)...)
       )::element_type
     >
   >
 {
-  return detail::makeXformUpDownSignal(
+  return detail::make_xform_up_down_signal(
     std::forward<Xform>(xform),
     std::forward<Xform2>(xform2),
-    detail::Access::signal(std::forward<InoutTs>(ins))...);
+    detail::access::signal(std::forward<InoutTs>(ins))...);
 }
 
 //!

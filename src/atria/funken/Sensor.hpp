@@ -2,26 +2,26 @@
 
 #pragma once
 
-#include <atria/funken/detail/RootSignals.hpp>
-#include <atria/funken/detail/Access.hpp>
-#include <atria/funken/detail/Watchable.hpp>
+#include <atria/funken/detail/root_signals.hpp>
+#include <atria/funken/detail/access.hpp>
+#include <atria/funken/detail/watchable.hpp>
 
 namespace atria {
 namespace funken {
 
 template <typename SensorFnT>
-class Sensor : private detail::Watchable<
+class Sensor : private detail::watchable<
   estd::decay_t<estd::result_of_t<SensorFnT()> > >
 {
   using SignalPtrT = decltype(
-    detail::makeSensorSignal(std::declval<SensorFnT>()));
+    detail::make_sensor_signal(std::declval<SensorFnT>()));
 public:
   using value_type = estd::decay_t<estd::result_of_t<SensorFnT()> >;
 
   Sensor()
-    : mpSignal(detail::makeSensorSignal(SensorFnT())) {}
+    : mpSignal(detail::make_sensor_signal(SensorFnT())) {}
   Sensor(SensorFnT fn)
-    : mpSignal(detail::makeSensorSignal(std::move(fn))) {}
+    : mpSignal(detail::make_sensor_signal(std::move(fn))) {}
 
   Sensor(const Sensor&) = delete;
   Sensor(Sensor&&) = default;
@@ -37,7 +37,7 @@ private:
   const SignalPtrT& signal() { return mpSignal; }
   const SignalPtrT& roots() { return mpSignal; }
 
-  friend class detail::Access;
+  friend class detail::access;
   SignalPtrT mpSignal;
 };
 

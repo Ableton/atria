@@ -11,7 +11,7 @@ namespace funken {
 // Raised by the view when it produces no value yet. This can happen
 // when the reducer that it uses is filtering some values.
 //
-struct NoValueError : std::exception
+struct no_value_error : std::exception
 {
   const char* what() const noexcept override
   { return "No value in funken object"; }
@@ -19,10 +19,10 @@ struct NoValueError : std::exception
 
 namespace detail {
 
-struct NoValue
+struct no_value
 {
-  template <typename T> operator T&() { throw NoValueError{}; }
-  template <typename T> operator const T&() { throw NoValueError{}; }
+  template <typename T> operator T&() { throw no_value_error{}; }
+  template <typename T> operator const T&() { throw no_value_error{}; }
 };
 
 } // namespace detail

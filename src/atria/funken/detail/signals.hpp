@@ -53,18 +53,18 @@ constexpr struct
       !a.owner_before(b) &&
       !b.owner_before(a);
   }
-} ownerEquals {};
+} owner_equals {};
 
 //!
 // Interface for children of a signal and is used to propagate
 // notifications.  The notifications are propagated in two steps,
-// `sendDown()` and `notify()`, not ensure that the outside world sees a
+// `send_down()` and `notify()`, not ensure that the outside world sees a
 // consistent state when it receives notifications.
 //
-struct IDown
+struct down_signal_base
 {
-  virtual ~IDown() {}
-  virtual void sendDown() = 0;
+  virtual ~down_signal_base() {}
+  virtual void send_down() = 0;
   virtual void notify() = 0;
 };
 
@@ -72,11 +72,11 @@ struct IDown
 // Interface for signals that can send values back to their parents.
 //
 template <typename T>
-struct IUp
+struct up_signal_base
 {
-  virtual ~IUp() {}
-  virtual void sendUp(const T&) = 0;
-  virtual void sendUp(T&&) = 0;
+  virtual ~up_signal_base() {}
+  virtual void send_up(const T&) = 0;
+  virtual void send_up(T&&) = 0;
 };
 
 //!
@@ -84,65 +84,65 @@ struct IUp
 // functionality for setting values and propagating them to children.
 //
 template <typename T>
-class DownSignal
-  : public std::enable_shared_from_this<DownSignal<T> >
-  , public IDown
+class down_signal
+  : public std::enable_shared_from_this<down_signal<T> >
+  , public down_signal_base
 {
 public:
   using value_type = T;
 
-  DownSignal(DownSignal&&) = default;
-  DownSignal(const DownSignal&) = delete;
-  DownSignal& operator=(DownSignal&&) = default;
-  DownSignal& operator=(const DownSignal&) = delete;
+  down_signal(down_signal&&) = default;
+  down_signal(const down_signal&) = delete;
+  down_signal& operator=(down_signal&&) = default;
+  down_signal& operator=(const down_signal&) = delete;
 
-  DownSignal(T value)
-    : mCurrent(std::move(value))
-    , mLast(mCurrent)
-    , mLastNotified(mCurrent)
+  down_signal(T value)
+    : current_(std::move(value))
+    , last_(current_)
+    , last_notified_(current_)
   {}
 
   virtual void recompute() {}
-  virtual void recomputeDeep() {}
+  virtual void recompute_deep() {}
 
-  const value_type& current() const { return mCurrent; }
-  const value_type& last() const { return mLast; }
+  const value_type& current() const { return current_; }
+  const value_type& last() const { return last_; }
 
-  void link(std::weak_ptr<IDown> pChild)
+  void link(std::weak_ptr<down_signal_base> child)
   {
     using namespace std;
     using std::placeholders::_1;
-    assert(find_if(begin(mChildren), end(mChildren),
-                   bind(ownerEquals, pChild, _1))
-           == end(mChildren) &&
+    assert(find_if(begin(children_), end(children_),
+                   bind(owner_equals, child, _1))
+           == end(children_) &&
            "Child signal must not be linked twice");
-    mChildren.push_back(pChild);
+    children_.push_back(child);
   }
 
   template <typename U>
-  void pushDown(U&& value)
+  void push_down(U&& value)
   {
-    if (value != mCurrent)
+    if (value != current_)
     {
-      mCurrent = std::forward<U>(value);
-      mNeedsSendDown = true;
+      current_ = std::forward<U>(value);
+      needs_send_down_ = true;
     }
   }
 
-  void sendDown() final
+  void send_down() final
   {
     recompute();
-    if (mNeedsSendDown)
+    if (needs_send_down_)
     {
-      mLast = mCurrent;
-      mNeedsSendDown = false;
-      mNeedsNotify = true;
+      last_ = current_;
+      needs_send_down_ = false;
+      needs_notify_ = true;
 
-      for (auto& wpChild : mChildren)
+      for (auto& wchild : children_)
       {
-        if (auto pChild = wpChild.lock())
+        if (auto child = wchild.lock())
         {
-          pChild->sendDown();
+          child->send_down();
         }
       }
     }
@@ -151,18 +151,18 @@ public:
   void notify() final
   {
     using namespace std;
-    if (!mNeedsSendDown && mNeedsNotify)
+    if (!needs_send_down_ && needs_notify_)
     {
-      mNeedsNotify = false;
-      mObservers(mLastNotified, mLast);
-      mLastNotified = mLast;
+      needs_notify_ = false;
+      observers_(last_notified_, last_);
+      last_notified_ = last_;
 
       auto garbage = false;
-      for (std::size_t i = 0, size = mChildren.size(); i < size; ++i)
+      for (std::size_t i = 0, size = children_.size(); i < size; ++i)
       {
-        if (auto pChild = mChildren[i].lock())
+        if (auto child = children_[i].lock())
         {
-          pChild->notify();
+          child->notify();
         }
         else
         {
@@ -181,47 +181,47 @@ public:
   auto observe(Fn&& f)
     -> boost::signals2::connection
   {
-    return mObservers.connect(std::forward<Fn>(f));
+    return observers_.connect(std::forward<Fn>(f));
   }
 
   auto observers()
     -> boost::signals2::signal<void(const value_type&,
                                     const value_type&)>&
   {
-    return mObservers;
+    return observers_;
   }
 
 private:
   void collect()
   {
     using namespace std;
-    mChildren.erase(
+    children_.erase(
       remove_if(
-        begin(mChildren),
-        end(mChildren),
-        mem_fn(&weak_ptr<IDown>::expired)),
-      end(mChildren));
+        begin(children_),
+        end(children_),
+        mem_fn(&weak_ptr<down_signal_base>::expired)),
+      end(children_));
   }
 
-  bool mNeedsSendDown = false;
-  bool mNeedsNotify = false;
-  value_type mCurrent;
-  value_type mLast;
-  value_type mLastNotified;
-  std::vector<std::weak_ptr<IDown> > mChildren;
+  bool needs_send_down_ = false;
+  bool needs_notify_ = false;
+  value_type current_;
+  value_type last_;
+  value_type last_notified_;
+  std::vector<std::weak_ptr<down_signal_base> > children_;
   boost::signals2::signal<void(const value_type&,
-                               const value_type&)> mObservers;
+                               const value_type&)> observers_;
 };
 
 //!
 // Base class for signals that can send values up the signal chain.
 //
 template <typename T>
-class UpDownSignal
-  : public DownSignal<T>
-  , public IUp<T>
+class up_down_signal
+  : public down_signal<T>
+  , public up_signal_base<T>
 {
-  using DownSignal<T>::DownSignal;
+  using down_signal<T>::down_signal;
 };
 
 } // namespace detail

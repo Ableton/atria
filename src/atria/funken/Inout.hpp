@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include <atria/funken/detail/Signals.hpp>
-#include <atria/funken/detail/Access.hpp>
-#include <atria/funken/detail/Watchable.hpp>
+#include <atria/funken/detail/signals.hpp>
+#include <atria/funken/detail/access.hpp>
+#include <atria/funken/detail/watchable.hpp>
 #include <atria/funken/Concepts.hpp>
 
 namespace atria {
@@ -14,12 +14,12 @@ namespace detail {
 
 template <typename SignalT>
 class InoutImpl
-  : private Watchable<estd::Value_type<SignalT> >
+  : private watchable<estd::Value_type<SignalT> >
 {
   template <typename T> friend class InoutImpl;
-  friend class detail::Access;
+  friend class detail::access;
 
-  using BaseT = Watchable<estd::Value_type<SignalT> >;
+  using BaseT = watchable<estd::Value_type<SignalT> >;
 
   using SignalPtrT = std::shared_ptr<SignalT>;
   SignalPtrT mpSignal;
@@ -60,7 +60,7 @@ public:
   template <typename T>
   void set(T&& value)
   {
-    return mpSignal->sendUp(std::forward<T>(value));
+    return mpSignal->send_up(std::forward<T>(value));
   }
 };
 
@@ -72,9 +72,9 @@ public:
 // @see `Inout_value`
 //
 template <typename T>
-class Inout : public detail::InoutImpl<detail::UpDownSignal<T> >
+class Inout : public detail::InoutImpl<detail::up_down_signal<T> >
 {
-  using BaseT = detail::InoutImpl<detail::UpDownSignal<T> >;
+  using BaseT = detail::InoutImpl<detail::up_down_signal<T> >;
   using BaseT::BaseT;
 };
 
@@ -86,9 +86,9 @@ template <typename InoutT>
 auto inout(InoutT&& object)
   -> estd::enable_if_t<
     (Inout_value<InoutT>()),
-    detail::InoutImpl<detail::SignalType_t<InoutT> > >
+    detail::InoutImpl<detail::signal_type_t<InoutT> > >
 {
-  return detail::Access::signal(std::forward<InoutT>(object));
+  return detail::access::signal(std::forward<InoutT>(object));
 }
 
 } // namespace funken

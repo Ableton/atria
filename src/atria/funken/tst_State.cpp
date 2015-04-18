@@ -127,19 +127,19 @@ TEST(State, WatchesAlwaysViewConsistentState)
 
 TEST(State, CapsuleCarriesItsOwnWatchers)
 {
-  auto sig = std::shared_ptr<detail::StateUpDownSignal<int>>{};
+  auto sig = std::shared_ptr<detail::state_up_down_signal<int>>{};
   auto s = testing::spy();
   {
     auto st = state(42);
-    sig = detail::Access::signal(st);
+    sig = detail::access::signal(st);
     watch(st, s);
-    sig->pushDown(12);
-    sig->sendDown();
+    sig->push_down(12);
+    sig->send_down();
     sig->notify();
     EXPECT_EQ(1, s.count());
   }
-  sig->pushDown(7);
-  sig->sendDown();
+  sig->push_down(7);
+  sig->send_down();
   sig->notify();
   EXPECT_EQ(1, s.count());
   EXPECT_TRUE(sig->observers().empty());
