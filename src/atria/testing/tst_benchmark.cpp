@@ -1,6 +1,6 @@
 // Copyright: 2014, Ableton AG, Berlin. All rights reserved.
 
-#include <atria/testing/Benchmark.hpp>
+#include <atria/testing/benchmark.hpp>
 #include <vector>
 
 namespace atria {

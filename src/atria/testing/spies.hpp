@@ -21,90 +21,90 @@ namespace testing {
 //
 // @todo Add support for checking the actual values that were passed.
 //
-class VariantSpy : public boost::static_visitor<>
+class variant_spy : public boost::static_visitor<>
 {
 public:
-  struct AllVariants {};
+  struct all_variants {};
 
   template <typename T>
   void operator()(const T&)
   {
-    mCalls.insert(typeid(T));
-    mCalls.insert(typeid(AllVariants));
+    calls_.insert(typeid(T));
+    calls_.insert(typeid(all_variants));
   }
 
-  template <typename T = AllVariants>
+  template <typename T = all_variants>
   std::size_t count() const
   {
-    return mCalls.count(typeid(T));
+    return calls_.count(typeid(T));
   }
 
   template<typename VariantT>
   auto visitor()
     -> decltype(std::bind(
-                  static_cast<void (*) (VariantSpy&, const VariantT&)>(
-                    &boost::apply_visitor<VariantSpy, const VariantT>),
+                  static_cast<void (*) (variant_spy&, const VariantT&)>(
+                    &boost::apply_visitor<variant_spy, const VariantT>),
                   std::ref(*this),
                   std::placeholders::_1))
   {
     return std::bind(
-      static_cast<void (*) (VariantSpy&, const VariantT&)>(
-        &boost::apply_visitor<VariantSpy, const VariantT>),
+      static_cast<void (*) (variant_spy&, const VariantT&)>(
+        &boost::apply_visitor<variant_spy, const VariantT>),
       std::ref(*this),
       std::placeholders::_1);
   }
 
 private:
-  std::unordered_multiset<std::type_index> mCalls;
+  std::unordered_multiset<std::type_index> calls_;
 };
 
 namespace mocks {
 
 template<typename T>
-struct Default
+struct defaulting
 {
   template <typename... Args>
   T operator() (Args&&...) { return T(); }
 };
 
 template<typename T>
-struct Return
+struct returning
 {
-  Return() = default;
+  returning() = default;
 
   template<typename Fn>
-  Return(const Fn& mock)
-    : mMock(mock)
+  returning(const Fn& mock)
+    : mock_(mock)
   {}
 
   template <typename... Args>
   T operator() (Args&& ...) {
-    return mMock();
+    return mock_();
   }
 
 private:
-  std::function<T()> mMock;
+  std::function<T()> mock_;
 };
 
 } // namespace mocks
 
 namespace detail {
 
-class SpyBase
+class spy_base
 {
 public:
   std::size_t count() const
   {
-    return *mCount;
+    return *count_;
   }
 
   void called()
   {
-    ++ *mCount;
+    ++ *count_;
   }
 
 private:
-  std::shared_ptr<std::size_t> mCount = std::make_shared<std::size_t>(0);
+  std::shared_ptr<std::size_t> count_ = std::make_shared<std::size_t>(0);
 };
 
 } // namespace detail
@@ -115,31 +115,31 @@ private:
 // @todo Support comparing the actual arguments.  Keep generic
 // interface using boost::any
 //
-template<typename MockT = mocks::Default<void> >
-class Spy : public detail::SpyBase
+template<typename MockT = mocks::defaulting<void> >
+class spy_fn : public detail::spy_base
 {
-  MockT mMock;
+  MockT mock_;
 
 public:
-  Spy() = default;
+  spy_fn() = default;
 
   template<typename MockT2>
-  Spy(MockT2 mock)
-    : mMock(std::move(mock))
+  spy_fn(MockT2 mock)
+    : mock_(std::move(mock))
   {}
 
   template<typename MockT2>
-  Spy(MockT2 mock, const SpyBase& spy)
-    : SpyBase(spy)
-    , mMock(std::move(mock))
+  spy_fn(MockT2 mock, const spy_base& spy)
+    : spy_base(spy)
+    , mock_(std::move(mock))
   {}
 
   template <typename... Args>
   auto operator() (Args&& ...args)
-    -> decltype(this->mMock(std::forward<Args>(args)...))
+    -> decltype(this->mock_(std::forward<Args>(args)...))
   {
     called();
-    return this->mMock(std::forward<Args>(args)...);
+    return this->mock_(std::forward<Args>(args)...);
   }
 };
 
@@ -147,17 +147,17 @@ public:
 // Returns a spy object that uses fn as mock implementation.
 //
 template <typename Fn>
-inline Spy<Fn> spy(const Fn& fn)
+inline spy_fn<Fn> spy(const Fn& fn)
 {
-  return Spy<Fn>(fn);
+  return spy_fn<Fn>(fn);
 }
 
 //!
 // Returns a spy object with a no-op mock implementation.
 //
-inline Spy<> spy()
+inline spy_fn<> spy()
 {
-  return Spy<>();
+  return spy_fn<>();
 }
 
 namespace detail {
@@ -165,8 +165,8 @@ namespace detail {
 template <typename MockT>
 class ScopedIntruder
 {
-  boost::optional<MockT&> mMock;
-  MockT mOriginal;
+  boost::optional<MockT&> mock_;
+  MockT original_;
 
 public:
   ScopedIntruder& operator=(const ScopedIntruder&) = delete;
@@ -186,32 +186,32 @@ public:
   }
 
   ScopedIntruder(MockT& mock, MockT replacement)
-    : mMock(mock)
-    , mOriginal(mock)
+    : mock_(mock)
+    , original_(mock)
   {
-    *mMock = replacement;
+    *mock_ = replacement;
   }
 
   ~ScopedIntruder()
   {
-    if (mMock)
+    if (mock_)
     {
-      *mMock = mOriginal;
+      *mock_ = original_;
     }
   }
 
   template <typename ...Args>
   auto operator() (Args&& ...args)
-    -> decltype((*mMock)(std::forward<Args>(args)...))
+    -> decltype((*mock_)(std::forward<Args>(args)...))
   {
-    assert(mMock && "must not call intruder after having moved from it");
-    return (*mMock)(std::forward<Args>(args)...);
+    assert(mock_ && "must not call intruder after having moved from it");
+    return (*mock_)(std::forward<Args>(args)...);
   }
 
   friend void swap(ScopedIntruder& a, ScopedIntruder& b)
   {
-    swap(a.mMock, b.mMock);
-    swap(a.mOriginal, b.mOriginal);
+    swap(a.mock_, b.mock_);
+    swap(a.original_, b.original_);
   }
 };
 
@@ -223,20 +223,20 @@ public:
 // the calls and returns such a spy.
 //
 template <typename MockT>
-inline Spy<detail::ScopedIntruder<MockT>> spyOn(MockT& mock)
+inline spy_fn<detail::ScopedIntruder<MockT>> spy_on(MockT& mock)
 {
   auto s = spy(mock);
   return { detail::ScopedIntruder<MockT>(mock, s), s };
 }
 
 //!
-// Like @a spyOn(), but it installs the `replacement` function instead
+// Like @a spy_on(), but it installs the `replacement` function instead
 // of keeping the original one.  The spy is uninstalled on
 // destruction, and it is not copyable.
 //
 template <typename MockT, typename FnT>
-inline Spy<detail::ScopedIntruder<MockT>>
-spyOn(MockT& mock, const FnT& replacement)
+inline spy_fn<detail::ScopedIntruder<MockT>>
+spy_on(MockT& mock, const FnT& replacement)
 {
   auto s = spy(replacement);
   return { detail::ScopedIntruder<MockT>(mock, s), s };

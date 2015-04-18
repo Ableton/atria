@@ -1,8 +1,9 @@
 // Copyright: 2014, Ableton AG, Berlin. All rights reserved.
 
 #include <atria/variant/match.hpp>
-#include <atria/testing/Spies.hpp>
+#include <atria/testing/spies.hpp>
 #include <atria/testing/gtest.hpp>
+
 #include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
 #include <boost/variant.hpp>

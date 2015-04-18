@@ -6,7 +6,7 @@
 #include <atria/funken/Out.hpp>
 #include <atria/funken/State.hpp>
 #include <atria/funken/Watch.hpp>
-#include <atria/testing/Spies.hpp>
+#include <atria/testing/spies.hpp>
 #include <atria/testing/gtest.hpp>
 
 namespace atria {

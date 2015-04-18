@@ -6,10 +6,11 @@
 // #define ABL_REDUCE_WITH_ACCUMULATE 1
 // #define ABL_REDUCE_NON_VARIADIC 0
 
-#include <ableton/build_system/Warnings.hpp>
 #include <atria/xform/Transducers.hpp>
-#include <atria/testing/Benchmark.hpp>
+#include <atria/testing/benchmark.hpp>
 #include <atria/testing/gtest.hpp>
+
+#include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
 #include <boost/range/adaptors.hpp>
 #include <boost/range/numeric.hpp>

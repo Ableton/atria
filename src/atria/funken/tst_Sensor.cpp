@@ -4,7 +4,7 @@
 #include <atria/funken/Concepts.hpp>
 #include <atria/funken/Sensor.hpp>
 #include <atria/funken/Watch.hpp>
-#include <atria/testing/Spies.hpp>
+#include <atria/testing/spies.hpp>
 #include <atria/testing/gtest.hpp>
 
 namespace atria {
