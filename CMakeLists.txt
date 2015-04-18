@@ -83,6 +83,9 @@ add_library(AtriaLib
   src/atria/meta/utils.hpp
   src/atria/testing/spies.hpp
   src/atria/testing/benchmark.hpp
+  src/atria/xform/functional.hpp
+  src/atria/xform/reduce.hpp
+  src/atria/xform/transducers.hpp
   )
 set_target_properties(AtriaLib PROPERTIES LINKER_LANGUAGE CXX)
 target_include_directories(AtriaLib PUBLIC
@@ -115,8 +118,8 @@ if(GTEST_FOUND)
     src/atria/meta/tst_std_tuple.cpp
     src/atria/testing/tst_benchmark.cpp
     src/atria/testing/tst_spies.cpp
-    src/atria/xform/tst_Transducers.cpp
-    src/atria/xform/tst_Transducers_Benchmark.cpp
+    src/atria/xform/tst_transducers.cpp
+    src/atria/xform/tst_transducers_benchmark.cpp
     src/atria/variant/tst_match.cpp
     )
 

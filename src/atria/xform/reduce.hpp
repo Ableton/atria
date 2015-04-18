@@ -36,7 +36,7 @@ namespace xform {
 // @see take
 //
 template <typename T>
-struct Reduced
+struct reduced_t
 {
   T value;
 };
@@ -45,48 +45,48 @@ struct Reduced
 // Constructs a reduced value for `value`
 //
 template <typename T>
-auto reduced(T&& value) -> Reduced<estd::decay_t<T> >
+auto reduced(T&& value) -> reduced_t<estd::decay_t<T> >
 {
   return { std::forward<T>(value) };
 }
 
 //!
 // Unwraps the value in a potentially *reduced* box.
-// @see Reduced
-// @see MaybeReduced
+// @see reduced_t
+// @see maybe_reduced
 //
 template <typename T>
-auto fromReduced(T& v) -> T& { return v; }
+auto from_reduced(T& v) -> T& { return v; }
 template <typename T>
-auto fromReduced(const T& v) -> const T& { return v; }
+auto from_reduced(const T& v) -> const T& { return v; }
 template <typename T>
-auto fromReduced(Reduced<T>& v) -> T& { return v.value; }
+auto from_reduced(reduced_t<T>& v) -> T& { return v.value; }
 template <typename T>
-auto fromReduced(const Reduced<T>& v) -> const T& { return v.value; }
+auto from_reduced(const reduced_t<T>& v) -> const T& { return v.value; }
 
 //!
 // Returns whether all values of a type are finished reducing.
-// @see Reduced
+// @see reduced_t
 //
 template <typename T>
-struct TypeIsReduced : std::false_type {};
+struct type_is_reduced : std::false_type {};
 template <typename T>
-struct TypeIsReduced<Reduced<T>> : std::true_type {};
+struct type_is_reduced<reduced_t<T>> : std::true_type {};
 
 //!
 // Returns whether a value `v` is a finished reduction.
-// @see Reduced
+// @see reduced_t
 //
 template <typename T>
-auto isReduced(const T&)
-  -> estd::enable_if_t<!TypeIsReduced<T>::value, bool>
+auto is_reduced(const T&)
+  -> estd::enable_if_t<!type_is_reduced<T>::value, bool>
 {
   return false;
 }
 
 template <typename T>
-auto isReduced(const T&)
-  -> estd::enable_if_t<TypeIsReduced<T>::value, bool>
+auto is_reduced(const T&)
+  -> estd::enable_if_t<type_is_reduced<T>::value, bool>
 {
   return true;
 }
@@ -94,27 +94,27 @@ auto isReduced(const T&)
 //!
 // Holds a value that may or may not be a finished reduction.  It
 // is convertible from any other type that may be reduced.
-// @see Reduced
+// @see reduced_t
 //
 template <typename T>
-struct MaybeReduced
+struct maybe_reduced
 {
   bool reduced;
   T value;
 
   template <typename U>
-  MaybeReduced(U x)
-    : reduced(isReduced(x))
-    , value(std::move(fromReduced(x)))
+  maybe_reduced(U x)
+    : reduced(is_reduced(x))
+    , value(std::move(from_reduced(x)))
   {}
 };
 
 template <typename T>
-auto isReduced(const MaybeReduced<T>& v) -> bool { return v.reduced; }
+auto is_reduced(const maybe_reduced<T>& v) -> bool { return v.reduced; }
 template <typename T>
-auto fromReduced(MaybeReduced<T>& v) -> T& { return v.value; }
+auto from_reduced(maybe_reduced<T>& v) -> T& { return v.value; }
 template <typename T>
-auto fromReduced(const MaybeReduced<T>& v) -> const T& { return v.value; }
+auto from_reduced(const maybe_reduced<T>& v) -> const T& { return v.value; }
 
 namespace detail {
 
@@ -128,23 +128,23 @@ auto reduce(ReducerT&& reducer,
             InputRangeTs&& ...ranges)
   -> estd::decay_t<StateT>
 {
-  using FinalStateT = estd::decay_t<decltype(
+  using final_state_t = estd::decay_t<decltype(
     reducer(initial, *ranges.begin()...))>;
 
-  auto state = FinalStateT(std::forward<StateT>(initial));
+  auto state = final_state_t(std::forward<StateT>(initial));
 
   for (auto firsts = std::make_tuple(std::begin(ranges)...),
             lasts  = std::make_tuple(std::end(ranges)...);
-       !isReduced(state) &&
+       !is_reduced(state) &&
          std::min({ std::get<Indices>(firsts) !=
                     std::get<Indices>(lasts)... });
        meta::noop(++std::get<Indices>(firsts)...))
   {
-    state = reducer(fromReduced(state),
+    state = reducer(from_reduced(state),
                     *std::get<Indices>(firsts)...);
   }
 
-  return fromReduced(state);
+  return from_reduced(state);
 }
 
 } // namespace detail
@@ -180,18 +180,18 @@ template <typename ReducerT,
 auto reduce(ReducerT&& reducer, StateT&& initial, InputRangeT&& range)
   -> estd::decay_t<StateT>
 {
-  using FinalStateT = estd::decay_t<decltype(
+  using final_state_t = estd::decay_t<decltype(
     reducer(initial, *range.begin()))>;
 
-  auto state = FinalStateT(std::forward<StateT>(initial));
+  auto state = final_state_t(std::forward<StateT>(initial));
   for (auto first = std::begin(range),
             last  = std::end(range);
-       !isReduced(state) && first != last;
+       !is_reduced(state) && first != last;
        ++first)
   {
-    state = reducer(fromReduced(state), *first);
+    state = reducer(from_reduced(state), *first);
   }
-  return fromReduced(state);
+  return from_reduced(state);
 }
 
 #endif // !ABL_REDUCE_WITH_ACCUMULATE && ABL_REDUCE_NON_VARIADIC

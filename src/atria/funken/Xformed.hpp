@@ -86,7 +86,7 @@ namespace detail {
 struct AtReducer
 {
   template <typename ReducerT, typename KeyT>
-  struct Reducer
+  struct apply
   {
     ReducerT reducer;
     KeyT key;
@@ -136,7 +136,7 @@ struct AtUpdater
 //
 template <typename KeyT>
 auto xat(KeyT&& key)
-  -> xform::detail::Transducer<detail::AtReducer, estd::decay_t<KeyT> >
+  -> xform::detail::transducer<detail::AtReducer, estd::decay_t<KeyT> >
 {
   return std::forward<KeyT>(key);
 }

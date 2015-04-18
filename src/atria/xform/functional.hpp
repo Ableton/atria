@@ -1,6 +1,7 @@
 // Copyright: 2014, Ableton AG, Berlin. All rights reserved.
 
 #include <atria/estd/type_traits.hpp>
+
 #include <ableton/build_system/Warnings.hpp>
 #include <tuple>
 
@@ -10,7 +11,7 @@ namespace xform {
 namespace detail {
 
 template <class F, class G>
-struct Composed
+struct composed
 {
   F f;
   G g;
@@ -39,18 +40,18 @@ auto comp(F&& f)
 
 template <typename Fn, typename ...Fns>
 auto comp(Fn&& f, Fns&& ...fns)
-  -> detail::Composed<estd::decay_t<Fn>,
+  -> detail::composed<estd::decay_t<Fn>,
                       decltype(comp(std::forward<Fns>(fns)...))>
 {
-  using ResultT = detail::Composed<estd::decay_t<Fn>,
+  using result_t = detail::composed<estd::decay_t<Fn>,
                                    decltype(comp(std::forward<Fns>(fns)...))>;
-  return ResultT { std::forward<Fn>(f), comp(std::forward<Fns>(fns)...)};
+  return result_t { std::forward<Fn>(f), comp(std::forward<Fns>(fns)...)};
 }
 
 //!
 // Similar to clojure.core/identity
 //
-constexpr struct Identity
+constexpr struct identity_fn
 {
   template <typename ArgT>
   constexpr auto operator() (ArgT&& x) const -> ArgT&&
@@ -63,7 +64,7 @@ constexpr struct Identity
 // @see constantly
 //
 template <typename T>
-struct Constantly
+struct constantly_t
 {
   using result_type = const T&;
   T value;
@@ -81,16 +82,16 @@ struct Constantly
 //
 template <typename T>
 auto constantly(T&& value)
-  -> Constantly<estd::decay_t<T> >
+  -> constantly_t<estd::decay_t<T> >
 {
-  return Constantly<estd::decay_t<T> >{ std::forward<T>(value) };
+  return constantly_t<estd::decay_t<T> >{ std::forward<T>(value) };
 }
 
 //!
 // Function that forwards its argument if only one element passed,
 // otherwise it makes a tuple.
 //
-constexpr struct Tuplify
+constexpr struct tuplify_t
 {
   constexpr auto operator() () const
     -> std::tuple<>

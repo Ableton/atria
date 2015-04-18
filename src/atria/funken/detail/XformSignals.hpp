@@ -4,7 +4,7 @@
 
 #include <atria/funken/detail/Signals.hpp>
 #include <atria/funken/detail/NoValue.hpp>
-#include <atria/xform/Transducers.hpp>
+#include <atria/xform/transducers.hpp>
 #include <atria/estd/utility.hpp>
 #include <atria/estd/type_traits.hpp>
 
@@ -23,7 +23,7 @@ struct GetXformResult
 {
   using type = estd::decay_t<
     decltype(
-      std::declval<XForm>()(xform::lastR)(
+      std::declval<XForm>()(xform::last_r)(
         std::declval<detail::NoValue>(),
         std::declval<estd::Value_type<Sources> >()...))
     >;
@@ -97,7 +97,7 @@ public:
   XformDownSignal(XForm2&& xform, std::shared_ptr<Parents> ...parents)
     : BaseT([&]() -> value_type {
         try {
-          return xform(xform::lastR)(detail::NoValue{}, parents->current()...);
+          return xform(xform::last_r)(detail::NoValue{}, parents->current()...);
         }
         catch (const NoValueError&) {
           return defaultConstructOrThrow<value_type, NoValueError>();
@@ -160,7 +160,7 @@ constexpr struct
 struct UpdateReducer
 {
   template <typename ReducerT, typename UpdateT>
-  struct Reducer
+  struct apply
   {
     ReducerT reducer;
     UpdateT updater;
@@ -198,7 +198,7 @@ struct UpdateReducer
 //
 template <typename UpdateT>
 auto update(UpdateT&& updater)
-  -> xform::detail::Transducer<UpdateReducer, estd::decay_t<UpdateT> >
+  -> xform::detail::transducer<UpdateReducer, estd::decay_t<UpdateT> >
 {
   return std::forward<UpdateT>(updater);
 }

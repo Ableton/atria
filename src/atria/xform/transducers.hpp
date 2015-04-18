@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include <atria/xform/Reduce.hpp>
-#include <atria/xform/Functional.hpp>
+#include <atria/xform/reduce.hpp>
+#include <atria/xform/functional.hpp>
 #include <atria/meta/utils.hpp>
 #include <atria/meta/common_type.hpp>
 #include <atria/estd/utility.hpp>
@@ -29,9 +29,9 @@ namespace detail {
 //
 // Writing functions that return functions without erasing their type
 // is very cumbersome in C++11 (this is not true with decltype(auto)
-// in the next standard).  The `Transducer` type implements the first
+// in the next standard).  The `transducer` type implements the first
 // two calls. The `ReducerGenT` parameter should have a nested
-// template `Reducer` that implements the last call.  It will be
+// template `apply` that implements the last call.  It will be
 // constructed `reducer, params...` and it should be callable with
 // `state, input`.
 //
@@ -40,44 +40,44 @@ namespace detail {
 //
 template<typename ReducerGenT,
          typename ...ParamTs>
-struct Transducer : std::tuple<ParamTs...>
+struct transducer : std::tuple<ParamTs...>
 {
-  using Base = std::tuple<ParamTs...>;
-  using Base::Base;
+  using base_t = std::tuple<ParamTs...>;
+  using base_t::base_t;
 
   template <typename ...Ts>
-  Transducer(Ts&& ...ts)
-    : Base(std::forward<Ts>(ts)...)
+  transducer(Ts&& ...ts)
+    : base_t(std::forward<Ts>(ts)...)
   {}
 
   template<typename ReducerT>
   auto operator() (ReducerT&& reducer) const
-    -> typename ReducerGenT::template Reducer<
+    -> typename ReducerGenT::template apply<
       estd::decay_t<ReducerT>,
       estd::decay_t<ParamTs>...
     >
   {
-    using Indexes = estd::make_index_sequence<sizeof...(ParamTs)>;
-    return this->make(std::forward<ReducerT>(reducer), Indexes());
+    using indexes_t = estd::make_index_sequence<sizeof...(ParamTs)>;
+    return this->make(std::forward<ReducerT>(reducer), indexes_t());
   }
 
-  template<typename ReducerT, std::size_t...Indexes>
-  auto make(ReducerT&& reducer, estd::index_sequence<Indexes...>) const
-    -> typename ReducerGenT::template Reducer<
+  template<typename ReducerT, std::size_t...indexes_t>
+  auto make(ReducerT&& reducer, estd::index_sequence<indexes_t...>) const
+    -> typename ReducerGenT::template apply<
       estd::decay_t<ReducerT>,
       estd::decay_t<ParamTs>...
     >
   {
     return { std::forward<ReducerT>(reducer),
-             std::get<Indexes>(*this)... };
+             std::get<indexes_t>(*this)... };
   }
 };
 
-struct MapReducer
+struct map_reducer
 {
   template <typename ReducerT,
             typename MappingT>
-  struct Reducer
+  struct apply
   {
     ReducerT reducer;
     MappingT mapping;
@@ -93,11 +93,11 @@ struct MapReducer
   };
 };
 
-struct FlatMapReducer
+struct flat_map_reducer
 {
   template <typename ReducerT,
             typename MappingT>
-  struct Reducer
+  struct apply
   {
     ReducerT reducer;
     MappingT mapping;
@@ -113,11 +113,11 @@ struct FlatMapReducer
   };
 };
 
-struct FilterReducer
+struct filter_reducer
 {
   template <typename ReducerT,
             typename PredicateT>
-  struct Reducer
+  struct apply
   {
     ReducerT reducer;
     PredicateT predicate;
@@ -137,18 +137,18 @@ struct FilterReducer
   };
 };
 
-struct TakeReducer
+struct take_reducer
 {
   template <typename ReducerT,
             typename IntegralT>
-  struct Reducer
+  struct apply
   {
     ReducerT reducer;
     IntegralT n;
 
     template <typename State, typename ...Inputs>
     auto operator() (State&& s, Inputs&& ...is)
-      -> MaybeReduced<estd::decay_t<
+      -> maybe_reduced<estd::decay_t<
            meta::common_type_t<
              decltype(s),
              decltype(reducer(s, is...)) > > >
@@ -171,7 +171,7 @@ struct TakeReducer
 //
 template <typename MappingT>
 auto map(MappingT&& mapping)
-  -> detail::Transducer<detail::MapReducer, estd::decay_t<MappingT> >
+  -> detail::transducer<detail::map_reducer, estd::decay_t<MappingT> >
 {
   return std::forward<MappingT>(mapping);
 }
@@ -180,8 +180,8 @@ auto map(MappingT&& mapping)
 // Similar to clojure.core/mapcat$1
 //
 template <typename MappingT>
-auto flatMap(MappingT&& mapping)
-  -> detail::Transducer<detail::FlatMapReducer, estd::decay_t<MappingT> >
+auto flat_map(MappingT&& mapping)
+  -> detail::transducer<detail::flat_map_reducer, estd::decay_t<MappingT> >
 {
   return std::forward<MappingT>(mapping);
 }
@@ -191,7 +191,7 @@ auto flatMap(MappingT&& mapping)
 //
 template <typename IntegralT>
 auto take(IntegralT&& n)
-  -> detail::Transducer<detail::TakeReducer, estd::decay_t<IntegralT> >
+  -> detail::transducer<detail::take_reducer, estd::decay_t<IntegralT> >
 {
   return n;
 }
@@ -204,7 +204,7 @@ auto take(IntegralT&& n)
 //
 template <typename ResultT=void, typename PredicateT>
 auto filter(PredicateT&& predicate)
-  -> detail::Transducer<detail::FilterReducer, estd::decay_t<PredicateT> >
+  -> detail::transducer<detail::filter_reducer, estd::decay_t<PredicateT> >
 {
   return std::forward<PredicateT>(predicate);
 }
@@ -212,7 +212,7 @@ auto filter(PredicateT&& predicate)
 //!
 // Reducer that returns the last input of the sequence.
 //
-constexpr struct lastR
+constexpr struct last_r_t
 {
   template <typename StateT, typename ...InputTs>
   constexpr auto operator() (StateT&&, InputTs&& ...ins) const
@@ -226,12 +226,12 @@ constexpr struct lastR
   {
     return std::forward<StateT>(s);
   }
-} lastR {};
+} last_r {};
 
 //!
 // Reducer that outputs to the iterator that is passed as state.
 //
-constexpr struct OutputR
+constexpr struct output_r_t
 {
   template <typename OutputItT, typename ...InputTs>
   auto operator() (OutputItT it, InputTs&& ...ins) const
@@ -240,7 +240,7 @@ constexpr struct OutputR
     *it = tuplify(std::forward<InputTs>(ins)...);
     return ++it;
   }
-} outputR {};
+} output_r {};
 
 
 //!
@@ -271,7 +271,7 @@ auto into(CollectionT&& col, XformT&& xform, InputRangeTs&& ...ranges)
 {
   transduce(
     std::forward<XformT>(xform),
-    outputR,
+    output_r,
     std::back_inserter(col),
     std::forward<InputRangeTs>(ranges)...);
   return std::forward<CollectionT>(col);

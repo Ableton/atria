@@ -6,7 +6,7 @@
 // #define ABL_REDUCE_WITH_ACCUMULATE 1
 // #define ABL_REDUCE_NON_VARIADIC 0
 
-#include <atria/xform/Transducers.hpp>
+#include <atria/xform/transducers.hpp>
 #include <atria/testing/benchmark.hpp>
 #include <atria/testing/gtest.hpp>
 
@@ -27,7 +27,7 @@ constexpr auto DATA_SIZE  = 1000;
 constexpr auto ITERATIONS = 1000;
 
 template <typename FnT>
-void xformBenchmark(FnT&& fn)
+void xform_benchmark(FnT&& fn)
 {
   auto data = std::vector<int>(DATA_SIZE);
   boost::iota(data, 0);
@@ -35,9 +35,9 @@ void xformBenchmark(FnT&& fn)
     testing::unoptimize(fn(data));
 }
 
-TEST(Transduce_Benchmark, FilterMapCopy_BoostRange)
+TEST(transduce_benchmark, filter_map_copy_boost_range)
 {
-  xformBenchmark(
+  xform_benchmark(
     [](const std::vector<int>& data)
     {
       using namespace boost::adaptors;
@@ -51,9 +51,9 @@ TEST(Transduce_Benchmark, FilterMapCopy_BoostRange)
     });
 }
 
-TEST(Transduce_Benchmark, FilterMapCopy_Stl)
+TEST(transduce_benchmark, filter_map_copy_stl)
 {
-  xformBenchmark(
+  xform_benchmark(
     [](const std::vector<int>& data)
     {
       std::vector<int> result;
@@ -68,9 +68,9 @@ TEST(Transduce_Benchmark, FilterMapCopy_Stl)
     });
 }
 
-TEST(Transduce_Benchmark, FilterMapCopy_Transduce)
+TEST(transduce_benchmark, filter_map_copy_transduce)
 {
-  xformBenchmark(
+  xform_benchmark(
     [](const std::vector<int>& data)
     {
       return into(
@@ -81,9 +81,9 @@ TEST(Transduce_Benchmark, FilterMapCopy_Transduce)
     });
 }
 
-TEST(Transduce_Benchmark, FilterMapReduce_BoostRange)
+TEST(transduce_benchmark, filter_map_reduce_boost_range)
 {
-  xformBenchmark(
+  xform_benchmark(
     [](const std::vector<int>& data)
     {
       using namespace boost::adaptors;
@@ -96,9 +96,9 @@ TEST(Transduce_Benchmark, FilterMapReduce_BoostRange)
     });
 }
 
-TEST(Transduce_Benchmark, FilterMapReduce_Stl)
+TEST(transduce_benchmark, filter_map_reduce_stl)
 {
-  xformBenchmark(
+  xform_benchmark(
     [](const std::vector<int>& data)
     {
       std::vector<int> result;
@@ -117,9 +117,9 @@ TEST(Transduce_Benchmark, FilterMapReduce_Stl)
     });
 }
 
-TEST(Transduce_Benchmark, FilterMapReduce_Accumulate)
+TEST(transduce_benchmark, filter_map_reduce_accumulate)
 {
-  xformBenchmark(
+  xform_benchmark(
     [](const std::vector<int>& data)
     {
       return std::accumulate(
@@ -136,9 +136,9 @@ TEST(Transduce_Benchmark, FilterMapReduce_Accumulate)
     });
 }
 
-TEST(Transduce_Benchmark, FilterMapReduce_Transduce)
+TEST(transduce_benchmark, filter_map_reduce_transduce)
 {
-  xformBenchmark(
+  xform_benchmark(
     [](const std::vector<int>& data)
     {
       return transduce(

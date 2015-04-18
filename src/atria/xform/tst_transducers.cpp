@@ -1,13 +1,13 @@
 // Copyright: 2014, Ableton AG, Berlin. All rights reserved.
 
 #include <atria/estd/memory.hpp>
-#include <atria/xform/Transducers.hpp>
+#include <atria/xform/transducers.hpp>
 #include <atria/testing/gtest.hpp>
 
 namespace atria {
 namespace xform {
 
-TEST(Compose, ComposeOneFn)
+TEST(compose, compose_one_fn)
 {
   auto fn = comp(
     [](int x) { return x + 1; });
@@ -15,7 +15,7 @@ TEST(Compose, ComposeOneFn)
   EXPECT_EQ(fn(42), 43);
 }
 
-TEST(Compose, ComposeTwoFn)
+TEST(compose, compose_two_fn)
 {
   auto fn = comp(
     [](int x) { return x + 1; },
@@ -24,7 +24,7 @@ TEST(Compose, ComposeTwoFn)
   EXPECT_EQ(fn(42), 85);
 }
 
-TEST(Compose, ComposeThreeFn)
+TEST(compose, compose_three_fn)
 {
   auto fn = comp(
     [](int x) { return x + 1; },
@@ -34,7 +34,7 @@ TEST(Compose, ComposeThreeFn)
   EXPECT_EQ(fn(42), 83);
 }
 
-TEST(Compose, VariousTypes)
+TEST(compose, various_types)
 {
   auto fn = comp(
     [](double x) { return x + 1; },
@@ -44,26 +44,26 @@ TEST(Compose, VariousTypes)
   EXPECT_EQ(fn(42), 43.0);
 }
 
-TEST(Transduce, Identity)
+TEST(transduce, identity)
 {
   auto v = std::vector<int> { 1, 2, 3, 6 };
   EXPECT_EQ(transduce(identity, std::plus<int>{}, 1, v), 13);
 }
 
-TEST(Transduce, Mapping)
+TEST(transduce, mapping)
 {
   auto v = std::vector<int> { 1, 2, 3, 6 };
   auto times2 = [] (int x) { return x * 2; };
   EXPECT_EQ(transduce(map(times2), std::plus<int>{}, 1, v), 25);
 }
 
-TEST(Transduce, Composition)
+TEST(transduce, composition)
 {
   auto v = std::vector<int> { 1, 2, 3, 6 };
   auto times2 = [] (int x) { return x * 2; };
   auto odd = [] (int x) { return x % 2 == 0; };
 
-  // Transducers compose from left to right, this is equivalent to
+  // transducers compose from left to right, this is equivalent to
   // Haskell-like expression:
   //
   //   foldl (+) $ map times2 $ filter odd $ v
@@ -73,7 +73,7 @@ TEST(Transduce, Composition)
   EXPECT_EQ(res, 17);
 }
 
-TEST(Transduce, Variadic)
+TEST(transduce, variadic)
 {
   auto v1 = std::vector<int> { 1, 2, 3, 6 };
   auto v2 = std::vector<int> { 1, 2, 1, 2 };
@@ -85,7 +85,7 @@ TEST(Transduce, Variadic)
             21);
 }
 
-TEST(Into, Mutation)
+TEST(into, mutation)
 {
   auto v = std::vector<int> { 1, 2, 3 };
   auto res = std::vector<int> { };
@@ -95,7 +95,7 @@ TEST(Into, Mutation)
   EXPECT_EQ(&res, &res2);
 }
 
-TEST(Into, NonMutation)
+TEST(into, non_mutation)
 {
   auto v = std::vector<int> { 1, 2, 3 };
 
@@ -103,7 +103,7 @@ TEST(Into, NonMutation)
   EXPECT_EQ(res, (std::vector<int> { 1, 2, 3 }));
 }
 
-TEST(Into, Appends)
+TEST(into, appends)
 {
   auto v = std::vector<int> { 1, 2, 3 };
 
@@ -111,7 +111,7 @@ TEST(Into, Appends)
   EXPECT_EQ(res, (std::vector<int> { 0, 1, 2, 3 }));
 }
 
-TEST(Into, Transduction)
+TEST(into, transduction)
 {
   auto v = std::vector<int> { 1, 2, 3, 4 };
 
@@ -123,7 +123,7 @@ TEST(Into, Transduction)
   EXPECT_EQ(res, (std::vector<std::string> { "2", "4" }));
 }
 
-TEST(Into, Zipping)
+TEST(into, zipping)
 {
   auto v1 = std::vector<int> { 1, 2, 3, 4 };
   auto v2 = std::vector<std::string> { "a", "b" };
@@ -137,15 +137,15 @@ TEST(Into, Zipping)
   EXPECT_EQ(res, (std::vector<tup> { tup(1, "a"), tup(2, "b") }));
 }
 
-TEST(Into, flatMap)
+TEST(into, flat_map)
 {
   auto v = std::vector<std::vector<int>> { { 1, 2 }, { 3 }, { 4, 5, 6 } };
 
-  auto res = into(std::vector<int> {}, flatMap(identity), v);
+  auto res = into(std::vector<int> {}, flat_map(identity), v);
   EXPECT_EQ(res, (std::vector<int> { 1, 2, 3, 4, 5, 6 }));
 }
 
-TEST(Into, take)
+TEST(into, take)
 {
   auto v = std::vector<int> { 1, 2, 3, 4, 5 };
 
@@ -153,7 +153,7 @@ TEST(Into, take)
   EXPECT_EQ(res, (std::vector<int> { 1, 2, 3 }));
 }
 
-TEST(Into, takeStopsEarlyEnough)
+TEST(into, take_stops_early_enough)
 {
   auto v = std::vector<int> { 1, 2, 3, 4, 5, 6 };
 
@@ -170,7 +170,7 @@ TEST(Into, takeStopsEarlyEnough)
   EXPECT_EQ(res, (std::vector<int> { 1, 2, 3 }));
 }
 
-TEST(Into, takeStopsEarlyEnough2)
+TEST(into, take_stops_early_enough2)
 {
   auto v = std::vector<int> { 1, 2, 3, 4, 5, 6 };
 
