@@ -2,8 +2,9 @@
 
 #pragma once
 
-#include <atria/meta/Utils.hpp>
-#include <atria/meta/Pack.hpp>
+#include <atria/meta/utils.hpp>
+#include <atria/meta/pack.hpp>
+
 #include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
 #include <boost/mpl/eval_if.hpp>
@@ -26,11 +27,11 @@ namespace mpl = boost::mpl;
 // Result of `CommonType` when no common type exists for types `Ts`
 //
 template <typename ...Ts>
-struct CouldNotFindCommonType
+struct could_not_find_common_type
 {
   template <typename T>
-  CouldNotFindCommonType(T&&) {}
-  CouldNotFindCommonType(FromVoid&&) {}
+  could_not_find_common_type(T&&) {}
+  could_not_find_common_type(from_void&&) {}
 };
 
 namespace detail {
@@ -41,7 +42,7 @@ namespace detail {
 // from a type that were added because of the use of `declval`.
 //
 template<class ValT, class ...OrigTs>
-struct Undeclval
+struct undeclval
   : mpl::eval_if<mpl::and_<std::is_rvalue_reference<ValT>,
                            mpl::not_<std::is_rvalue_reference<OrigTs> >... >,
                  std::remove_reference<ValT>,
@@ -49,18 +50,18 @@ struct Undeclval
 {};
 
 template <typename T, typename U, typename Enable=void>
-struct CommonType2
+struct common_type2
 {
-  using type = CouldNotFindCommonType<T, U>;
+  using type = could_not_find_common_type<T, U>;
 };
 
 template <typename T, typename U>
-struct CommonType2<
+struct common_type2<
   T, U,
-  meta::EnableIfType_t<decltype(
+  meta::enable_if_type_t<decltype(
     true ? std::declval<T>() : std::declval<U>())>>
 {
-  using type = typename Undeclval<
+  using type = typename undeclval<
     decltype(true ? std::declval<T>() : std::declval<U>()),
     T, U
   >::type;
@@ -84,15 +85,15 @@ struct CommonType2<
 // chosen instead of `void` to make debugging easier.
 //
 template <typename T, typename ...Ts>
-struct CommonType
-  : mpl::fold<Pack<Ts...>, T, detail::CommonType2<mpl::_1, mpl::_2> >
+struct common_type
+  : mpl::fold<pack<Ts...>, T, detail::common_type2<mpl::_1, mpl::_2> >
 {};
 
 //!
 // C++14 style alias
 //
 template <typename ...Ts>
-using CommonType_t = typename CommonType<Ts...>::type;
+using common_type_t = typename common_type<Ts...>::type;
 
 } // namespace meta
 } // namespace atria

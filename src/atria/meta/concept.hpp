@@ -31,8 +31,8 @@
 #pragma once
 
 #include <atria/estd/type_traits.hpp>
-#include <atria/meta/Utils.hpp>
-#include <atria/meta/Pack.hpp>
+#include <atria/meta/utils.hpp>
+#include <atria/meta/pack.hpp>
 #include <algorithm>
 
 namespace atria {
@@ -41,15 +41,15 @@ namespace meta {
 //!
 // Returns true if all the passed in values are true.
 //
-constexpr bool All()
+constexpr bool all()
 {
   return true;
 }
 
 template <typename T, typename ...Ts>
-constexpr bool All(T x, Ts ...xs)
+constexpr bool all(T x, Ts ...xs)
 {
-  return x && All(xs...);
+  return x && all(xs...);
 }
 
 //!
@@ -58,7 +58,7 @@ constexpr bool All(T x, Ts ...xs)
 // type, using `decltype` expresions on a `Valid<>()`.
 //
 template <typename ...Ts>
-constexpr bool Valid()
+constexpr bool valid()
 {
   return true;
 }
@@ -70,18 +70,18 @@ constexpr bool Valid()
 // @code{.cpp}
 // template <typename Arg>
 // struct Inout_value
-//   : meta::Concept<Inout_value<Arg> >
+//   : meta::concept<Inout_value<Arg> >
 // {
 //   template <typename T>
 //   auto requires(T&& x) -> decltype(
 //     meta::expressions(
-//       meta::Require<(In_value<T>())>(),
-//       meta::Require<(Out_value<T>())>()));
+//       meta::require<(In_value<T>())>(),
+//       meta::require<(Out_value<T>())>()));
 // };
 // @endcode
 //
 template <bool Requirement, typename Result=int>
-using Require = estd::enable_if_t<Requirement, Result>;
+using require = estd::enable_if_t<Requirement, Result>;
 
 //!
 // Allows to validate a sequence of expressions in a single decltype.
@@ -94,12 +94,12 @@ void expressions(Ts&&...);
 namespace detail {
 
 template <typename ConceptSig, typename Enable=void>
-struct Satisfies : std::false_type {};
+struct satisfies_t : std::false_type {};
 
 template <typename ConceptSpecT, typename ...Ts>
-struct Satisfies<
+struct satisfies_t<
     ConceptSpecT(Ts...),
-    EnableIfType_t<
+    enable_if_type_t<
         decltype(std::declval<ConceptSpecT>().requires(std::declval<Ts>()...))
       >
     >
@@ -141,7 +141,7 @@ struct Satisfies<
 template<typename ConceptSig>
 constexpr bool satisfies()
 {
-  return detail::Satisfies<ConceptSig>();
+  return detail::satisfies_t<ConceptSig>();
 }
 
 //!
@@ -153,21 +153,21 @@ constexpr bool satisfies()
 template<typename ConceptSig>
 constexpr bool check()
 {
-  return check(Pack<ConceptSig>{});
+  return check(pack<ConceptSig>{});
 }
 
 template<typename ConceptSpecT, typename ...Ts>
-constexpr bool check(Pack<ConceptSpecT(Ts...)>)
+constexpr bool check(pack<ConceptSpecT(Ts...)>)
 {
-  return Valid<decltype(
+  return valid<decltype(
     std::declval<ConceptSpecT>().requires(
       std::declval<Ts>()...))>();
 }
 
 template<template<typename...>class ConceptSpecT, typename ...Ts>
-constexpr bool check(Pack<ConceptSpecT<Ts...> >)
+constexpr bool check(pack<ConceptSpecT<Ts...> >)
 {
-  return Valid<decltype(
+  return valid<decltype(
     std::declval<ConceptSpecT<Ts...> >().requires(
       std::declval<Ts>()...))>();
 }
@@ -184,7 +184,7 @@ constexpr bool check(Pack<ConceptSpecT<Ts...> >)
 //
 // @code{.cpp}
 // template <typename T, typename U=T>
-// struct Equality_comparable : Concept<Equality_comparable<T, U>>
+// struct Equality_comparable : concept<Equality_comparable<T, U>>
 // {
 //    template <typename T, typename U>
 //    auto require(T&& x, U&& y) -> decltype(
@@ -208,16 +208,16 @@ constexpr bool check(Pack<ConceptSpecT<Ts...> >)
 // };
 //
 // template <typename T, typename U=T>
-// using Equality_comparable = Concept<Equality_comparable_spec(T, U)>;
+// using Equality_comparable = concept<Equality_comparable_spec(T, U)>;
 // @endcode
 //
 // @see satisfies
 //
 template <typename ConceptSpecT>
-struct Concept;
+struct concept;
 
 template <template<typename...> class ConceptSpecTplT, typename ...Ts>
-struct Concept<ConceptSpecTplT<Ts...>>
+struct concept<ConceptSpecTplT<Ts...>>
 {
   constexpr operator bool() const {
     return satisfies<ConceptSpecTplT<Ts...>(Ts...)>();
@@ -225,7 +225,7 @@ struct Concept<ConceptSpecTplT<Ts...>>
 };
 
 template <typename ConceptSpecT, typename ...Ts>
-struct Concept<ConceptSpecT(Ts...)>
+struct concept<ConceptSpecT(Ts...)>
 {
   constexpr operator bool() const {
     return satisfies<ConceptSpecT(Ts...)>();

@@ -4,8 +4,8 @@
 
 #include <atria/xform/Reduce.hpp>
 #include <atria/xform/Functional.hpp>
-#include <atria/meta/Utils.hpp>
-#include <atria/meta/CommonType.hpp>
+#include <atria/meta/utils.hpp>
+#include <atria/meta/common_type.hpp>
 #include <atria/estd/utility.hpp>
 #include <atria/estd/type_traits.hpp>
 #include <algorithm>
@@ -149,7 +149,7 @@ struct TakeReducer
     template <typename State, typename ...Inputs>
     auto operator() (State&& s, Inputs&& ...is)
       -> MaybeReduced<estd::decay_t<
-           meta::CommonType_t<
+           meta::common_type_t<
              decltype(s),
              decltype(reducer(s, is...)) > > >
     {

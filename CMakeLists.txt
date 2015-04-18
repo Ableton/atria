@@ -77,10 +77,10 @@ add_library(AtriaLib
   src/atria/estd/memory.hpp
   src/atria/estd/type_traits.hpp
   src/atria/estd/utility.hpp
-  src/atria/meta/CommonType.hpp
-  src/atria/meta/Pack.hpp
-  src/atria/meta/StdTuple.hpp
-  src/atria/meta/Utils.hpp
+  src/atria/meta/common_type.hpp
+  src/atria/meta/pack.hpp
+  src/atria/meta/std_tuple.hpp
+  src/atria/meta/utils.hpp
   src/atria/testing/Spies.hpp
   src/atria/testing/Benchmark.hpp
   )
@@ -110,9 +110,9 @@ if(GTEST_FOUND)
     src/atria/funken/tst_State.cpp
     src/atria/funken/tst_Struct.cpp
     src/atria/funken/tst_Xformed.cpp
-    src/atria/meta/tst_Concepts.cpp
-    src/atria/meta/tst_Pack.cpp
-    src/atria/meta/tst_StdTuple.cpp
+    src/atria/meta/tst_concepts.cpp
+    src/atria/meta/tst_pack.cpp
+    src/atria/meta/tst_std_tuple.cpp
     src/atria/testing/tst_Benchmark.cpp
     src/atria/testing/tst_Spies.cpp
     src/atria/xform/tst_Transducers.cpp

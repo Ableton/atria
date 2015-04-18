@@ -30,17 +30,17 @@ namespace meta {
 // paremeter pack.
 //
 template <typename ...Ts>
-struct Pack {};
+struct pack {};
 
-struct PackTag;
-
-template <class ... Args>
-struct PackIterator;
+struct pack_tag;
 
 template <class ... Args>
-struct PackIterator<atria::meta::Pack<Args...>>
+struct pack_iterator;
+
+template <class ... Args>
+struct pack_iterator<atria::meta::pack<Args...>>
 {
-  typedef atria::meta::PackTag tag;
+  typedef atria::meta::pack_tag tag;
   typedef boost::mpl::forward_iterator_tag category;
 };
 
@@ -51,77 +51,77 @@ namespace boost {
 namespace mpl {
 
 template <class ... Args>
-struct sequence_tag<atria::meta::Pack<Args...>>
+struct sequence_tag<atria::meta::pack<Args...>>
 {
-  typedef atria::meta::PackTag type;
+  typedef atria::meta::pack_tag type;
 };
 
 template <>
-struct front_impl<atria::meta::PackTag>
+struct front_impl<atria::meta::pack_tag>
 {
   template <typename PackT> struct apply;
   template <typename T, typename ...Ts>
-  struct apply<atria::meta::Pack<T, Ts...>>
+  struct apply<atria::meta::pack<T, Ts...>>
   {
     using type = T;
   };
 };
 
 template <>
-struct empty_impl<atria::meta::PackTag>
+struct empty_impl<atria::meta::pack_tag>
 {
   template <typename PackT> struct apply;
   template <typename ...Ts>
-  struct apply<atria::meta::Pack<Ts...>>
+  struct apply<atria::meta::pack<Ts...>>
     : std::integral_constant<bool, sizeof...(Ts) == 0>
   {};
 };
 
 template <>
-struct pop_front_impl<atria::meta::PackTag>
+struct pop_front_impl<atria::meta::pack_tag>
 {
   template <typename PackT> struct apply;
   template <class First, class ...Types>
-  struct apply<atria::meta::Pack<First, Types...>>
+  struct apply<atria::meta::pack<First, Types...>>
   {
-    typedef atria::meta::Pack<Types...> type;
+    typedef atria::meta::pack<Types...> type;
   };
 };
 
 template <>
-struct push_front_impl<atria::meta::PackTag>
+struct push_front_impl<atria::meta::pack_tag>
 {
   template <typename PackT, typename T> struct apply;
   template <typename T, typename ... Args>
-  struct apply<atria::meta::Pack<Args...>, T>
+  struct apply<atria::meta::pack<Args...>, T>
   {
-    typedef atria::meta::Pack<T, Args...> type;
+    typedef atria::meta::pack<T, Args...> type;
   };
 };
 
 template <>
-struct push_back_impl<atria::meta::PackTag>
+struct push_back_impl<atria::meta::pack_tag>
 {
   template <typename PackT, typename T> struct apply;
   template <typename T, typename ... Args >
-  struct apply<atria::meta::Pack<Args...>, T>
+  struct apply<atria::meta::pack<Args...>, T>
   {
-    typedef atria::meta::Pack<Args..., T> type;
+    typedef atria::meta::pack<Args..., T> type;
   };
 };
 
 template <>
-struct size_impl<atria::meta::PackTag>
+struct size_impl<atria::meta::pack_tag>
 {
   template <typename PackT> struct apply;
   template <typename ...Ts>
-  struct apply<atria::meta::Pack<Ts...>>
+  struct apply<atria::meta::pack<Ts...>>
     : std::integral_constant<std::size_t, sizeof...(Ts)>
   {};
 };
 
 template <>
-struct at_impl<atria::meta::PackTag>
+struct at_impl<atria::meta::pack_tag>
 {
   template <typename T>
   struct apply
@@ -131,7 +131,7 @@ struct at_impl<atria::meta::PackTag>
 };
 
 template <>
-struct back_impl<atria::meta::PackTag>
+struct back_impl<atria::meta::pack_tag>
 {
   template <typename T>
   struct apply
@@ -141,17 +141,17 @@ struct back_impl<atria::meta::PackTag>
 };
 
 template <>
-struct clear_impl<atria::meta::PackTag>
+struct clear_impl<atria::meta::pack_tag>
 {
   template <typename PackT>
   struct apply
   {
-    typedef atria::meta::Pack<> type;
+    typedef atria::meta::pack<> type;
   };
 };
 
 template <>
-struct pop_back_impl<atria::meta::PackTag>
+struct pop_back_impl<atria::meta::pack_tag>
 {
   template <typename T>
   struct apply
@@ -161,37 +161,37 @@ struct pop_back_impl<atria::meta::PackTag>
 };
 
 template <>
-struct begin_impl<atria::meta::PackTag>
+struct begin_impl<atria::meta::pack_tag>
 {
   template <class PackT> struct apply
   {
-    typedef atria::meta::PackIterator<PackT> type;
+    typedef atria::meta::pack_iterator<PackT> type;
   };
 };
 
 template <>
-struct end_impl<atria::meta::PackTag>
+struct end_impl<atria::meta::pack_tag>
 {
   template <typename> struct apply
   {
-    typedef atria::meta::PackIterator<
-      atria::meta::Pack<>> type;
+    typedef atria::meta::pack_iterator<
+      atria::meta::pack<>> type;
   };
 };
 
 template <typename First, class ... Args>
-struct deref<atria::meta::PackIterator<
-  atria::meta::Pack<First, Args...>>>
+struct deref<atria::meta::pack_iterator<
+  atria::meta::pack<First, Args...>>>
 {
   typedef First type;
 };
 
 template <typename First, class ... Args>
-struct next<atria::meta::PackIterator<
-  atria::meta::Pack<First, Args...>>>
+struct next<atria::meta::pack_iterator<
+  atria::meta::pack<First, Args...>>>
 {
-  typedef atria::meta::PackIterator<
-    atria::meta::Pack<Args...>> type;
+  typedef atria::meta::pack_iterator<
+    atria::meta::pack<Args...>> type;
 };
 
 } // namespace mpl

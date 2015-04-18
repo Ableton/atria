@@ -3,7 +3,7 @@
 #pragma once
 
 #include <atria/funken/detail/Access.hpp>
-#include <atria/meta/Utils.hpp>
+#include <atria/meta/utils.hpp>
 #include <utility>
 
 namespace atria {
@@ -14,10 +14,10 @@ void commit(RootValueTs&& ...roots)
 {
   meta::noop(
     (detail::Access::roots(std::forward<RootValueTs>(roots))->sendDown(),
-     meta::canBeVoid)...);
+     meta::can_be_void)...);
   meta::noop(
     (detail::Access::roots(std::forward<RootValueTs>(roots))->notify(),
-     meta::canBeVoid)...);
+     meta::can_be_void)...);
 }
 
 } // namespace funken

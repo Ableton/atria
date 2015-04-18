@@ -1,6 +1,6 @@
 // Copyright: 2014, Ableton AG, Berlin. All rights reserved.
 
-#include <atria/meta/Concept.hpp>
+#include <atria/meta/concept.hpp>
 #include <atria/testing/gtest.hpp>
 
 namespace atria {
@@ -17,7 +17,7 @@ constexpr bool Example_concept()
 {
   using namespace std;
 
-  return Valid<decltype(
+  return valid<decltype(
     expressions(
       // Dereferenceable
       *declval<T>(),
@@ -26,7 +26,7 @@ constexpr bool Example_concept()
       // Can forward dereferenced to value type
       forward<estd::Value_type<T>>( *declval<T>() ),
       // Has an action() method that may return void
-      (declval<T>().action(), canBeVoid)
+      (declval<T>().action(), can_be_void)
       ))>();
 }
 
@@ -34,7 +34,7 @@ constexpr bool Example_concept()
 // Models the concept:
 //   Example_concept
 //
-struct ExampleModel
+struct example_model
 {
   typedef int value_type;
   int operator*() { return 0; }
@@ -44,23 +44,23 @@ struct ExampleModel
 //!
 // Example non-model, missing action
 //
-struct ExampleNonModel
+struct example_non_model
 {
   typedef int value_type;
   std::string operator*() { return 0; }
   void action() {}
 };
 
-TEST(SimpleConcept, CanBeEvaluatedLikeAConceptLite)
+TEST(simple_concept, can_be_evaluated_like_aconcept_lite)
 {
-  EXPECT_TRUE(Example_concept<ExampleModel>());
+  EXPECT_TRUE(Example_concept<example_model>());
   // This is expected to fail to compile
   //   EXPECT_FALSE(Example_concept<ExampleNonModel>());
 }
 
-TEST(SimpleConcept, CanBeUsedWithConceptAssert)
+TEST(simple_concept, can_be_used_with_concept_assert)
 {
-  ABL_ASSERT_CONCEPT(Example_concept, ExampleModel);
+  ABL_ASSERT_CONCEPT(Example_concept, example_model);
   // This is expected to fail to compile
   //   ABL_ASSERT_CONCEPT(Example_concept, ExampleNonModel);
 }
@@ -72,7 +72,7 @@ TEST(SimpleConcept, CanBeUsedWithConceptAssert)
 // hand, it is a bit more "magical"
 //
 template <typename _>
-struct Example_concept_two : Concept<Example_concept_two<_>>
+struct Example_concept_two : concept<Example_concept_two<_>>
 {
   template <typename T>
   auto requires(T&& x) -> decltype(
@@ -84,31 +84,31 @@ struct Example_concept_two : Concept<Example_concept_two<_>>
       // Can forward dereferenced to value type
       std::forward<estd::Value_type<T>>( *x ),
       // Has an action() method that may return void
-      (x.action(), canBeVoid)
+      (x.action(), can_be_void)
       ));
 };
 
-TEST(Concept, CanBeEvaluatedLikeAConceptLite)
+TEST(concept, can_be_evaluated_like_aconcept_lite)
 {
-  EXPECT_TRUE(Example_concept_two<ExampleModel>());
-  EXPECT_FALSE(Example_concept_two<ExampleNonModel>());
+  EXPECT_TRUE(Example_concept_two<example_model>());
+  EXPECT_FALSE(Example_concept_two<example_non_model>());
 }
 
-TEST(Concept, CanBeUsedWithConceptAssert)
+TEST(concept, can_be_used_with_concept_assert)
 {
-  ABL_ASSERT_CONCEPT(Example_concept_two, ExampleModel);
-  ABL_ASSERT_NOT_CONCEPT(Example_concept_two, ExampleNonModel);
+  ABL_ASSERT_CONCEPT(Example_concept_two, example_model);
+  ABL_ASSERT_NOT_CONCEPT(Example_concept_two, example_non_model);
 }
 
-TEST(Concept, CanUseSatisfiesWithConceptSpec)
+TEST(concept, can_use_satisfies_with_concept_spec)
 {
-  EXPECT_TRUE(satisfies<Example_concept_two<void>(ExampleModel)>());
-  EXPECT_FALSE(satisfies<Example_concept_two<void>(ExampleNonModel)>());
+  EXPECT_TRUE(satisfies<Example_concept_two<void>(example_model)>());
+  EXPECT_FALSE(satisfies<Example_concept_two<void>(example_non_model)>());
 }
 
-TEST(Concept, CanUseCheckWithConceptSpec)
+TEST(concept, can_use_check_with_concept_spec)
 {
-  EXPECT_TRUE(check<Example_concept_two<void>(ExampleModel)>());
+  EXPECT_TRUE(check<Example_concept_two<void>(example_model)>());
   // This should fail to compiler, rising an error in the line of
   // the specification that is not met.
   //   EXPECT_FALSE(check<Example_concept_two<void>(ExampleNonModel)>());
@@ -130,38 +130,38 @@ struct Example_concept_spec
       // Can forward dereferenced to value type
       std::forward<estd::Value_type<T>>( *x ),
       // Has an action() method that may return void
-      (x.action(), canBeVoid)
+      (x.action(), can_be_void)
       ));
 };
 
 template <typename T>
-using Example_concept_three = Concept<Example_concept_spec(T)>;
+using Example_concept_three = concept<Example_concept_spec(T)>;
 
-TEST(Concept, CanBeDefinedInTwoSteps)
+TEST(concept, can_be_defined_in_two_steps)
 {
-  EXPECT_TRUE(Example_concept_three<ExampleModel>());
-  EXPECT_FALSE(Example_concept_three<ExampleNonModel>());
+  EXPECT_TRUE(Example_concept_three<example_model>());
+  EXPECT_FALSE(Example_concept_three<example_non_model>());
 }
 
 template <typename Arg1, typename Arg2=Arg1>
-struct AdlSwapable : Concept<AdlSwapable<Arg1, Arg2>>
+struct adl_swapable : concept<adl_swapable<Arg1, Arg2>>
 {
   template <typename T, typename U>
   auto requires(T&& x, U&& y) -> decltype(
     expressions(
-      (swap(x, y), canBeVoid),
-      (swap(y, x), canBeVoid)));
+      (swap(x, y), can_be_void),
+      (swap(y, x), can_be_void)));
 };
 
-void swap(ExampleModel&, ExampleModel&);
-void swap(ExampleModel&, int&);
-void swap(int&, ExampleModel&);
+void swap(example_model&, example_model&);
+void swap(example_model&, int&);
+void swap(int&, example_model&);
 
-TEST(Concept, OptionalMultipleArguments)
+TEST(concept, optional_multiple_arguments)
 {
-  EXPECT_TRUE((AdlSwapable<ExampleModel>()));
-  EXPECT_TRUE((AdlSwapable<ExampleModel, int>()));
-  EXPECT_FALSE((AdlSwapable<ExampleModel, float>()));
+  EXPECT_TRUE((adl_swapable<example_model>()));
+  EXPECT_TRUE((adl_swapable<example_model, int>()));
+  EXPECT_FALSE((adl_swapable<example_model, float>()));
 }
 
 } // namespace meta

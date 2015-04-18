@@ -10,13 +10,13 @@ namespace meta {
 // plug a dependent type expression in the second argument for SFINAE
 //
 template <typename CheckedType, typename Result = void>
-struct EnableIfType
+struct enable_if_type
 {
   using type = Result;
 };
 
 template<typename CheckedType, typename Result = void>
-using EnableIfType_t = typename EnableIfType<CheckedType, Result>::type;
+using enable_if_type_t = typename enable_if_type<CheckedType, Result>::type;
 
 //!
 // Type to enable making a type convertible from `void`.  The problem
@@ -24,14 +24,14 @@ using EnableIfType_t = typename EnableIfType<CheckedType, Result>::type;
 // to define a convertion between `void` and some types, in the
 // degenerate cases where it is desirable.
 //
-// @see CouldNotFindCommonType
+// @see could_not_find_common_type
 //
-constexpr struct FromVoid {} fromVoid {};
+struct from_void {};
 
 //!
 // Does nothing.
 //
-constexpr struct Noop
+constexpr struct noop_t
 {
   template <typename ...Args>
   void operator() (Args&&...) const {}
@@ -44,10 +44,10 @@ constexpr struct Noop
 //
 // @code{.cpp}
 // template <typename ...Args>
-// void doFoo(Args& args)
+// void do_foo(Args& args)
 // {
 //   using namespace meta;
-//   noop((args.foo(), canBeVoid)...);
+//   noop((args.foo(), can_be_void)...);
 // }
 // @endcode
 //
@@ -56,17 +56,17 @@ constexpr struct Noop
 //
 // @code{.cpp}
 // template <typename Arg1, typename Arg2=Arg1>
-// struct Swapable : Concept<Swapable<Arg1, Arg2>>
+// struct swapable : concept<swapable<Arg1, Arg2>>
 // {
 //   template <typename T, typename U>
 //   auto requires(T&& x, T&& y) -> decltype(
 //     expressions(
-//       (swap(x, y), canBeVoid),
-//       (swap(y, x), canBeVoid)));
+//       (swap(x, y), can_be_void),
+//       (swap(y, x), can_be_void)));
 // };
 // @endcode
 //
-constexpr int canBeVoid = 42;
+constexpr int can_be_void = 42;
 
 } // namespace meta
 } // namespace atria

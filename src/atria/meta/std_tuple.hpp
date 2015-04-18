@@ -29,15 +29,15 @@ namespace meta {
 // Sequence tag form std::tuple adaptor for boost::mpl.  This is
 // mostly based on http://stackoverflow.com/a/15865204
 //
-struct StdTupleTag;
+struct std_tuple_tag;
 
 template <class ... Args>
-struct StdTupleIterator;
+struct std_tuple_iterator;
 
 template <class ... Args>
-struct StdTupleIterator<std::tuple<Args...>>
+struct std_tuple_iterator<std::tuple<Args...>>
 {
-  typedef atria::meta::StdTupleTag tag;
+  typedef atria::meta::std_tuple_tag tag;
   typedef boost::mpl::forward_iterator_tag category;
 };
 
@@ -50,11 +50,11 @@ namespace mpl {
 template <class ... Args>
 struct sequence_tag<std::tuple<Args...>>
 {
-  typedef atria::meta::StdTupleTag type;
+  typedef atria::meta::std_tuple_tag type;
 };
 
 template <>
-struct front_impl<atria::meta::StdTupleTag>
+struct front_impl<atria::meta::std_tuple_tag>
 {
   template <typename Tuple>
   struct apply
@@ -64,7 +64,7 @@ struct front_impl<atria::meta::StdTupleTag>
 };
 
 template <>
-struct empty_impl<atria::meta::StdTupleTag>
+struct empty_impl<atria::meta::std_tuple_tag>
 {
   template <typename Tuple> struct apply
   : std::integral_constant<bool, std::tuple_size<Tuple>::value == 0>
@@ -73,7 +73,7 @@ struct empty_impl<atria::meta::StdTupleTag>
 };
 
 template <>
-struct pop_front_impl<atria::meta::StdTupleTag>
+struct pop_front_impl<atria::meta::std_tuple_tag>
 {
   template <typename Tuple> struct apply;
 
@@ -84,7 +84,7 @@ struct pop_front_impl<atria::meta::StdTupleTag>
 };
 
 template <>
-struct push_front_impl<atria::meta::StdTupleTag>
+struct push_front_impl<atria::meta::std_tuple_tag>
 {
   template <typename Tuple, typename T> struct apply;
 
@@ -96,7 +96,7 @@ struct push_front_impl<atria::meta::StdTupleTag>
 };
 
 template <>
-struct push_back_impl<atria::meta::StdTupleTag>
+struct push_back_impl<atria::meta::std_tuple_tag>
 {
   template <typename Tuple, typename T> struct apply;
 
@@ -109,7 +109,7 @@ struct push_back_impl<atria::meta::StdTupleTag>
 
 
 template <>
-struct size_impl<atria::meta::StdTupleTag>
+struct size_impl<atria::meta::std_tuple_tag>
 {
   template <typename Tuple> struct apply
   : std::tuple_size<Tuple>
@@ -118,7 +118,7 @@ struct size_impl<atria::meta::StdTupleTag>
 };
 
 template <>
-struct at_impl<atria::meta::StdTupleTag>
+struct at_impl<atria::meta::std_tuple_tag>
 {
   template <typename Tuple, typename N> struct apply
   : std::tuple_element<N::value, Tuple>
@@ -127,7 +127,7 @@ struct at_impl<atria::meta::StdTupleTag>
 };
 
 template <>
-struct back_impl<atria::meta::StdTupleTag>
+struct back_impl<atria::meta::std_tuple_tag>
 {
   template <typename Tuple> struct apply
   : std::tuple_element<std::tuple_size<Tuple>::value - 1, Tuple>
@@ -136,7 +136,7 @@ struct back_impl<atria::meta::StdTupleTag>
 };
 
 template <>
-struct clear_impl<atria::meta::StdTupleTag>
+struct clear_impl<atria::meta::std_tuple_tag>
 {
   template <typename Tuple> struct apply
   {
@@ -145,7 +145,7 @@ struct clear_impl<atria::meta::StdTupleTag>
 };
 
 template <>
-struct pop_back_impl<atria::meta::StdTupleTag>
+struct pop_back_impl<atria::meta::std_tuple_tag>
 {
   template <int ...> struct tuple_seq {};
   template <int N, int ...S> struct tuple_gens : tuple_gens<N-1, N-1, S...> {};
@@ -161,33 +161,33 @@ struct pop_back_impl<atria::meta::StdTupleTag>
 };
 
 template <>
-struct begin_impl<atria::meta::StdTupleTag>
+struct begin_impl<atria::meta::std_tuple_tag>
 {
   template <class Tuple> struct apply
   {
-    typedef atria::meta::StdTupleIterator<Tuple> type;
+    typedef atria::meta::std_tuple_iterator<Tuple> type;
   };
 };
 
 template <>
-struct end_impl<atria::meta::StdTupleTag>
+struct end_impl<atria::meta::std_tuple_tag>
 {
   template <typename> struct apply
   {
-    typedef atria::meta::StdTupleIterator<std::tuple<>> type;
+    typedef atria::meta::std_tuple_iterator<std::tuple<>> type;
   };
 };
 
 template <typename First, class ... Args>
-struct deref<atria::meta::StdTupleIterator<std::tuple<First, Args...>>>
+struct deref<atria::meta::std_tuple_iterator<std::tuple<First, Args...>>>
 {
   typedef First type;
 };
 
 template <typename First, class ... Args>
-struct next<atria::meta::StdTupleIterator<std::tuple<First, Args...>>>
+struct next<atria::meta::std_tuple_iterator<std::tuple<First, Args...>>>
 {
-  typedef atria::meta::StdTupleIterator<std::tuple<Args...>> type;
+  typedef atria::meta::std_tuple_iterator<std::tuple<Args...>> type;
 };
 
 } // namespace mpl

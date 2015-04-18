@@ -2,9 +2,10 @@
 
 #pragma once
 
-#include <atria/meta/CommonType.hpp>
-#include <atria/meta/Utils.hpp>
+#include <atria/meta/common_type.hpp>
+#include <atria/meta/utils.hpp>
 #include <atria/estd/type_traits.hpp>
+
 #include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
 #include <boost/variant/static_visitor.hpp>
@@ -82,7 +83,7 @@ template<typename T, typename U=ReturnType>
         !std::is_void<U>{},
       ReturnType>
   {
-    return impl_(std::forward<T>(x)), meta::fromVoid{};
+    return impl_(std::forward<T>(x)), meta::from_void{};
   }
 };
 
@@ -94,7 +95,7 @@ namespace detail
 // can be used as a placeholder for any parameter type in `result_of`
 // metacalls.
 //
-struct Bottom
+struct bottom
 {
   template <typename T> operator T&();
   template <typename T> operator const T&();
@@ -191,9 +192,8 @@ when(Fn&& fn)
 //
 template <typename... Fns>
 visitor_t<
-  typename meta::CommonType<
-      typename std::result_of<Fns(detail::Bottom)>::type...
-    >::type,
+  meta::common_type_t<
+      typename std::result_of<Fns(detail::bottom)>::type...>,
   Fns...>
 visitor(Fns&& ...fns)
 {

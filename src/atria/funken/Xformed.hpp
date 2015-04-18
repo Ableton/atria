@@ -43,7 +43,7 @@ struct XformedInout : private InoutImpl<SignalT>
 template <typename Xform, typename ...InTs>
 auto xformed(Xform&& xform, InTs&& ...ins)
   -> estd::enable_if_t<
-    meta::All(In_value<InTs>()...),
+    meta::all(In_value<InTs>()...),
     detail::XformedIn<
       typename decltype(
         detail::makeXformDownSignal(
@@ -60,7 +60,7 @@ auto xformed(Xform&& xform, InTs&& ...ins)
 template <typename Xform, typename Xform2, typename ...InoutTs>
 auto xformed(Xform&& xform, Xform2&& xform2, InoutTs&& ...ins)
   -> estd::enable_if_t<
-  (!In_value<Xform2>() && meta::All(Inout_value<InoutTs>()...)),
+  (!In_value<Xform2>() && meta::all(Inout_value<InoutTs>()...)),
   detail::XformedInout<
     typename decltype(
       detail::makeXformUpDownSignal(
@@ -163,7 +163,7 @@ auto uat(KeyT&& key)
 template <typename KeyT, typename ...Ins>
 auto atted(KeyT&& k, Ins&& ...ins)
   -> estd::enable_if_t<
-    meta::All(In_value<Ins>() && !Out_value<Ins>()...),
+    meta::all(In_value<Ins>() && !Out_value<Ins>()...),
     decltype(xformed(xat(k), ins...))
     >
 {
@@ -174,7 +174,7 @@ auto atted(KeyT&& k, Ins&& ...ins)
 template <typename KeyT, typename ...Ins>
 auto atted(KeyT&& k, Ins&& ...ins)
   -> estd::enable_if_t<
-    meta::All(Inout_value<Ins>()...),
+    meta::all(Inout_value<Ins>()...),
     decltype(xformed(xat(k), update(uat(k)), ins...))
     >
 {
@@ -235,7 +235,7 @@ auto setAttr(AttrPtrT p) -> detail::SetAttr<AttrPtrT>{ return { p }; }
 template <typename AttrPtrT, typename ...Ins>
 auto attred(AttrPtrT pAttr, Ins&& ...ins)
   -> estd::enable_if_t<
-    meta::All(In_value<Ins>() && !Out_value<Ins>()...),
+    meta::all(In_value<Ins>() && !Out_value<Ins>()...),
           decltype(xformed(xform::map(getAttr(pAttr)), ins...))
     >
 {
@@ -246,7 +246,7 @@ auto attred(AttrPtrT pAttr, Ins&& ...ins)
 template <typename AttrPtrT, typename ...Ins>
 auto attred(AttrPtrT pAttr, Ins&& ...ins)
   -> estd::enable_if_t<
-    meta::All(Inout_value<Ins>()...),
+    meta::all(Inout_value<Ins>()...),
           decltype(xformed(xform::map(getAttr(pAttr)),
                            update(setAttr(pAttr)), ins...))
     >
