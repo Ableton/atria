@@ -1,8 +1,8 @@
 // Copyright: 2014, Ableton AG, Berlin. All rights reserved.
 
-
-#include <atria/funken/Struct.hpp>
+#include <atria/funken/structure.hpp>
 #include <atria/testing/gtest.hpp>
+
 #include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
 #include <boost/fusion/include/adapt_struct.hpp>
@@ -15,12 +15,12 @@ namespace atria {
 namespace funken {
 namespace test {
 
-struct Person : Struct<Person>
+struct person : structure<person>
 {
   std::string name;
   std::size_t age;
 
-  Person(std::string name_ = "",
+  person(std::string name_ = "",
          std::size_t age_  = 0)
     : name(name_), age(age_) {}
 };
@@ -30,38 +30,38 @@ struct Person : Struct<Person>
 } // namespace atria
 
 ABL_FUNKEN_STRUCT(
-  atria::funken::test::Person,
+  atria::funken::test::person,
   (std::string, name)
   (std::size_t, age))
 
 namespace atria {
 namespace funken {
 
-TEST(Struct, CanPutInHashMap)
+TEST(structure, can_put_in_hash_map)
 {
-  using test::Person;
-  std::unordered_set<Person> s;
-  s.insert(Person { "peter", 42 });
-  EXPECT_EQ(1, s.count(Person { "peter", 42 }));
-  EXPECT_EQ(0, s.count(Person { "peter", 13 }));
-  EXPECT_EQ(0, s.count(Person { "john", 42 }));
+  using test::person;
+  std::unordered_set<person> s;
+  s.insert(person { "peter", 42 });
+  EXPECT_EQ(1, s.count(person { "peter", 42 }));
+  EXPECT_EQ(0, s.count(person { "peter", 13 }));
+  EXPECT_EQ(0, s.count(person { "john", 42 }));
 }
 
-TEST(Struct, CanPutInMap)
+TEST(structure, can_put_in_map)
 {
-  using test::Person;
-  std::set<Person> s;
-  s.insert(Person { "peter", 42 });
-  EXPECT_EQ(1, s.count(Person { "peter", 42 }));
-  EXPECT_EQ(0, s.count(Person { "peter", 13 }));
-  EXPECT_EQ(0, s.count(Person { "john", 42 }));
+  using test::person;
+  std::set<person> s;
+  s.insert(person { "peter", 42 });
+  EXPECT_EQ(1, s.count(person { "peter", 42 }));
+  EXPECT_EQ(0, s.count(person { "peter", 13 }));
+  EXPECT_EQ(0, s.count(person { "john", 42 }));
 }
 
-TEST(Struct, InvalidateCache)
+TEST(structure, invalidate_cache)
 {
-  using test::Person;
-  auto x = Person { "john", 13 };
-  auto y = Person { "peter", 13 };
+  using test::person;
+  auto x = person { "john", 13 };
+  auto y = person { "peter", 13 };
   EXPECT_TRUE(x != y);
   auto z = y;
   z.name = "john";

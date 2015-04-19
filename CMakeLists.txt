@@ -72,17 +72,34 @@ feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 # Defining Atria
 add_library(AtriaLib
-  src/atria/variant/match.hpp
-  src/atria/variant/visitor.hpp
   src/atria/estd/memory.hpp
   src/atria/estd/type_traits.hpp
   src/atria/estd/utility.hpp
+  src/atria/funken/commit.hpp
+  src/atria/funken/concepts.hpp
+  src/atria/funken/detail
+  src/atria/funken/detail/access.hpp
+  src/atria/funken/detail/no_value.hpp
+  src/atria/funken/detail/root_signals.hpp
+  src/atria/funken/detail/signals.hpp
+  src/atria/funken/detail/watchable.hpp
+  src/atria/funken/detail/xform_signals.hpp
+  src/atria/funken/in.hpp
+  src/atria/funken/inout.hpp
+  src/atria/funken/out.hpp
+  src/atria/funken/sensor.hpp
+  src/atria/funken/state.hpp
+  src/atria/funken/structure.hpp
+  src/atria/funken/watch.hpp
+  src/atria/funken/xformed.hpp
   src/atria/meta/common_type.hpp
   src/atria/meta/pack.hpp
   src/atria/meta/std_tuple.hpp
   src/atria/meta/utils.hpp
-  src/atria/testing/spies.hpp
   src/atria/testing/benchmark.hpp
+  src/atria/testing/spies.hpp
+  src/atria/variant/match.hpp
+  src/atria/variant/visitor.hpp
   src/atria/xform/functional.hpp
   src/atria/xform/reduce.hpp
   src/atria/xform/transducers.hpp
@@ -108,19 +125,19 @@ if(GTEST_FOUND)
     ${cxx11_options} -Wno-global-constructors)
 
   add_executable(AtriaTest
-    src/atria/funken/tst_InAndOut.cpp
-    src/atria/funken/tst_Sensor.cpp
-    src/atria/funken/tst_State.cpp
-    src/atria/funken/tst_Struct.cpp
-    src/atria/funken/tst_Xformed.cpp
+    src/atria/funken/tst_in_and_out.cpp
+    src/atria/funken/tst_sensor.cpp
+    src/atria/funken/tst_state.cpp
+    src/atria/funken/tst_structure.cpp
+    src/atria/funken/tst_xformed.cpp
     src/atria/meta/tst_concepts.cpp
     src/atria/meta/tst_pack.cpp
     src/atria/meta/tst_std_tuple.cpp
     src/atria/testing/tst_benchmark.cpp
     src/atria/testing/tst_spies.cpp
+    src/atria/variant/tst_match.cpp
     src/atria/xform/tst_transducers.cpp
     src/atria/xform/tst_transducers_benchmark.cpp
-    src/atria/variant/tst_match.cpp
     )
 
   target_link_libraries(AtriaTest

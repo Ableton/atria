@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include <atria/funken/In.hpp>
-#include <atria/funken/Inout.hpp>
+#include <atria/funken/in.hpp>
+#include <atria/funken/inout.hpp>
 #include <atria/funken/detail/xform_signals.hpp>
 
 namespace atria {
@@ -12,24 +12,24 @@ namespace funken {
 namespace detail {
 
 template <typename SignalT>
-struct XformedIn : private InImpl<SignalT>
+struct xformed_input : private input_impl<SignalT>
 {
   friend class access;
-  using ImplT = InImpl<SignalT>;
-  using typename ImplT::value_type;
-  using ImplT::ImplT;
-  using ImplT::get;
+  using impl_t = input_impl<SignalT>;
+  using typename impl_t::value_type;
+  using impl_t::impl_t;
+  using impl_t::get;
 };
 
 template <typename SignalT>
-struct XformedInout : private InoutImpl<SignalT>
+struct xformed_inoutput : private inoutput_impl<SignalT>
 {
   friend class access;
-  using ImplT = InoutImpl<SignalT>;
-  using typename ImplT::value_type;
-  using ImplT::ImplT;
-  using ImplT::get;
-  using ImplT::set;
+  using impl_t = inoutput_impl<SignalT>;
+  using typename impl_t::value_type;
+  using impl_t::impl_t;
+  using impl_t::get;
+  using impl_t::set;
 };
 
 } // namespace detail
@@ -44,7 +44,7 @@ template <typename Xform, typename ...InTs>
 auto xformed(Xform&& xform, InTs&& ...ins)
   -> estd::enable_if_t<
     meta::all(In_value<InTs>()...),
-    detail::XformedIn<
+    detail::xformed_input<
       typename decltype(
         detail::make_xform_down_signal(
           xform, detail::access::signal(ins)...)
@@ -61,7 +61,7 @@ template <typename Xform, typename Xform2, typename ...InoutTs>
 auto xformed(Xform&& xform, Xform2&& xform2, InoutTs&& ...ins)
   -> estd::enable_if_t<
   (!In_value<Xform2>() && meta::all(Inout_value<InoutTs>()...)),
-  detail::XformedInout<
+  detail::xformed_inoutput<
     typename decltype(
       detail::make_xform_up_down_signal(
         xform, xform2, detail::access::signal(ins)...)
@@ -83,7 +83,7 @@ using detail::update;
 
 namespace detail {
 
-struct AtReducer
+struct at_reducer
 {
   template <typename ReducerT, typename KeyT>
   struct apply
@@ -111,7 +111,7 @@ struct AtReducer
 };
 
 template <typename KeyT>
-struct AtUpdater
+struct at_updater
 {
   KeyT key;
 
@@ -136,7 +136,7 @@ struct AtUpdater
 //
 template <typename KeyT>
 auto xat(KeyT&& key)
-  -> xform::detail::transducer<detail::AtReducer, estd::decay_t<KeyT> >
+  -> xform::detail::transducer<detail::at_reducer, estd::decay_t<KeyT> >
 {
   return std::forward<KeyT>(key);
 }
@@ -149,7 +149,7 @@ auto xat(KeyT&& key)
 //
 template <typename KeyT>
 auto uat(KeyT&& key)
-  -> detail::AtUpdater<estd::decay_t<KeyT> >
+  -> detail::at_updater<estd::decay_t<KeyT> >
 {
   return { std::forward<KeyT>(key) };
 }
@@ -186,26 +186,26 @@ auto atted(KeyT&& k, Ins&& ...ins)
 namespace detail {
 
 template <typename AttrPtr>
-struct GetAttr
+struct get_attr_fn
 {
-  AttrPtr pAttr;
+  AttrPtr attr;
 
   //! @todo variadic version
   template <typename T>
-  auto operator()(T&& x) const -> decltype(x.*pAttr)
+  auto operator()(T&& x) const -> decltype(x.*attr)
   {
-    return x.*pAttr;
+    return x.*attr;
   }
 };
 
 template <typename AttrPtr>
-struct SetAttr
+struct set_attr_fn
 {
-  AttrPtr pAttr;
+  AttrPtr attr;
   template <typename T, typename U>
   auto operator()(T x, U&& v) const -> T
   {
-    x.*pAttr = std::forward<U>(v);
+    x.*attr = std::forward<U>(v);
     modified(x);
     return x;
   }
@@ -218,14 +218,14 @@ struct SetAttr
 // member to the applied objects.
 //
 template <typename AttrPtrT>
-auto getAttr(AttrPtrT p) -> detail::GetAttr<AttrPtrT> { return { p }; }
+auto get_attr(AttrPtrT p) -> detail::get_attr_fn<AttrPtrT> { return { p }; }
 
 //!
 // Returns a update function that uses the given pointer to member.
 // @see update
 //
 template <typename AttrPtrT>
-auto setAttr(AttrPtrT p) -> detail::SetAttr<AttrPtrT>{ return { p }; }
+auto set_attr(AttrPtrT p) -> detail::set_attr_fn<AttrPtrT>{ return { p }; }
 
 //!
 // Given a pointer to member, returns a *xformed* version of the ins
@@ -233,26 +233,26 @@ auto setAttr(AttrPtrT p) -> detail::SetAttr<AttrPtrT>{ return { p }; }
 // version is an inout.
 //
 template <typename AttrPtrT, typename ...Ins>
-auto attred(AttrPtrT pAttr, Ins&& ...ins)
+auto attred(AttrPtrT attr, Ins&& ...ins)
   -> estd::enable_if_t<
     meta::all(In_value<Ins>() && !Out_value<Ins>()...),
-          decltype(xformed(xform::map(getAttr(pAttr)), ins...))
+          decltype(xformed(xform::map(get_attr(attr)), ins...))
     >
 {
-  return xformed(xform::map(getAttr(pAttr)),
+  return xformed(xform::map(get_attr(attr)),
                  std::forward<Ins>(ins)...);
 }
 
 template <typename AttrPtrT, typename ...Ins>
-auto attred(AttrPtrT pAttr, Ins&& ...ins)
+auto attred(AttrPtrT attr, Ins&& ...ins)
   -> estd::enable_if_t<
     meta::all(Inout_value<Ins>()...),
-          decltype(xformed(xform::map(getAttr(pAttr)),
-                           update(setAttr(pAttr)), ins...))
+          decltype(xformed(xform::map(get_attr(attr)),
+                           update(set_attr(attr)), ins...))
     >
 {
-  return xformed(xform::map(getAttr(pAttr)),
-                 update(setAttr(pAttr)),
+  return xformed(xform::map(get_attr(attr)),
+                 update(set_attr(attr)),
                  std::forward<Ins>(ins)...);
 }
 

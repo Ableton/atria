@@ -3,6 +3,7 @@
 #pragma once
 
 #include <atria/estd/type_traits.hpp>
+
 #include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
 #include <boost/operators.hpp>
@@ -22,29 +23,29 @@ namespace detail {
 
 //! Similar to boost::hash_value
 template <typename T>
-std::size_t hashValue(const T& v)
+std::size_t hash_value(const T& v)
 {
   return std::hash<T>{}(v);
 }
 
 //! Similar to boost::hash_combine
 template <typename T>
-void hashCombine(std::size_t& seed, const T& v)
+void hash_combine(std::size_t& seed, const T& v)
 {
-  seed ^= hashValue(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+  seed ^= hash_value(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 }
 
-struct HashCombine
+struct hash_combine_fn
 {
   template <typename T>
   std::size_t operator()(std::size_t seed, const T& v) const
   {
-    hashCombine(seed, v);
+    hash_combine(seed, v);
     return seed;
   }
 };
 
-struct FirstEqualToSecond
+struct first_equal_to_second
 {
   template <typename T>
   bool operator()(const T& x) const
@@ -60,15 +61,15 @@ struct FirstEqualToSecond
 // @todo doc
 //
 template <typename T>
-struct Struct
-  : boost::equality_comparable<Struct<T> >
-  , boost::less_than_comparable<Struct<T> >
+struct structure
+  : boost::equality_comparable<structure<T> >
+  , boost::less_than_comparable<structure<T> >
 {
-  Struct() = default;
-  Struct(Struct&& x) = default;
-  Struct(const Struct& x) = default;
-  Struct& operator=(Struct&& x) = default;
-  Struct& operator=(const Struct& x) = default;
+  structure() = default;
+  structure(structure&& x) = default;
+  structure(const structure& x) = default;
+  structure& operator=(structure&& x) = default;
+  structure& operator=(const structure& x) = default;
 
 
   std::size_t hash() const
@@ -83,7 +84,7 @@ struct Struct
     else
     {
       using namespace boost::fusion;
-      auto hash = fold(self(), 0, detail::HashCombine{});
+      auto hash = fold(self(), 0, detail::hash_combine_fn{});
       mHash = hash;
       return hash;
     }
@@ -102,7 +103,7 @@ private:
 };
 
 template <typename T>
-bool operator==(const Struct<T>& a, const Struct<T>& b)
+bool operator==(const structure<T>& a, const structure<T>& b)
 {
   if (&a == &b)
     return true;
@@ -112,14 +113,14 @@ bool operator==(const Struct<T>& a, const Struct<T>& b)
 }
 
 template <typename T>
-bool operator<(const Struct<T>& a, const Struct<T>& b)
+bool operator<(const structure<T>& a, const structure<T>& b)
 {
   return boost::fusion::less(a.self(), b.self());
 }
 
 template <typename T>
 auto operator<<(std::ostream& os, const T& x)
-  -> estd::enable_if_t<std::is_convertible<T&, Struct<T>&>::value,
+  -> estd::enable_if_t<std::is_convertible<T&, structure<T>&>::value,
                        std::ostream&>
 {
   os << typeid(x).name();
@@ -128,16 +129,16 @@ auto operator<<(std::ostream& os, const T& x)
 }
 
 //!
-// Call this on an `Struct` value to indicate that is has indeed
+// Call this on an `structure` value to indicate that is has indeed
 // changed, invalidating its cached values.
 //
 template <typename T>
 auto modified(T&)
-  -> estd::enable_if_t<!std::is_convertible<T&, Struct<T>& >::value>
+  -> estd::enable_if_t<!std::is_convertible<T&, structure<T>& >::value>
 {}
 
 template <typename T>
-void modified(Struct<T>& x)
+void modified(structure<T>& x)
 {
   x.modified();
 }
@@ -148,9 +149,9 @@ void modified(Struct<T>& x)
 namespace std {
 
 template <typename T>
-struct hash<atria::funken::Struct<T> >
+struct hash<atria::funken::structure<T> >
 {
-  std::size_t operator()(const atria::funken::Struct<T>& v) const
+  std::size_t operator()(const atria::funken::structure<T>& v) const
   {
     return v.hash();
   }
@@ -158,12 +159,12 @@ struct hash<atria::funken::Struct<T> >
 
 } // namespace std
 
-#define ABL_FUNKEN_STRUCT(StructFullName, StructMembers)                \
-  BOOST_FUSION_ADAPT_STRUCT(StructFullName, StructMembers)              \
+#define ABL_FUNKEN_STRUCT(structure_full_name, structure_members)       \
+  BOOST_FUSION_ADAPT_STRUCT(structure_full_name, structure_members)     \
   namespace std {                                                       \
-  template<>                                                            \
-  struct hash<StructFullName>                                           \
-    : hash<atria::funken::Struct<StructFullName> >                    \
-  {};                                                                   \
+    template<>                                                          \
+    struct hash<structure_full_name>                                    \
+      : hash<atria::funken::structure<structure_full_name> >            \
+    {};                                                                 \
   } /* namespace std */                                                 \
 /**/

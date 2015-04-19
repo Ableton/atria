@@ -10,39 +10,39 @@ namespace atria {
 namespace funken {
 
 template <typename SensorFnT>
-class Sensor : private detail::watchable<
+class sensor : private detail::watchable<
   estd::decay_t<estd::result_of_t<SensorFnT()> > >
 {
-  using SignalPtrT = decltype(
+  using signal_ptr_t = decltype(
     detail::make_sensor_signal(std::declval<SensorFnT>()));
 public:
   using value_type = estd::decay_t<estd::result_of_t<SensorFnT()> >;
 
-  Sensor()
-    : mpSignal(detail::make_sensor_signal(SensorFnT())) {}
-  Sensor(SensorFnT fn)
-    : mpSignal(detail::make_sensor_signal(std::move(fn))) {}
+  sensor()
+    : signal_(detail::make_sensor_signal(SensorFnT())) {}
+  sensor(SensorFnT fn)
+    : signal_(detail::make_sensor_signal(std::move(fn))) {}
 
-  Sensor(const Sensor&) = delete;
-  Sensor(Sensor&&) = default;
-  Sensor& operator=(const Sensor&) = delete;
-  Sensor& operator=(Sensor&&) = default;
+  sensor(const sensor&) = delete;
+  sensor(sensor&&) = default;
+  sensor& operator=(const sensor&) = delete;
+  sensor& operator=(sensor&&) = default;
 
   const value_type& get() const
   {
-    return mpSignal->last();
+    return signal_->last();
   }
 
 private:
-  const SignalPtrT& signal() { return mpSignal; }
-  const SignalPtrT& roots() { return mpSignal; }
+  const signal_ptr_t& signal() { return signal_; }
+  const signal_ptr_t& roots() { return signal_; }
 
   friend class detail::access;
-  SignalPtrT mpSignal;
+  signal_ptr_t signal_;
 };
 
 template <typename SensorFnT>
-Sensor<SensorFnT> sensor(SensorFnT fn)
+sensor<SensorFnT> make_sensor(SensorFnT fn)
 {
   return fn;
 }

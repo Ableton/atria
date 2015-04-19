@@ -1,53 +1,53 @@
 // Copyright: 2014, Ableton AG, Berlin. All rights reserved.
 
-#include <atria/funken/Concepts.hpp>
-#include <atria/funken/Commit.hpp>
-#include <atria/funken/State.hpp>
-#include <atria/funken/Watch.hpp>
+#include <atria/funken/concepts.hpp>
+#include <atria/funken/commit.hpp>
+#include <atria/funken/state.hpp>
+#include <atria/funken/watch.hpp>
 #include <atria/testing/spies.hpp>
 #include <atria/testing/gtest.hpp>
 
 namespace atria {
 namespace funken {
 
-struct NoDefaultCtr
+struct no_default_ctr
 {
-  NoDefaultCtr() = delete;
-  NoDefaultCtr(int) {}
-  bool operator==(NoDefaultCtr) const { return true; }
-  bool operator!=(NoDefaultCtr) const { return false; }
+  no_default_ctr() = delete;
+  no_default_ctr(int) {}
+  bool operator==(no_default_ctr) const { return true; }
+  bool operator!=(no_default_ctr) const { return false; }
 };
 
-TEST(State, Concepts)
+TEST(state, Concepts)
 {
-  EXPECT_TRUE(meta::check<In_value<State<int>>>());
-  EXPECT_TRUE(meta::check<Out_value<State<int>>>());
-  EXPECT_TRUE(meta::check<Root_value<State<int>>>());
+  EXPECT_TRUE(meta::check<In_value<state<int>>>());
+  EXPECT_TRUE(meta::check<Out_value<state<int>>>());
+  EXPECT_TRUE(meta::check<Root_value<state<int>>>());
 }
 
-TEST(State, HoldsAValue)
+TEST(state, holds_avalue)
 {
   {
-    auto x = state(1);
+    auto x = make_state(1);
     EXPECT_EQ(x.get(), 1);
   }
   {
-    auto x = state("hello");
+    auto x = make_state("hello");
     EXPECT_EQ(x.get(), "hello");
   }
   {
-    auto x = State<int> {};
+    auto x = state<int> {};
     EXPECT_EQ(x.get(), 0);
   }
   {
-    auto x = state(NoDefaultCtr { 42 });
-    EXPECT_EQ(x.get(), NoDefaultCtr { 42 });
+    auto x = make_state(no_default_ctr { 42 });
+    EXPECT_EQ(x.get(), no_default_ctr { 42 });
   }
 }
 
-TEST(State, NewValuesArentVisible)
+TEST(state, new_values_arent_visible)
 {
-  auto x = state(42);
+  auto x = make_state(42);
   x.set(13);
   EXPECT_EQ(x.get(), 42);
   x.set(16);
@@ -56,9 +56,9 @@ TEST(State, NewValuesArentVisible)
   EXPECT_EQ(x.get(), 42);
 }
 
-TEST(State, CommitMakesLatestValueVisible)
+TEST(state, commit_makes_latest_value_visible)
 {
-  auto x = state(42);
+  auto x = make_state(42);
   x.set(13);
   commit(x);
   EXPECT_EQ(x.get(), 13);
@@ -70,9 +70,9 @@ TEST(State, CommitMakesLatestValueVisible)
   EXPECT_EQ(x.get(), 3);
 }
 
-TEST(State, CommitIdempotence)
+TEST(state, commit_idempotence)
 {
-  auto x = state(42);
+  auto x = make_state(42);
   x.set(13);
   commit(x);
   EXPECT_EQ(x.get(), 13);
@@ -82,9 +82,9 @@ TEST(State, CommitIdempotence)
   EXPECT_EQ(x.get(), 13);
 }
 
-TEST(State, WatcheNotifiedOnCommit)
+TEST(state, watche_notified_on_commit)
 {
-  auto x = state(42);
+  auto x = make_state(42);
   auto s = testing::spy();
   watch(x, s);
 
@@ -95,10 +95,10 @@ TEST(State, WatcheNotifiedOnCommit)
   EXPECT_EQ(s.count(), 1);
 }
 
-TEST(State, WatchesAlwaysViewConsistentState)
+TEST(state, watches_always_view_consistent_state)
 {
-  auto x = state(42);
-  auto y = state(35);
+  auto x = make_state(42);
+  auto y = make_state(35);
   auto sx = testing::spy([&](int old, int curr) {
       EXPECT_EQ(42, old);
       EXPECT_EQ(84, curr);
@@ -125,12 +125,12 @@ TEST(State, WatchesAlwaysViewConsistentState)
   EXPECT_EQ(sy.count(), 1);
 }
 
-TEST(State, CapsuleCarriesItsOwnWatchers)
+TEST(state, capsule_carries_its_own_watchers)
 {
   auto sig = std::shared_ptr<detail::state_up_down_signal<int>>{};
   auto s = testing::spy();
   {
-    auto st = state(42);
+    auto st = make_state(42);
     sig = detail::access::signal(st);
     watch(st, s);
     sig->push_down(12);
