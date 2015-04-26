@@ -53,7 +53,7 @@ auto comp(Fn&& f, Fns&& ...fns)
 //!
 // Similar to clojure.core/identity
 //
-constexpr struct identity_fn
+constexpr struct identity_t
 {
   template <typename ArgT>
   constexpr auto operator() (ArgT&& x) const -> ArgT&&
