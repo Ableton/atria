@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <atria/meta/Utils.hpp>
+#include <atria/meta/utils.hpp>
 #include <type_traits>
 
 namespace atria {
@@ -37,13 +37,13 @@ namespace detail {
 template <typename T, typename Enable=void>
 struct has_value_type : std::false_type {};
 template <typename T>
-struct has_value_type<T, meta::EnableIfType_t<typename T::value_type> >
+struct has_value_type<T, meta::enable_if_type_t<typename T::value_type> >
   : std::true_type {};
 
 template <typename T, typename Enable=void>
 struct has_dereference : std::false_type {};
 template <typename T>
-struct has_dereference<T, meta::EnableIfType_t<decltype(*std::declval<T>())> >
+struct has_dereference<T, meta::enable_if_type_t<decltype(*std::declval<T>())> >
   : std::true_type {};
 
 template <typename T, typename Enable=void>
