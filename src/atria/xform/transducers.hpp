@@ -46,12 +46,12 @@ struct transducer : std::tuple<ParamTs...>
   using base_t::base_t;
 
   template <typename ...Ts>
-  transducer(Ts&& ...ts)
+  constexpr transducer(Ts&& ...ts)
     : base_t(std::forward<Ts>(ts)...)
   {}
 
   template<typename ReducerT>
-  auto operator() (ReducerT&& reducer) const
+  constexpr auto operator() (ReducerT&& reducer) const
     -> typename ReducerGenT::template apply<
       estd::decay_t<ReducerT>,
       estd::decay_t<ParamTs>...
@@ -62,7 +62,7 @@ struct transducer : std::tuple<ParamTs...>
   }
 
   template<typename ReducerT, std::size_t...indexes_t>
-  auto make(ReducerT&& reducer, estd::index_sequence<indexes_t...>) const
+  constexpr auto make(ReducerT&& reducer, estd::index_sequence<indexes_t...>) const
     -> typename ReducerGenT::template apply<
       estd::decay_t<ReducerT>,
       estd::decay_t<ParamTs>...
@@ -93,22 +93,22 @@ struct map_reducer
   };
 };
 
-struct flat_map_reducer
+struct cat_reducer
 {
-  template <typename ReducerT,
-            typename MappingT>
+  template <typename ReducerT>
   struct apply
   {
     ReducerT reducer;
-    MappingT mapping;
 
     template <typename State, typename ...Inputs>
     auto operator() (State&& s, Inputs&& ...is)
-      -> decltype(reduce(reducer, std::forward<State>(s),
-                         mapping(std::forward<Inputs>(is)...)))
+      -> decltype(reduce(reducer,
+                         std::forward<State>(s),
+                         std::forward<Inputs>(is)...))
     {
-      return reduce(reducer, std::forward<State>(s),
-                    mapping(std::forward<Inputs>(is)...));
+      return reduce(reducer,
+                    std::forward<State>(s),
+                    std::forward<Inputs>(is)...);
     }
   };
 };
@@ -177,13 +177,22 @@ auto map(MappingT&& mapping)
 }
 
 //!
+// Similar to clojure.core/cat
+//
+constexpr auto cat = detail::transducer<detail::cat_reducer> {};
+
+//!
 // Similar to clojure.core/mapcat$1
 //
 template <typename MappingT>
-auto flat_map(MappingT&& mapping)
-  -> detail::transducer<detail::flat_map_reducer, estd::decay_t<MappingT> >
+auto mapcat(MappingT&& mapping)
+  -> decltype(comp(
+                cat,
+                map(std::forward<MappingT>(mapping))))
 {
-  return std::forward<MappingT>(mapping);
+  return comp(
+    cat,
+    map(std::forward<MappingT>(mapping)));
 }
 
 //!

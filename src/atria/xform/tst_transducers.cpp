@@ -137,12 +137,20 @@ TEST(into, zipping)
   EXPECT_EQ(res, (std::vector<tup> { tup(1, "a"), tup(2, "b") }));
 }
 
-TEST(into, flat_map)
+TEST(into, cat)
 {
   auto v = std::vector<std::vector<int>> { { 1, 2 }, { 3 }, { 4, 5, 6 } };
 
-  auto res = into(std::vector<int> {}, flat_map(identity), v);
+  auto res = into(std::vector<int> {}, cat, v);
   EXPECT_EQ(res, (std::vector<int> { 1, 2, 3, 4, 5, 6 }));
+}
+
+TEST(into, mapcat)
+{
+  auto v = std::vector<std::vector<int>> { { 1, 2 }, { 3 }, { 4, 5, 6 } };
+
+  auto res = into(std::vector<int> {}, mapcat([](int x) { return x * 2; }), v);
+  EXPECT_EQ(res, (std::vector<int> { 2, 4, 6, 8, 10, 12 }));
 }
 
 TEST(into, take)
