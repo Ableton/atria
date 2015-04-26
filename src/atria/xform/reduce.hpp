@@ -4,6 +4,8 @@
 
 #include <atria/estd/type_traits.hpp>
 #include <atria/estd/utility.hpp>
+#include <atria/xform/functional.hpp>
+
 #include <algorithm>
 #include <numeric>
 #include <tuple>
@@ -51,19 +53,27 @@ auto reduced(T&& value) -> reduced_t<estd::decay_t<T> >
   return { std::forward<T>(value) };
 }
 
+template <typename T>
+struct from_reduced_impl : identity_t {};
+
+template <typename T>
+struct from_reduced_impl<reduced_t<T>>
+{
+  template <typename ArgT>
+    auto operator() (ArgT&& x) -> decltype(x.value) { return x.value; }
+};
+
 //!
 // Unwraps the value in a potentially *reduced* box.
 // @see reduced_t
 // @see maybe_reduced
 //
 template <typename T>
-auto from_reduced(T& v) -> T& { return v; }
-template <typename T>
-auto from_reduced(const T& v) -> const T& { return v; }
-template <typename T>
-auto from_reduced(reduced_t<T>& v) -> T& { return v.value; }
-template <typename T>
-auto from_reduced(const reduced_t<T>& v) -> const T& { return v.value; }
+auto from_reduced(T&& t) ->
+  decltype(from_reduced_impl<estd::decay_t<T>>{}(std::forward<T>(t)))
+{
+  return from_reduced_impl<estd::decay_t<T>>{}(std::forward<T>(t));
+}
 
 //!
 // Returns whether all values of a type are finished reducing.
@@ -112,10 +122,11 @@ struct maybe_reduced
 
 template <typename T>
 auto is_reduced(const maybe_reduced<T>& v) -> bool { return v.reduced; }
+
 template <typename T>
-auto from_reduced(maybe_reduced<T>& v) -> T& { return v.value; }
-template <typename T>
-auto from_reduced(const maybe_reduced<T>& v) -> const T& { return v.value; }
+struct from_reduced_impl<maybe_reduced<T>>
+  : from_reduced_impl<reduced_t<T>> {};
+
 
 namespace detail {
 
