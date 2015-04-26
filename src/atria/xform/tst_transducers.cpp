@@ -85,6 +85,17 @@ TEST(transduce, variadic)
             21);
 }
 
+TEST(transduce, early_termination_does_not_leak)
+{
+  auto v1 = { 1, 2, 3, 4 };
+
+  EXPECT_EQ(transduce(take(2),
+                      std::plus<int>{},
+                      0,
+                      v1),
+            3);
+}
+
 TEST(into, mutation)
 {
   auto v = std::vector<int> { 1, 2, 3 };
@@ -159,6 +170,20 @@ TEST(into, take)
 
   auto res = into(std::vector<int> {}, take(3), v);
   EXPECT_EQ(res, (std::vector<int> { 1, 2, 3 }));
+}
+
+TEST(into, take_cat_terminates_early)
+{
+  auto v = std::vector<std::vector<int>> { { 1, 2 }, { 3 }, { 4, 5, 6 } };
+
+  auto res = into(
+    std::vector<int> {},
+    comp(cat, map([] (int x) {
+          EXPECT_LT(x, 5);
+          return x;
+        }), take(4)),
+    v);
+  EXPECT_EQ(res, (std::vector<int> { 1, 2, 3, 4 }));
 }
 
 TEST(into, take_stops_early_enough)

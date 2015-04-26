@@ -16,6 +16,7 @@
 #ifndef ABL_REDUCE_WITH_ACCUMULATE
 #define ABL_REDUCE_WITH_ACCUMULATE 0
 #endif
+
 //!
 // When defined to 1, reduce will be defined separately for the
 // non-variadic version.
@@ -120,13 +121,48 @@ namespace detail {
 
 template <typename ReducerT,
           typename StateT,
+          typename InputRangeT>
+auto reduce_nested_accumulate(ReducerT&& reducer, StateT&& state, InputRangeT&& range)
+  -> estd::decay_t<StateT>
+{
+  return std::accumulate(
+    std::begin(range),
+    std::end(range),
+    std::forward<StateT>(state),
+    std::forward<ReducerT>(reducer));
+}
+
+template <typename ReducerT,
+          typename StateT,
+          typename InputRangeT>
+auto reduce_nested_non_variadic(ReducerT&& reducer, StateT&& initial, InputRangeT&& range)
+  -> estd::decay_t<decltype(reducer(initial, *range.begin()))>
+{
+  using final_state_t = estd::decay_t<decltype(
+    reducer(initial, *range.begin()))>;
+
+  auto state = final_state_t(std::forward<StateT>(initial));
+  for (auto first = std::begin(range),
+            last  = std::end(range);
+       !is_reduced(state) && first != last;
+       ++first)
+  {
+    state = reducer(from_reduced(state), *first);
+  }
+
+  return state;
+}
+
+
+template <typename ReducerT,
+          typename StateT,
           std::size_t ...Indices,
           typename ...InputRangeTs>
-auto reduce(ReducerT&& reducer,
-            StateT&& initial,
-            estd::index_sequence<Indices...>,
-            InputRangeTs&& ...ranges)
-  -> estd::decay_t<StateT>
+auto reduce_nested_variadic_impl(ReducerT&& reducer,
+                                 StateT&& initial,
+                                 estd::index_sequence<Indices...>,
+                                 InputRangeTs&& ...ranges)
+  -> estd::decay_t<decltype(reducer(initial, *ranges.begin()...))>
 {
   using final_state_t = estd::decay_t<decltype(
     reducer(initial, *ranges.begin()...))>;
@@ -144,76 +180,92 @@ auto reduce(ReducerT&& reducer,
                     *std::get<Indices>(firsts)...);
   }
 
-  return from_reduced(state);
+  return state;
+}
+
+template <typename ReducerT,
+          typename StateT,
+          typename ...InputRangeTs>
+auto reduce_nested_variadic(ReducerT&& reducer, StateT&& state, InputRangeTs&& ...ranges)
+  -> estd::decay_t<StateT>
+{
+  return detail::reduce_nested_variadic_impl(
+    std::forward<ReducerT>(reducer),
+    std::forward<StateT>(state),
+    estd::make_index_sequence<sizeof...(InputRangeTs)> {},
+    std::forward<InputRangeTs>(ranges)...);
 }
 
 } // namespace detail
 
+
+#if ABL_REDUCE_WITH_ACCUMULATE
+#  define ABL_REDUCE_NESTED_NON_VARIADIC_IMPL \
+  ::atria::xform::detail::reduce_nested_accumulate
+#elif ABL_REDUCE_NON_VARIADIC
+#  define ABL_REDUCE_NESTED_NON_VARIADIC_IMPL \
+  ::atria::xform::detail::reduce_nested_non_variadic
+#else
+#  define ABL_REDUCE_NESTED_NON_VARIADIC_IMPL \
+  ::atria::xform::detail::reduce_nested_variadic
+#endif
+
+//!
+// Similar to @a reduce, but does not unwrap `reduced` values.  This is
+// useful when calling reduce recursively inside a transducer.
+// @see take
+//
+template <typename ReducerT,
+          typename StateT,
+          typename InputRangeT>
+auto reduce_nested(ReducerT&& reducer, StateT&& state, InputRangeT&& range)
+  -> decltype(ABL_REDUCE_NESTED_NON_VARIADIC_IMPL(
+                std::forward<ReducerT>(reducer),
+                std::forward<StateT>(state),
+                std::forward<InputRangeT>(range)))
+{
+  return ABL_REDUCE_NESTED_NON_VARIADIC_IMPL(
+    std::forward<ReducerT>(reducer),
+    std::forward<StateT>(state),
+    std::forward<InputRangeT>(range));
+}
+
+template <typename ReducerT,
+          typename StateT,
+          typename InputRangeT,
+          typename ...InputRangeTs>
+auto reduce_nested(ReducerT&& reducer, StateT&& state, InputRangeT&& range,
+                   InputRangeTs&& ...ranges)
+  -> decltype(detail::reduce_nested_variadic(
+                std::forward<ReducerT>(reducer),
+                std::forward<StateT>(state),
+                std::forward<InputRangeT>(range),
+                std::forward<InputRangeTs>(ranges)...))
+{
+  return detail::reduce_nested_variadic(
+    std::forward<ReducerT>(reducer),
+    std::forward<StateT>(state),
+    std::forward<InputRangeT>(range),
+    std::forward<InputRangeTs>(ranges)...);
+}
+
 //!
 // Similar to clojure.core/reduce.  Unlike `std::accumulate`, this
 // reduces over a range (doesn't take to distinct iterators) and can
-// reduce over several ranges at the same time.
-//
-
-#if ABL_REDUCE_WITH_ACCUMULATE
-
-template <typename ReducerT,
-          typename StateT,
-          typename InputRangeT>
-auto reduce(ReducerT&& reducer, StateT&& state, InputRangeT&& range)
-  -> estd::decay_t<StateT>
-{
-  return std::accumulate(
-    std::begin(range),
-    std::end(range),
-    std::forward<StateT>(state),
-    std::forward<ReducerT>(reducer));
-}
-
-#endif // ABL_REDUCE_WITH_ACCUMULATE
-
-#if !ABL_REDUCE_WITH_ACCUMULATE && ABL_REDUCE_NON_VARIADIC
-
-template <typename ReducerT,
-          typename StateT,
-          typename InputRangeT>
-auto reduce(ReducerT&& reducer, StateT&& initial, InputRangeT&& range)
-  -> estd::decay_t<StateT>
-{
-  using final_state_t = estd::decay_t<decltype(
-    reducer(initial, *range.begin()))>;
-
-  auto state = final_state_t(std::forward<StateT>(initial));
-  for (auto first = std::begin(range),
-            last  = std::end(range);
-       !is_reduced(state) && first != last;
-       ++first)
-  {
-    state = reducer(from_reduced(state), *first);
-  }
-  return from_reduced(state);
-}
-
-#endif // !ABL_REDUCE_WITH_ACCUMULATE && ABL_REDUCE_NON_VARIADIC
-
-//!
-// Variadic overload of `reduce()`
+// reduce over several ranges at the same time.  It also supports
+// early termination for transducers.
 //
 template <typename ReducerT,
           typename StateT,
           typename ...InputRangeTs>
 auto reduce(ReducerT&& reducer, StateT&& state, InputRangeTs&& ...ranges)
-  -> estd::enable_if_t<
-    (sizeof...(InputRangeTs) > 1)
-    || !ABL_REDUCE_NON_VARIADIC,
-    estd::decay_t<StateT>
-  >
+  -> estd::decay_t<StateT>
 {
-  return detail::reduce(
-    std::forward<ReducerT>(reducer),
-    std::forward<StateT>(state),
-    estd::make_index_sequence<sizeof...(InputRangeTs)> {},
-    std::forward<InputRangeTs>(ranges)...);
+  return from_reduced(
+    reduce_nested(
+      std::forward<ReducerT>(reducer),
+      std::forward<StateT>(state),
+      std::forward<InputRangeTs>(ranges)...));
 }
 
 } // namespace xform

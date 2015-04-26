@@ -8,7 +8,9 @@
 #include <atria/meta/common_type.hpp>
 #include <atria/estd/utility.hpp>
 #include <atria/estd/type_traits.hpp>
+
 #include <algorithm>
+#include <cassert>
 #include <iterator>
 
 namespace atria {
@@ -102,13 +104,13 @@ struct cat_reducer
 
     template <typename State, typename ...Inputs>
     auto operator() (State&& s, Inputs&& ...is)
-      -> decltype(reduce(reducer,
-                         std::forward<State>(s),
-                         std::forward<Inputs>(is)...))
+      -> decltype(reduce_nested(reducer,
+                                std::forward<State>(s),
+                                std::forward<Inputs>(is)...))
     {
-      return reduce(reducer,
-                    std::forward<State>(s),
-                    std::forward<Inputs>(is)...);
+      return reduce_nested(reducer,
+                           std::forward<State>(s),
+                           std::forward<Inputs>(is)...);
     }
   };
 };
@@ -153,13 +155,20 @@ struct take_reducer
              decltype(s),
              decltype(reducer(s, is...)) > > >
     {
-      if (n > 0)
+      if (n > 1)
       {
         --n;
         return reducer(std::forward<State>(s),
                        std::forward<Inputs>(is)...);
       }
-      return reduced(std::forward<State>(s));
+      else if (n == 1) {
+        return reduced(
+          reducer(std::forward<State>(s),
+                  std::forward<Inputs>(is)...));
+      } else {
+        assert(false);
+        return s;
+      }
     }
   };
 };
@@ -259,8 +268,9 @@ template <typename XformT,
           typename ReducerT,
           typename StateT,
           typename ...InputRangeTs>
-StateT transduce(XformT&& xform, ReducerT&& reducer,
-                 StateT&& state, InputRangeTs&& ...ranges)
+auto transduce(XformT&& xform, ReducerT&& reducer,
+               StateT&& state, InputRangeTs&& ...ranges)
+  -> estd::decay_t<StateT>
 {
   auto xformed = xform(std::forward<ReducerT>(reducer));
   return reduce(
