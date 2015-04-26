@@ -5,8 +5,10 @@
 //
 // #define ABL_REDUCE_WITH_ACCUMULATE 1
 // #define ABL_REDUCE_NON_VARIADIC 0
+#define ABL_XFORM_BENCHMARK_ENABLE_ANY 1
 
 #include <atria/xform/transduce.hpp>
+#include <atria/xform/transducer.hpp>
 #include <atria/xform/transducers.hpp>
 #include <atria/testing/benchmark.hpp>
 #include <atria/testing/gtest.hpp>
@@ -82,6 +84,23 @@ TEST(transduce_benchmark, filter_map_copy_transduce)
     });
 }
 
+#if ABL_XFORM_BENCHMARK_ENABLE_ANY
+TEST(transduce_benchmark, filter_map_copy_transduce_any)
+{
+  xform_benchmark(
+    [](const std::vector<int>& data)
+    {
+      transducer<int> xform = comp(
+        filter([](int x) { return x % 2 == 0; }),
+        map([](int x) { return x * 2; }));
+      return into(
+        std::vector<int>{},
+        xform,
+        data);
+    });
+}
+#endif // ABL_XFORM_BENCHMARK_ENABLE_ANY
+
 TEST(transduce_benchmark, filter_map_reduce_boost_range)
 {
   xform_benchmark(
@@ -150,6 +169,24 @@ TEST(transduce_benchmark, filter_map_reduce_transduce)
         data);
     });
 }
+
+#if ABL_XFORM_BENCHMARK_ENABLE_ANY
+TEST(transduce_benchmark, filter_map_reduce_transduce_any)
+{
+  xform_benchmark(
+    [](const std::vector<int>& data)
+    {
+      transducer<int> xform = comp(
+        filter([](int x) { return x % 2 == 0; }),
+        map([](int x) { return x * 2; }));
+      return transduce(
+        xform,
+        std::plus<int>{},
+        0,
+        data);
+    });
+}
+#endif // ABL_XFORM_BENCHMARK_ENABLE_ANY
 
 } // namespace funken
 } // namespace atria
