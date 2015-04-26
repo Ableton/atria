@@ -42,11 +42,13 @@ auto comp(F&& f)
 
 template <typename Fn, typename ...Fns>
 auto comp(Fn&& f, Fns&& ...fns)
-  -> detail::composed<estd::decay_t<Fn>,
-                      decltype(comp(std::forward<Fns>(fns)...))>
+  -> detail::composed<
+  estd::decay_t<Fn>,
+  estd::decay_t<decltype(comp(std::forward<Fns>(fns)...))>>
 {
-  using result_t = detail::composed<estd::decay_t<Fn>,
-                                   decltype(comp(std::forward<Fns>(fns)...))>;
+  using result_t = detail::composed<
+    estd::decay_t<Fn>,
+    estd::decay_t<decltype(comp(std::forward<Fns>(fns)...))>>;
   return result_t { std::forward<Fn>(f), comp(std::forward<Fns>(fns)...)};
 }
 
