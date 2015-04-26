@@ -136,7 +136,7 @@ struct at_updater
 //
 template <typename KeyT>
 auto xat(KeyT&& key)
-  -> xform::detail::transducer<detail::at_reducer, estd::decay_t<KeyT> >
+  -> xform::detail::transducer_impl<detail::at_reducer, estd::decay_t<KeyT> >
 {
   return std::forward<KeyT>(key);
 }

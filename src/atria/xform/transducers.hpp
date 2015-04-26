@@ -2,16 +2,13 @@
 
 #pragma once
 
+#include <atria/xform/reduced.hpp>
 #include <atria/xform/reduce.hpp>
-#include <atria/xform/functional.hpp>
-#include <atria/meta/utils.hpp>
 #include <atria/meta/common_type.hpp>
-#include <atria/estd/utility.hpp>
 #include <atria/estd/type_traits.hpp>
+#include <atria/estd/utility.hpp>
 
-#include <algorithm>
 #include <cassert>
-#include <iterator>
 
 namespace atria {
 namespace xform {
@@ -31,7 +28,7 @@ namespace detail {
 //
 // Writing functions that return functions without erasing their type
 // is very cumbersome in C++11 (this is not true with decltype(auto)
-// in the next standard).  The `transducer` type implements the first
+// in the next standard).  The `transducer_impl` type implements the first
 // two calls. The `ReducerGenT` parameter should have a nested
 // template `apply` that implements the last call.  It will be
 // constructed `reducer, params...` and it should be callable with
@@ -42,13 +39,13 @@ namespace detail {
 //
 template<typename ReducerGenT,
          typename ...ParamTs>
-struct transducer : std::tuple<ParamTs...>
+struct transducer_impl : std::tuple<ParamTs...>
 {
   using base_t = std::tuple<ParamTs...>;
   using base_t::base_t;
 
   template <typename ...Ts>
-  constexpr transducer(Ts&& ...ts)
+  constexpr transducer_impl(Ts&& ...ts)
     : base_t(std::forward<Ts>(ts)...)
   {}
 
@@ -180,7 +177,7 @@ struct take_reducer
 //
 template <typename MappingT>
 auto map(MappingT&& mapping)
-  -> detail::transducer<detail::map_reducer, estd::decay_t<MappingT> >
+  -> detail::transducer_impl<detail::map_reducer, estd::decay_t<MappingT> >
 {
   return std::forward<MappingT>(mapping);
 }
@@ -188,7 +185,7 @@ auto map(MappingT&& mapping)
 //!
 // Similar to clojure.core/cat
 //
-constexpr auto cat = detail::transducer<detail::cat_reducer> {};
+constexpr auto cat = detail::transducer_impl<detail::cat_reducer> {};
 
 //!
 // Similar to clojure.core/mapcat$1
@@ -209,7 +206,7 @@ auto mapcat(MappingT&& mapping)
 //
 template <typename IntegralT>
 auto take(IntegralT&& n)
-  -> detail::transducer<detail::take_reducer, estd::decay_t<IntegralT> >
+  -> detail::transducer_impl<detail::take_reducer, estd::decay_t<IntegralT> >
 {
   return n;
 }
@@ -222,78 +219,9 @@ auto take(IntegralT&& n)
 //
 template <typename ResultT=void, typename PredicateT>
 auto filter(PredicateT&& predicate)
-  -> detail::transducer<detail::filter_reducer, estd::decay_t<PredicateT> >
+  -> detail::transducer_impl<detail::filter_reducer, estd::decay_t<PredicateT> >
 {
   return std::forward<PredicateT>(predicate);
-}
-
-//!
-// Reducer that returns the last input of the sequence.
-//
-constexpr struct last_r_t
-{
-  template <typename StateT, typename ...InputTs>
-  constexpr auto operator() (StateT&&, InputTs&& ...ins) const
-    -> estd::decay_t<decltype(tuplify(std::forward<InputTs>(ins)...))>
-  {
-    return tuplify(std::forward<InputTs>(ins)...);
-  }
-
-  template <typename StateT, typename ...InputTs>
-  constexpr auto operator() (StateT&& s) const -> StateT&&
-  {
-    return std::forward<StateT>(s);
-  }
-} last_r {};
-
-//!
-// Reducer that outputs to the iterator that is passed as state.
-//
-constexpr struct output_r_t
-{
-  template <typename OutputItT, typename ...InputTs>
-  auto operator() (OutputItT it, InputTs&& ...ins) const
-    -> OutputItT
-  {
-    *it = tuplify(std::forward<InputTs>(ins)...);
-    return ++it;
-  }
-} output_r {};
-
-
-//!
-// Similar to clojure.core/transduce
-//
-template <typename XformT,
-          typename ReducerT,
-          typename StateT,
-          typename ...InputRangeTs>
-auto transduce(XformT&& xform, ReducerT&& reducer,
-               StateT&& state, InputRangeTs&& ...ranges)
-  -> estd::decay_t<StateT>
-{
-  auto xformed = xform(std::forward<ReducerT>(reducer));
-  return reduce(
-    xformed,
-    state,
-    std::forward<InputRangeTs>(ranges)...);
-}
-
-//!
-// Similar to clojure.core/transduce$4
-//
-template <typename CollectionT,
-          typename XformT,
-          typename ...InputRangeTs>
-auto into(CollectionT&& col, XformT&& xform, InputRangeTs&& ...ranges)
-  -> CollectionT&&
-{
-  transduce(
-    std::forward<XformT>(xform),
-    output_r,
-    std::back_inserter(col),
-    std::forward<InputRangeTs>(ranges)...);
-  return std::forward<CollectionT>(col);
 }
 
 } // namespace xform

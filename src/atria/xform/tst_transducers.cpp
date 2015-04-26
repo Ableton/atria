@@ -1,6 +1,7 @@
 // Copyright: 2014, Ableton AG, Berlin. All rights reserved.
 
 #include <atria/estd/memory.hpp>
+#include <atria/xform/transduce.hpp>
 #include <atria/xform/transducers.hpp>
 #include <atria/testing/gtest.hpp>
 

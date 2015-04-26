@@ -102,6 +102,9 @@ add_library(AtriaLib
   src/atria/variant/visitor.hpp
   src/atria/xform/functional.hpp
   src/atria/xform/reduce.hpp
+  src/atria/xform/reduced.hpp
+  src/atria/xform/reducers.hpp
+  src/atria/xform/transduce.hpp
   src/atria/xform/transducers.hpp
   src/atria/testing/benchmark.cpp
   )

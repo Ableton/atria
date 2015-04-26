@@ -6,6 +6,7 @@
 // #define ABL_REDUCE_WITH_ACCUMULATE 1
 // #define ABL_REDUCE_NON_VARIADIC 0
 
+#include <atria/xform/transduce.hpp>
 #include <atria/xform/transducers.hpp>
 #include <atria/testing/benchmark.hpp>
 #include <atria/testing/gtest.hpp>
