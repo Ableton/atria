@@ -1,5 +1,7 @@
 // Copyright: 2014, Ableton AG, Berlin. All rights reserved.
 
+#pragma once
+
 #include <atria/estd/type_traits.hpp>
 
 #include <ableton/build_system/Warnings.hpp>
