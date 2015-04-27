@@ -3,7 +3,7 @@
 #pragma once
 
 #include <atria/xform/functional.hpp>
-#include <atria/xform/reduced.hpp>
+#include <atria/xform/reduce_finished.hpp>
 
 #include <atria/estd/type_traits.hpp>
 #include <atria/estd/utility.hpp>
@@ -50,48 +50,39 @@ auto reduce_nested_accumulate(ReducerT&& reducer, StateT&& state, InputRangeT&& 
 template <typename ReducerT,
           typename StateT,
           typename InputRangeT>
-auto reduce_nested_non_variadic(ReducerT&& reducer, StateT&& initial, InputRangeT&& range)
-  -> estd::decay_t<decltype(reducer(initial, *range.begin()))>
+auto reduce_nested_non_variadic(ReducerT&& reducer,
+                                StateT&& state,
+                                InputRangeT&& range)
+  -> estd::decay_t<StateT>
 {
-  using final_state_t = estd::decay_t<decltype(
-    reducer(initial, *range.begin()))>;
-
-  auto state = final_state_t(std::forward<StateT>(initial));
   for (auto first = std::begin(range),
             last  = std::end(range);
-       !is_reduced(state) && first != last;
+       first != last;
        ++first)
   {
-    state = reducer(from_reduced(state), *first);
+    state = reducer(std::move(state), *first);
   }
 
   return state;
 }
-
 
 template <typename ReducerT,
           typename StateT,
           std::size_t ...Indices,
           typename ...InputRangeTs>
 auto reduce_nested_variadic_impl(ReducerT&& reducer,
-                                 StateT&& initial,
+                                 StateT&& state,
                                  estd::index_sequence<Indices...>,
                                  InputRangeTs&& ...ranges)
-  -> estd::decay_t<decltype(reducer(initial, *ranges.begin()...))>
+  -> estd::decay_t<StateT>
 {
-  using final_state_t = estd::decay_t<decltype(
-    reducer(initial, *ranges.begin()...))>;
-
-  auto state = final_state_t(std::forward<StateT>(initial));
-
   for (auto firsts = std::make_tuple(std::begin(ranges)...),
             lasts  = std::make_tuple(std::end(ranges)...);
-       !is_reduced(state) &&
-         std::min({ std::get<Indices>(firsts) !=
-                    std::get<Indices>(lasts)... });
+       std::min({ std::get<Indices>(firsts) !=
+                  std::get<Indices>(lasts)... });
        meta::noop(++std::get<Indices>(firsts)...))
   {
-    state = reducer(from_reduced(state),
+    state = reducer(std::move(state),
                     *std::get<Indices>(firsts)...);
   }
 
@@ -176,11 +167,14 @@ template <typename ReducerT,
 auto reduce(ReducerT&& reducer, StateT&& state, InputRangeTs&& ...ranges)
   -> estd::decay_t<StateT>
 {
-  return from_reduced(
-    reduce_nested(
+  try {
+    return reduce_nested(
       std::forward<ReducerT>(reducer),
       std::forward<StateT>(state),
-      std::forward<InputRangeTs>(ranges)...));
+      std::forward<InputRangeTs>(ranges)...);
+  } catch (reduce_finished_exception<estd::decay_t<StateT>>& e) {
+    return std::move(e.value);
+  }
 }
 
 } // namespace xform

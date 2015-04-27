@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include <atria/xform/reduced.hpp>
 #include <atria/xform/reduce.hpp>
 #include <atria/meta/common_type.hpp>
 #include <atria/estd/type_traits.hpp>
@@ -147,10 +146,9 @@ struct take_reducer
 
     template <typename State, typename ...Inputs>
     auto operator() (State&& s, Inputs&& ...is)
-      -> maybe_reduced<estd::decay_t<
-           meta::common_type_t<
-             decltype(s),
-             decltype(reducer(s, is...)) > > >
+      -> estd::decay_t<meta::common_type_t<
+           decltype(s),
+           decltype(reducer(s, is...))> >
     {
       if (n > 1)
       {
@@ -159,12 +157,12 @@ struct take_reducer
                        std::forward<Inputs>(is)...);
       }
       else if (n == 1) {
-        return reduced(
+        reduce_finished(
           reducer(std::forward<State>(s),
                   std::forward<Inputs>(is)...));
       } else {
         assert(false);
-        return s;
+        return std::forward<State>(s);
       }
     }
   };

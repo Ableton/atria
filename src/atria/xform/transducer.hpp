@@ -63,9 +63,15 @@ struct type_erased_reducer
         };
         xformed = comp(xform, map_state(from_any))(reducer);
       }
-      return boost::any_cast<estd::decay_t<StateT>>(
-        xformed(std::forward<StateT>(st),
-                std::forward<InputT>(in)));
+      try {
+        return boost::any_cast<estd::decay_t<StateT>>(
+          xformed(std::forward<StateT>(st),
+                  std::forward<InputT>(in)));
+      } catch (reduce_finished_exception<boost::any>& err) {
+        reduce_finished(
+          boost::any_cast<estd::decay_t<StateT>>(
+            std::move(err.value)));
+      }
     }
   };
 };

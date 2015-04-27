@@ -238,6 +238,12 @@ TEST(transducer, type_erasure)
     auto res = into(std::vector<int>{}, xform, v);
     EXPECT_EQ(res, (std::vector<int> { 1, 3 }));
   }
+
+  {
+    xform = take(3);
+    auto res = into(std::vector<int>{}, xform, v);
+    EXPECT_EQ(res, (std::vector<int> { 1, 2, 3 }));
+  }
 }
 
 } // namespace xform
