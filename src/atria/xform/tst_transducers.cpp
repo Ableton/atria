@@ -2,6 +2,7 @@
 
 #include <atria/estd/memory.hpp>
 #include <atria/xform/transduce.hpp>
+#include <atria/xform/transducer.hpp>
 #include <atria/xform/transducers.hpp>
 #include <atria/testing/gtest.hpp>
 
@@ -219,6 +220,24 @@ TEST(into, take_stops_early_enough2)
         })),
     v);
   EXPECT_EQ(res, (std::vector<int> { 1, 2, 3 }));
+}
+
+TEST(transducer, type_erasure)
+{
+  auto v = std::vector<int> { 1, 2, 3, 4 };
+  auto xform = transducer<int>{};
+
+  {
+    xform = map([] (int x) { return x + 2; });
+    auto res = into(std::vector<int>{}, xform, v);
+    EXPECT_EQ(res, (std::vector<int> { 3, 4, 5, 6 }));
+  }
+
+  {
+    xform = filter([] (int x) { return x % 2; });
+    auto res = into(std::vector<int>{}, xform, v);
+    EXPECT_EQ(res, (std::vector<int> { 1, 3 }));
+  }
 }
 
 } // namespace xform
