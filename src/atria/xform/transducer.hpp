@@ -50,8 +50,8 @@ struct type_erased_reducer
     ReducerT reducer;
     XformT xform;
 
-    template <typename StateT, typename InputT>
-    auto operator() (StateT&& st, InputT&& in)
+    template <typename StateT, typename... InputTs>
+    auto operator() (StateT&& st, InputTs&& ...ins)
       -> estd::enable_if_t<
            !is_state_wrapper<StateT>::value,
            state_wrapper<
@@ -64,14 +64,14 @@ struct type_erased_reducer
       using tag_t  = type_erased_reducer::tag<estd::decay_t<StateT> >;
       auto xformed = comp(xform, from_any_state<StateT>{}) (reducer);
       auto result  = xformed(std::forward<StateT>(st),
-                             std::forward<InputT>(in));
+                             std::forward<InputTs>(ins)...);
       return wrap_state<tag_t> (
         std::move(result),
         std::move(xformed));
     }
 
-    template <typename StateT, typename InputT>
-    auto operator() (StateT st, InputT&& in)
+    template <typename StateT, typename... InputTs>
+    auto operator() (StateT st, InputTs&& ...ins)
       -> estd::enable_if_t<
            is_state_wrapper<StateT>::value,
            estd::decay_t<StateT>
@@ -79,7 +79,7 @@ struct type_erased_reducer
     {
       std::get<0>(st) = std::get<1>(st) (
         std::move(std::get<0>(st)),
-        std::forward<InputT>(in));
+        std::forward<InputTs>(ins)...);
       return st;
     }
   };
@@ -102,6 +102,31 @@ struct state_traits<
   }
 };
 
+namespace detail {
+
+template <typename InputT>
+struct transducer_function
+{
+  using type = std::function<
+    std::function<any_state(any_state, InputT)> (
+      std::function<any_state(any_state, InputT)>)
+    >;
+};
+
+template <typename OutputT, typename... InputTs>
+struct transducer_function<OutputT(InputTs...)>
+{
+  using type = std::function<
+    std::function<any_state(any_state, InputTs...)> (
+      std::function<any_state(any_state, OutputT)>)
+    >;
+};
+
+template <typename T>
+using transducer_function_t = typename transducer_function<T>::type;
+
+} // namespace detail
+
 //!
 // Type erased transducer.
 //
@@ -116,12 +141,22 @@ struct state_traits<
 // });
 // @endcode
 //
-// A second type `InputT2` can be passed to specify the type of the
-// data after running through the transducer.
+// Using function style sintax one might specify the type of the data
+// after running through the transducer.
 //
 // @code{.cpp}
-// transducer<int, std::string> serialize = map([] (int x) {
+// transducer<std::string(int)> serialize = map([] (int x) {
 //     return std::to_string(x);
+// });
+// @endcode
+//
+// Function style syntax can be used to specify the output and input
+// type.  This allows to specify transducers that may be applied over
+// multiple inputs.
+//
+// @code{.cpp}
+// transducer<float(int, int)> serialize = map([] (int a, int b) {
+//     return float(a) / float(b);
 // });
 // @endcode
 //
@@ -150,13 +185,10 @@ struct state_traits<
 //       auto sum = reduce(reducer, 0, {1, 2, 3})
 //       @endcode
 //
-template <typename InputT, typename InputT2=InputT>
+template <typename SignatureT>
 using transducer = detail::transducer_impl<
   detail::type_erased_reducer,
-  std::function<
-    std::function<any_state(any_state, InputT)> (
-      std::function<any_state(any_state, InputT2)>)>
-  >;
+  detail::transducer_function_t<SignatureT> >;
 
 } // namespace xform
 } // namespace atria

@@ -246,5 +246,24 @@ TEST(transducer, type_erasure)
   }
 }
 
+TEST(transducer, variadic_type_erasure)
+{
+  auto xform = transducer<int(int, int)>{};
+  xform = map([] (int a, int b) { return a + b; });
+  auto res = into(std::vector<int>{}, xform,
+                  std::vector<int> {1, 2, 3},
+                  std::vector<int> {2, 3, 4});
+  EXPECT_EQ(res, (std::vector<int> { 3, 5, 7 }));
+}
+
+TEST(transducer, transforming_type_erasure)
+{
+  auto xform = transducer<std::string(int)>{};
+  xform = map([] (int a) { return std::to_string(a); });
+  auto res = into(std::vector<std::string>{}, xform,
+                  std::vector<int> {1, 2, 3});
+  EXPECT_EQ(res, (std::vector<std::string> { "1", "2", "3" }));
+}
+
 } // namespace xform
 } // namespace atria
