@@ -3,8 +3,9 @@
 #pragma once
 
 #include <atria/xform/transducers.hpp>
+#include <atria/xform/state.hpp>
+#include <atria/xform/any_state.hpp>
 
-#include <boost/any.hpp>
 #include <functional>
 
 namespace atria {
@@ -12,38 +13,36 @@ namespace xform {
 
 namespace detail {
 
-struct map_state_reducer
-{
-  template <typename ReducerT,
-            typename MappingT>
-  struct apply
-  {
-    ReducerT reducer;
-    MappingT mapping;
-
-    template <typename State, typename ...Inputs>
-    auto operator() (State&& s, Inputs&& ...is)
-      -> decltype(reducer(mapping(std::forward<State>(s)),
-                          std::forward<Inputs>(is)...))
-    {
-      return reducer(mapping(std::forward<State>(s)),
-                     std::forward<Inputs>(is)...);
-    }
-  };
-};
-
-//!
-// Similar to @a map, but it maps the state instead of the input.
-//
-template <typename MappingT>
-auto map_state(MappingT&& mapping)
-  -> detail::transducer_impl<detail::map_state_reducer, estd::decay_t<MappingT> >
-{
-  return std::forward<MappingT>(mapping);
-}
-
 struct type_erased_reducer
 {
+  template <typename StateT>
+  struct tag {
+    using type = StateT;
+  };
+
+  template <typename AsStateT>
+  struct from_any_state_reducer
+  {
+    template <typename ReducerT>
+    struct apply
+    {
+      ReducerT reducer;
+
+      template <typename StateT, typename ...InputTs>
+      auto operator() (StateT&& s, InputTs&& ...is)
+        -> decltype(reducer(std::forward<StateT>(s).template as<AsStateT>(),
+                            std::forward<InputTs>(is)...))
+      {
+        return reducer(std::forward<StateT>(s).template as<AsStateT>(),
+                       std::forward<InputTs>(is)...);
+      }
+    };
+  };
+
+  template <typename AsStateT>
+  using from_any_state = detail::transducer_impl<
+    from_any_state_reducer<estd::decay_t<AsStateT> > >;
+
   template <typename ReducerT,
             typename XformT>
   struct apply
@@ -51,32 +50,57 @@ struct type_erased_reducer
     ReducerT reducer;
     XformT xform;
 
-    typename XformT::result_type xformed;
-
     template <typename StateT, typename InputT>
     auto operator() (StateT&& st, InputT&& in)
-      -> estd::decay_t<StateT>
+      -> estd::enable_if_t<
+           !is_state_wrapper<StateT>::value,
+           state_wrapper<
+             type_erased_reducer::tag<estd::decay_t<StateT> >,
+             any_state,
+             typename XformT::result_type
+           >
+        >
     {
-      if (!xformed) {
-        auto from_any = [](boost::any st) {
-          return boost::any_cast<estd::decay_t<StateT>>(std::move(st));
-        };
-        xformed = comp(xform, map_state(from_any))(reducer);
-      }
-      try {
-        return boost::any_cast<estd::decay_t<StateT>>(
-          xformed(std::forward<StateT>(st),
-                  std::forward<InputT>(in)));
-      } catch (reduce_finished_exception<boost::any>& err) {
-        reduce_finished(
-          boost::any_cast<estd::decay_t<StateT>>(
-            std::move(err.value)));
-      }
+      using tag_t  = type_erased_reducer::tag<estd::decay_t<StateT> >;
+      auto xformed = comp(xform, from_any_state<StateT>{}) (reducer);
+      auto result  = xformed(std::forward<StateT>(st),
+                             std::forward<InputT>(in));
+      return wrap_state<tag_t> (
+        std::move(result),
+        std::move(xformed));
+    }
+
+    template <typename StateT, typename InputT>
+    auto operator() (StateT st, InputT&& in)
+      -> estd::enable_if_t<
+           is_state_wrapper<StateT>::value,
+           estd::decay_t<StateT>
+        >
+    {
+      std::get<0>(st) = std::get<1>(st) (
+        std::move(std::get<0>(st)),
+        std::forward<InputT>(in));
+      return st;
     }
   };
 };
 
 } // namespace detail
+
+template <typename StateT, typename _1, typename _2>
+struct state_traits<
+    state_wrapper<detail::type_erased_reducer::tag<StateT>, _1, _2>
+  >
+  : state_traits<state_wrapper<> >
+{
+  template <typename T>
+  static auto complete(T&& wrapper)
+    -> typename estd::decay_t<T>::tag::type
+  {
+    return state_complete(state_unwrap(std::forward<T>(wrapper)))
+      .template as<typename estd::decay_t<T>::tag::type>();
+  }
+};
 
 //!
 // Type erased transducer.
@@ -130,8 +154,8 @@ template <typename InputT, typename InputT2=InputT>
 using transducer = detail::transducer_impl<
   detail::type_erased_reducer,
   std::function<
-    std::function<boost::any(boost::any, InputT)> (
-      std::function<boost::any(boost::any, InputT2)>)>
+    std::function<any_state(any_state, InputT)> (
+      std::function<any_state(any_state, InputT2)>)>
   >;
 
 } // namespace xform

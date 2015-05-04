@@ -7,6 +7,7 @@
 #include <atria/estd/type_traits.hpp>
 #include <atria/estd/utility.hpp>
 
+#include <boost/optional.hpp>
 #include <cassert>
 
 namespace atria {
@@ -137,35 +138,32 @@ struct filter_reducer
 
 struct take_reducer
 {
+  struct tag {};
+
   template <typename ReducerT,
             typename IntegralT>
   struct apply
   {
     ReducerT reducer;
-    IntegralT n;
+    IntegralT total;
 
-    template <typename State, typename ...Inputs>
-    auto operator() (State&& s, Inputs&& ...is)
-      -> estd::decay_t<meta::common_type_t<
-           decltype(s),
-           decltype(reducer(s, is...))> >
+    template <typename StateT, typename ...InputTs>
+    auto operator() (StateT&& s, InputTs&& ...is)
+      -> decltype(wrap_state<take_reducer::tag>(
+                    reducer(state_unwrap(s), std::forward<InputTs>(is)...),
+                    state_data(s, total) - 1))
     {
-      if (n > 1)
-      {
-        --n;
-        return reducer(std::forward<State>(s),
-                       std::forward<Inputs>(is)...);
-      }
-      else if (n == 1) {
-        reduce_finished(
-          reducer(std::forward<State>(s),
-                  std::forward<Inputs>(is)...));
-      } else {
-        assert(false);
-        return std::forward<State>(s);
-      }
+      return wrap_state<take_reducer::tag>(
+        reducer(state_unwrap(s), std::forward<InputTs>(is)...),
+        state_data(s, total) - 1);
     }
   };
+
+  template <typename T>
+  friend bool state_data_is_reduced(take_reducer::tag, T&& n)
+  {
+    return std::forward<T>(n) == 0;
+  }
 };
 
 } // namespace detail

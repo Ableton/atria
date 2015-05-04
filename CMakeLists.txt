@@ -32,8 +32,8 @@ endif()
 if(CMAKE_CXX_COMPILER_ID STREQUAL Clang
     OR CMAKE_CXX_COMPILER_ID STREQUAL AppleClang)
   set(warning_options
-    -Werror
-    -Weverything
+    #-Werror
+    #-Weverything
     -Wno-c++98-compat
     -Wno-c++98-compat-pedantic
     -Wno-documentation-unknown-command
@@ -100,10 +100,11 @@ add_library(AtriaLib
   src/atria/testing/spies.hpp
   src/atria/variant/match.hpp
   src/atria/variant/visitor.hpp
+  src/atria/xform/any_state.hpp
   src/atria/xform/functional.hpp
   src/atria/xform/reduce.hpp
-  src/atria/xform/reduce_finished.hpp
   src/atria/xform/reducers.hpp
+  src/atria/xform/state.hpp
   src/atria/xform/transduce.hpp
   src/atria/xform/transducer.hpp
   src/atria/xform/transducers.hpp
