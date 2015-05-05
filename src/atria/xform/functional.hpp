@@ -26,6 +26,22 @@ struct composed
   }
 };
 
+template <typename ...Fns>
+struct get_composed;
+
+template <typename... Ts>
+using get_composed_t = typename get_composed<Ts...>::type;
+
+template <typename F>
+struct get_composed<F> {
+  using type = F;
+};
+
+template <typename F, typename... Fs>
+struct get_composed<F, Fs...> {
+  using type = composed<F, get_composed_t<Fs...> >;
+};
+
 } // namespace detail
 
 //!
@@ -34,21 +50,17 @@ struct composed
 //                 g(x) = f_1(f_2(...f_n(x)))
 //
 template <typename F>
-auto comp(F&& f)
-  -> F&&
+auto comp(F&& f) -> F&&
 {
   return std::forward<F>(f);
 }
 
 template <typename Fn, typename ...Fns>
 auto comp(Fn&& f, Fns&& ...fns)
-  -> detail::composed<
-  estd::decay_t<Fn>,
-  estd::decay_t<decltype(comp(std::forward<Fns>(fns)...))>>
+  -> detail::get_composed_t<estd::decay_t<Fn>, estd::decay_t<Fns>...>
 {
-  using result_t = detail::composed<
-    estd::decay_t<Fn>,
-    estd::decay_t<decltype(comp(std::forward<Fns>(fns)...))>>;
+  using result_t = detail::get_composed_t<
+    estd::decay_t<Fn>, estd::decay_t<Fns>...>;
   return result_t { std::forward<Fn>(f), comp(std::forward<Fns>(fns)...)};
 }
 
