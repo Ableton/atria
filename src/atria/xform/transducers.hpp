@@ -42,11 +42,10 @@ template<typename ReducerGenT,
 struct transducer_impl : std::tuple<ParamTs...>
 {
   using base_t = std::tuple<ParamTs...>;
-  using base_t::base_t;
 
   template <typename ...Ts>
-  constexpr transducer_impl(Ts&& ...ts)
-    : base_t(std::forward<Ts>(ts)...)
+  constexpr transducer_impl(Ts ...ts)
+    : base_t(std::move(ts)...)
   {}
 
   template<typename ReducerT>
