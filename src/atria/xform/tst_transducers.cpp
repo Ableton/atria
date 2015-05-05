@@ -265,5 +265,18 @@ TEST(transducer, transforming_type_erasure)
   EXPECT_EQ(res, (std::vector<std::string> { "1", "2", "3" }));
 }
 
+TEST(transducer, type_erasure_and_composition)
+{
+  auto xform1 = transducer<int(std::string)>{};
+  auto xform2 = transducer<float(int)>{};
+  xform1 = map([] (std::string a) { return std::stoi(a); });
+  xform2 = map([] (int a) { return float(a) / 2.0; });
+
+  auto xform3 = comp(xform1, xform2);
+  auto res = into(std::vector<float>{}, xform3,
+                    std::vector<std::string> {"1", "2", "3"});
+  EXPECT_EQ(res, (std::vector<float> { 0.5f, 1.0f, 1.5f }));
+}
+
 } // namespace xform
 } // namespace atria

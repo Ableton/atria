@@ -15,9 +15,11 @@ namespace detail {
 
 struct type_erased_reducer
 {
-  template <typename StateT>
+  template <typename CompleteT,
+            typename ReduceT>
   struct tag {
-    using type = StateT;
+    using complete_t = CompleteT;
+    using reduce_t   = ReduceT;
   };
 
   template <typename AsStateT>
@@ -50,24 +52,32 @@ struct type_erased_reducer
     ReducerT reducer;
     XformT xform;
 
+    using xformed_t = typename XformT::result_type;
+    using output_t  = typename XformT::argument_type::second_argument_type;
+
     template <typename StateT, typename... InputTs>
     auto operator() (StateT&& st, InputTs&& ...ins)
       -> estd::enable_if_t<
-           !is_state_wrapper<StateT>::value,
+         !is_state_wrapper<StateT>::value,
            state_wrapper<
-             type_erased_reducer::tag<estd::decay_t<StateT> >,
+             type_erased_reducer::tag<
+               estd::decay_t<StateT>,
+               estd::decay_t<decltype(reducer(st, std::declval<output_t>()))> >,
              any_state,
-             typename XformT::result_type
+             xformed_t
            >
         >
     {
-      using tag_t  = type_erased_reducer::tag<estd::decay_t<StateT> >;
-      auto xformed = comp(xform, from_any_state<StateT>{}) (reducer);
-      auto result  = xformed(std::forward<StateT>(st),
-                             std::forward<InputTs>(ins)...);
+      using complete_t = estd::decay_t<StateT>;
+      using reduce_t = estd::decay_t<
+        decltype(reducer(st, std::declval<output_t>()))>;
+      using tag_t = type_erased_reducer::tag<complete_t, reduce_t>;
+
       return wrap_state<tag_t> (
-        std::move(result),
-        std::move(xformed));
+        comp(xform, from_any_state<complete_t>{}) (reducer) (
+          std::forward<StateT>(st),
+          std::forward<InputTs>(ins)...),
+        comp(xform, from_any_state<reduce_t>{}) (reducer));
     }
 
     template <typename StateT, typename... InputTs>
@@ -87,18 +97,18 @@ struct type_erased_reducer
 
 } // namespace detail
 
-template <typename StateT, typename _1, typename _2>
+template <typename _1, typename _2, typename _3, typename _4>
 struct state_traits<
-    state_wrapper<detail::type_erased_reducer::tag<StateT>, _1, _2>
+  state_wrapper<detail::type_erased_reducer::tag<_1, _2>, _3, _4>
   >
   : state_traits<state_wrapper<> >
 {
   template <typename T>
   static auto complete(T&& wrapper)
-    -> typename estd::decay_t<T>::tag::type
+    -> typename estd::decay_t<T>::tag::complete_t
   {
     return state_complete(state_unwrap(std::forward<T>(wrapper)))
-      .template as<typename estd::decay_t<T>::tag::type>();
+      .template as<typename estd::decay_t<T>::tag::complete_t>();
   }
 };
 
