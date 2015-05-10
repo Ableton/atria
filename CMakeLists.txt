@@ -1,4 +1,4 @@
-# Copyright (c) 2014 Ableton AG, Berlin
+# Copyright (c) 2014, 2015 Ableton AG, Berlin
 
 cmake_minimum_required(VERSION 2.8.12)
 
