@@ -29,6 +29,14 @@
 #define ABL_REDUCE_NON_VARIADIC 1
 #endif
 
+//!
+// When defined to 1, a tail-recursive definition will be used for the
+// non-variadic reduce.
+//
+#ifndef ABL_REDUCE_TAIL_RECURSIVE
+#define ABL_REDUCE_TAIL_RECURSIVE 0
+#endif
+
 namespace atria {
 namespace xform {
 
@@ -45,6 +53,47 @@ auto reduce_nested_accumulate(ReducerT&& reducer, StateT&& state, InputRangeT&& 
     std::end(range),
     std::forward<StateT>(state),
     std::forward<ReducerT>(reducer));
+}
+
+template <typename ReducerT,
+          typename StateT,
+          typename InputIterT>
+auto reduce_nested_tail_recursive_impl(ReducerT&& reducer,
+                                       StateT&& state,
+                                       InputIterT&& first,
+                                       InputIterT&& last)
+  -> estd::decay_t<decltype(reducer(state, *first))>
+{
+  using result_t = estd::decay_t<decltype(reducer(state, *first))>;
+
+  if (state_is_reduced(state) || first == last) {
+    return result_t { std::forward<StateT>(state) };
+  }
+  auto next_state = reducer(std::forward<StateT>(state), *first);
+  return reduce_nested_tail_recursive_impl(
+    std::forward<ReducerT>(reducer),
+    std::move(next_state),
+    std::forward<InputIterT>(++first),
+    std::forward<InputIterT>(last));
+}
+
+template <typename ReducerT,
+          typename StateT,
+          typename InputRangeT>
+auto reduce_nested_tail_recursive(ReducerT&& reducer,
+                                  StateT&& initial,
+                                  InputRangeT&& range)
+  -> decltype(reduce_nested_tail_recursive_impl(
+                std::forward<ReducerT>(reducer),
+                std::forward<StateT>(initial),
+                std::begin(range),
+                std::end(range)))
+{
+  return reduce_nested_tail_recursive_impl(
+    std::forward<ReducerT>(reducer),
+    std::forward<StateT>(initial),
+    std::begin(range),
+    std::end(range));
 }
 
 template <typename ReducerT,
@@ -70,7 +119,7 @@ auto reduce_nested_non_variadic(ReducerT&& reducer,
     return state;
   }
 
-  return result_t { initial };
+  return result_t { std::forward<StateT>(initial) };
 }
 
 template <typename ReducerT,
@@ -124,7 +173,10 @@ auto reduce_nested_variadic(ReducerT&& reducer, StateT&& state, InputRangeTs&& .
 } // namespace detail
 
 
-#if ABL_REDUCE_WITH_ACCUMULATE
+#if ABL_REDUCE_TAIL_RECURSIVE
+#  define ABL_REDUCE_NESTED_NON_VARIADIC_IMPL \
+  ::atria::xform::detail::reduce_nested_tail_recursive
+#elif ABL_REDUCE_WITH_ACCUMULATE
 #  define ABL_REDUCE_NESTED_NON_VARIADIC_IMPL \
   ::atria::xform::detail::reduce_nested_accumulate
 #elif ABL_REDUCE_NON_VARIADIC
