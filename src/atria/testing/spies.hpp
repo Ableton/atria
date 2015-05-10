@@ -1,4 +1,6 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+
+#define BOOST_OPTIONAL_CONFIG_ALLOW_BINDING_TO_RVALUES
 
 #include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
