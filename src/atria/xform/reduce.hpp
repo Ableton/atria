@@ -61,7 +61,10 @@ auto reduce_nested_non_variadic(ReducerT&& reducer,
   auto last  = std::end(range);
   if (first != last) {
     auto state = reducer(std::forward<StateT>(initial), *first);
-    while (!state_is_reduced(state) && ++first != last) {
+    // This may be expressed more brief with a:
+    //    while(++first != last)
+    // but the for loop seems to make compilers generate better code.
+    for (++first; !state_is_reduced(state) && first != last; ++first) {
       state = reducer(std::move(state), *first);
     }
     return state;
