@@ -26,9 +26,12 @@ auto transduce(XformT&& xform, ReducerT&& reducer,
     std::forward<InputRangeTs>(ranges)...);
 }
 
+#define ABL_STATEFUL_INTO 1
+
 //!
-// Similar to clojure.core/transduce$4
+// Similar to clojure.core/into$4
 //
+#if ABL_STATEFUL_INTO
 template <typename CollectionT,
           typename XformT,
           typename ...InputRangeTs>
@@ -42,6 +45,22 @@ auto into(CollectionT&& col, XformT&& xform, InputRangeTs&& ...ranges)
     std::forward<InputRangeTs>(ranges)...);
   return std::forward<CollectionT>(col);
 }
+#endif
+
+#if !ABL_STATEFUL_INTO
+template <typename CollectionT,
+          typename XformT,
+          typename ...InputRangeTs>
+auto into(CollectionT&& col, XformT&& xform, InputRangeTs&& ...ranges)
+  -> estd::decay_t<CollectionT>
+{
+  return transduce(
+    std::forward<XformT>(xform),
+    emplace_back_r,
+    std::forward<CollectionT>(col),
+    std::forward<InputRangeTs>(ranges)...);
+}
+#endif
 
 } // namespace xform
 } // namespace atria

@@ -40,5 +40,19 @@ constexpr struct output_r_t
   }
 } output_r {};
 
+//!
+// Reducer that emplaces back at the collection that it is passed.
+//
+constexpr struct emplace_back_r_t
+{
+  template <typename CollectionT, typename ...InputTs>
+  auto operator() (CollectionT c, InputTs&& ...ins) const
+    -> CollectionT
+  {
+    c.emplace_back(std::forward<InputTs>(ins)...);
+    return c;
+  }
+} emplace_back_r {};
+
 } // namespace xform
 } // namespace atria
