@@ -53,31 +53,21 @@ public:
   }
 
   template <typename T>
-  estd::decay_t<T>& as() & {
-#if ABL_SAFE_ANY
-    check<T>();
-#endif
-    return static_cast<holder<estd::decay_t<T> >*>(content.get())->held;
-  }
+  estd::decay_t<T>& as() &
+    { return as_impl(meta::pack<estd::decay_t<T> >{}); }
 
   template <typename T>
-  estd::decay_t<T>&& as() && {
-#if ABL_SAFE_ANY
-    check<T>();
-#endif
-    return std::move(static_cast<holder<estd::decay_t<T> >*>(content.get())->held);
-  }
+  estd::decay_t<T>&& as() &&
+    { return std::move(as_impl(meta::pack<estd::decay_t<T> >{})); }
 
   template <typename T>
   const estd::decay_t<T>& as() const& {
-#if ABL_SAFE_ANY
-    check<T>();
-#endif
-    return static_cast<holder<estd::decay_t<T> > const *>(content.get())->held;
+    return const_cast<any_state*>(this)->as_impl(
+      meta::pack<estd::decay_t<T> >{});
   }
 
   template <typename T>
-  const void check() const {
+  void check() const {
     if (!has<T>()) {
       throw std::runtime_error(
         std::string("Have ") + type().name() +
@@ -95,6 +85,18 @@ public:
   }
 
 private:
+  template <typename T>
+  T& as_impl(meta::pack<T>) {
+#if ABL_SAFE_ANY
+    check<T>();
+#endif
+    return static_cast<holder<T>*>(content.get())->held;
+  }
+
+  any_state& as_impl(meta::pack<any_state>) {
+    return *this;
+  }
+
   friend struct state_traits<any_state>;
 
   struct holder_base
@@ -160,6 +162,62 @@ struct state_traits<any_state>
     return data.template has<D>()
       ? data.template as<D>()
       : std::forward<D>(d);
+  }
+};
+
+
+template <typename WrappedStateT,
+          typename StateT,
+          typename UnwrappedFn,
+          typename WrappedFn>
+auto with_state(StateT&& st, UnwrappedFn&&, WrappedFn&& fn)
+  -> estd::enable_if_t<
+    std::is_same<
+      estd::decay_t<StateT>,
+      WrappedStateT
+    >::value,
+    decltype(std::forward<WrappedFn>(fn)(std::forward<StateT>(st)))
+  >
+{
+  return std::forward<WrappedFn>(fn)(std::forward<StateT>(st));
+};
+
+template <typename WrappedStateT,
+          typename StateT,
+          typename UnwrappedFn,
+          typename WrappedFn>
+auto with_state(StateT&& st, UnwrappedFn&& fn, WrappedFn&&)
+  -> estd::enable_if_t<
+    !std::is_same<estd::decay_t<StateT>, any_state>::value
+    && std::is_same<
+      estd::decay_t<StateT>,
+      estd::decay_t<decltype(state_complete(st))>
+    >::value,
+    WrappedStateT
+  >
+{
+  return std::forward<UnwrappedFn>(fn)(std::forward<StateT>(st));
+};
+
+template <typename WrappedStateT,
+          typename StateT,
+          typename UnwrappedFn,
+          typename WrappedFn>
+auto with_state(StateT&& st, UnwrappedFn&& fn1, WrappedFn&& fn2)
+  -> estd::enable_if_t<
+    std::is_same<
+      estd::decay_t<StateT>,
+      any_state
+    >::value,
+    WrappedStateT
+  >
+{
+  if (!st.template has<WrappedStateT>()) {
+    return std::forward<UnwrappedFn>(fn1)(
+      std::forward<StateT>(st));
+  } else {
+    return std::forward<WrappedFn>(fn2)(
+      std::forward<StateT>(st).template as<WrappedStateT>());
   }
 };
 
