@@ -167,14 +167,18 @@ struct take_reducer
 
 } // namespace detail
 
+template <typename T>
+using map_t = detail::transducer_impl<detail::map_reducer, T>;
+
 //!
 // Similar to clojure.core/map$1
 //
 template <typename MappingT>
 auto map(MappingT&& mapping)
-  -> detail::transducer_impl<detail::map_reducer, estd::decay_t<MappingT> >
+  -> map_t<estd::decay_t<MappingT> >
 {
-  return std::forward<MappingT>(mapping);
+  return map_t<estd::decay_t<MappingT> > {
+    std::forward<MappingT>(mapping) };
 }
 
 //!
@@ -196,15 +200,21 @@ auto mapcat(MappingT&& mapping)
     map(std::forward<MappingT>(mapping)));
 }
 
+template <typename T>
+using take_t = detail::transducer_impl<detail::take_reducer, T>;
+
 //!
 // Similar to clojure.core/take$1
 //
 template <typename IntegralT>
 auto take(IntegralT&& n)
-  -> detail::transducer_impl<detail::take_reducer, estd::decay_t<IntegralT> >
+  -> take_t<estd::decay_t<IntegralT> >
 {
-  return n;
+  return take_t<estd::decay_t<IntegralT> > { n };
 }
+
+template <typename T>
+using filter_t = detail::transducer_impl<detail::filter_reducer, T>;
 
 //!
 // Similar to clojure.core/filter$1
@@ -214,9 +224,10 @@ auto take(IntegralT&& n)
 //
 template <typename ResultT=void, typename PredicateT>
 auto filter(PredicateT&& predicate)
-  -> detail::transducer_impl<detail::filter_reducer, estd::decay_t<PredicateT> >
+  -> filter_t<estd::decay_t<PredicateT> >
 {
-  return std::forward<PredicateT>(predicate);
+  return filter_t<estd::decay_t<PredicateT> > {
+    std::forward<PredicateT>(predicate) };
 }
 
 } // namespace xform
