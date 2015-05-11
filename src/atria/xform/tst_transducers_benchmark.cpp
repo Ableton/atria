@@ -4,8 +4,9 @@
 //! performance cost or not.
 //
 // #define ABL_REDUCE_WITH_ACCUMULATE 1
-// #define ABL_REDUCE_NON_VARIADIC 0
-#define ABL_XFORM_BENCHMARK_ENABLE_ANY 1
+// #define ABL_REDUCE_ALWAYS_VARIADIC 1
+// #define ABL_REDUCE_TAIL_RECURSIVE 1
+// #define ABL_XFORM_BENCHMARK_ENABLE_ANY 1
 
 #include <atria/xform/transduce.hpp>
 #include <atria/xform/transducer.hpp>

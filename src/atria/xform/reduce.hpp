@@ -13,6 +13,14 @@
 #include <tuple>
 
 //!
+// When defined to 1, a tail-recursive definition will be used for the
+// non-variadic reduce.
+//
+#ifndef ABL_REDUCE_TAIL_RECURSIVE
+#define ABL_REDUCE_TAIL_RECURSIVE 0
+#endif
+
+//!
 // When defined to 1, std::accumulate will be used as an
 // implementation for reduce() over one single collection.  In that
 // case, halting reducers (e.g. take) might not work.
@@ -22,19 +30,11 @@
 #endif
 
 //!
-// When defined to 1, reduce will be defined separately for the
-// non-variadic version.
+// When defined to 1, reduce will used a variadic implementation also
+// when one single input is provided.
 //
-#ifndef ABL_REDUCE_NON_VARIADIC
-#define ABL_REDUCE_NON_VARIADIC 1
-#endif
-
-//!
-// When defined to 1, a tail-recursive definition will be used for the
-// non-variadic reduce.
-//
-#ifndef ABL_REDUCE_TAIL_RECURSIVE
-#define ABL_REDUCE_TAIL_RECURSIVE 0
+#ifndef ABL_REDUCE_ALWAYS_VARIADIC
+#define ABL_REDUCE_ALWAYS_VARIADIC 0
 #endif
 
 namespace atria {
@@ -179,12 +179,12 @@ auto reduce_nested_variadic(ReducerT&& reducer, StateT&& state, InputRangeTs&& .
 #elif ABL_REDUCE_WITH_ACCUMULATE
 #  define ABL_REDUCE_NESTED_NON_VARIADIC_IMPL \
   ::atria::xform::detail::reduce_nested_accumulate
-#elif ABL_REDUCE_NON_VARIADIC
-#  define ABL_REDUCE_NESTED_NON_VARIADIC_IMPL \
-  ::atria::xform::detail::reduce_nested_non_variadic
-#else
+#elif ABL_REDUCE_ALWAYS_VARIADIC
 #  define ABL_REDUCE_NESTED_NON_VARIADIC_IMPL \
   ::atria::xform::detail::reduce_nested_variadic
+#else
+#  define ABL_REDUCE_NESTED_NON_VARIADIC_IMPL \
+  ::atria::xform::detail::reduce_nested_non_variadic
 #endif
 
 //!
