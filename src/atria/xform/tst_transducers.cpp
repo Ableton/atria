@@ -222,6 +222,26 @@ TEST(into, take_stops_early_enough2)
   EXPECT_EQ(res, (std::vector<int> { 1, 2, 3 }));
 }
 
+TEST(into, partition)
+{
+  auto v = std::vector<int> { 1, 2, 3, 4, 5, 6 };
+
+  auto res = into(std::vector<std::vector<int> > {}, partition(2), v);
+  EXPECT_EQ(res, (std::vector<std::vector<int> > {
+        {1, 2}, {3, 4}, {5, 6}
+      }));
+}
+
+TEST(into, partition_flushing)
+{
+  auto v = std::vector<int> { 1, 2, 3, 4, 5 };
+
+  auto res = into(std::vector<std::vector<int> > {}, partition(2), v);
+  EXPECT_EQ(res, (std::vector<std::vector<int> > {
+        {1, 2}, {3, 4}, {5}
+      }));
+}
+
 TEST(transducer, type_erasure)
 {
   auto v = std::vector<int> { 1, 2, 3, 4 };

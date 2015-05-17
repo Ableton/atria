@@ -8,6 +8,7 @@
 #include <atria/estd/utility.hpp>
 
 #include <boost/optional.hpp>
+#include <vector>
 #include <cassert>
 
 namespace atria {
@@ -172,7 +173,68 @@ struct take_reducer
   }
 };
 
+struct partition_reducer
+{
+  struct tag {};
+
+  template <typename ReducerT,
+            typename IntegralT>
+  struct apply
+  {
+    ReducerT reducer;
+    IntegralT size;
+
+    template <typename StateT, typename ...InputTs>
+    auto operator() (StateT&& s, InputTs&& ...is)
+      -> decltype(
+        wrap_state<partition_reducer::tag>(
+          reducer(state_unwrap(s), std::vector<estd::decay_t<decltype(tuplify(is...))>>{}),
+          make_tuple(std::vector<estd::decay_t<decltype(tuplify(is...))>>{}, reducer)))
+    {
+      using elem_t = estd::decay_t<decltype(tuplify(is...))>;
+      auto data = state_data(s, [&] {
+          std::vector<elem_t> v;
+          v.reserve(size);
+          return make_tuple(v, reducer);
+        });
+      auto& next = std::get<0>(data);
+
+      next.push_back(tuplify(std::forward<InputTs>(is)...));
+      if (next.size() == size) {
+        auto ss = reducer(state_unwrap(std::forward<StateT>(s)), next);
+        next.clear();
+        return wrap_state<partition_reducer::tag> (
+          std::move(ss),
+          make_tuple(std::move(next), reducer));
+      }
+      else {
+        return wrap_state<partition_reducer::tag> (
+          state_unwrap(std::forward<StateT>(s)),
+          make_tuple(std::move(next), reducer));
+      }
+    }
+  };
+};
+
 } // namespace detail
+
+template <typename _1, typename _2>
+struct state_traits<state_wrapper<detail::partition_reducer::tag, _1, _2> >
+  : state_traits<state_wrapper<> >
+{
+  template <typename T>
+  static auto complete(T&& wrapper)
+    -> decltype(state_complete(state_unwrap(std::forward<T>(wrapper))))
+  {
+    auto next    = std::get<0>(std::get<1>(std::forward<T>(wrapper)));
+    auto reducer = std::get<1>(std::get<1>(std::forward<T>(wrapper)));
+    return state_complete(
+      next.empty()
+      ? state_unwrap(std::forward<T>(wrapper))
+      : reducer(state_unwrap(std::forward<T>(wrapper)),
+                std::move(next)));
+  }
+};
 
 template <typename T>
 using map_t = detail::transducer_impl<detail::map_reducer, T>;
@@ -235,6 +297,19 @@ auto filter(PredicateT&& predicate)
 {
   return filter_t<estd::decay_t<PredicateT> > {
     std::forward<PredicateT>(predicate) };
+}
+
+template <typename T>
+using partition_t = detail::transducer_impl<detail::partition_reducer, T>;
+
+//!
+// Similar to clojure.core/partition$1
+//
+template <typename IntegralT>
+auto partition(IntegralT&& n)
+  -> partition_t<estd::decay_t<IntegralT> >
+{
+  return partition_t<estd::decay_t<IntegralT> > { n };
 }
 
 } // namespace xform
