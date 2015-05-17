@@ -157,11 +157,11 @@ struct take_reducer
     auto operator() (StateT&& s, InputTs&& ...is)
       -> decltype(wrap_state<take_reducer::tag>(
                     reducer(state_unwrap(s), std::forward<InputTs>(is)...),
-                    state_data(s, total) - 1))
+                    state_data(s, constantly(total))))
     {
       return wrap_state<take_reducer::tag>(
         reducer(state_unwrap(s), std::forward<InputTs>(is)...),
-        state_data(s, total) - 1);
+        state_data(s, constantly(total)) - 1);
     }
   };
 

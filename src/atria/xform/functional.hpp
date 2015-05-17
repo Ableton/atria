@@ -85,8 +85,8 @@ struct constantly_t
   using result_type = const T&;
   T value;
 
-  template <typename ArgT>
-  constexpr auto operator() (ArgT&&) const
+  template <typename ...ArgTs>
+  constexpr auto operator() (ArgTs&&...) const
     -> result_type
   {
     return value;

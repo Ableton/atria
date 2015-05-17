@@ -195,7 +195,7 @@ private:
     { return state_unwrap(held); }
 
     any_state data() const override
-    { return state_data(held, any_state{}); }
+    { return state_data(held, [] { return any_state{}; }); }
 
     std::size_t size() const override
     { return sizeof(T); }
@@ -239,12 +239,14 @@ struct state_traits<any_state>
   { return std::forward<T>(t).content()->unwrap(); }
 
   template <typename T, typename D>
-  static auto data(T&& t, D&& d) -> estd::decay_t<D>
+  static auto data(T&& t, D&& d)
+    -> decltype(std::forward<D>(d)())
   {
+    using data_t = decltype(std::forward<D>(d)());
     auto data = t.content()->data();
-    return data.template has<D>()
-      ? data.template as<D>()
-      : std::forward<D>(d);
+    return data.template has<data_t>()
+      ? data.template as<data_t>()
+      : std::forward<D>(d)();
   }
 };
 

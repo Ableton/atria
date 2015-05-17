@@ -1,4 +1,4 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #pragma once
 
@@ -39,8 +39,9 @@ struct state_traits
   // contains no associated data, the `default_data` will be returned.
   //
   template <typename T, typename D>
-  static auto data(T&&, D&& default_data) -> D&&
-    { return std::forward<D>(default_data); }
+  static auto data(T&&, D&& d)
+    -> decltype(std::forward<D>(d)())
+    { return std::forward<D>(d)(); }
 
   //!
   // Unwraps all the layers of state wrappers returning the deepmost
