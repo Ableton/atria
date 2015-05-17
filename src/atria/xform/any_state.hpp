@@ -2,7 +2,9 @@
 
 #pragma once
 
+#include <atria/xform/state.hpp>
 #include <atria/estd/memory.hpp>
+#include <atria/meta/pack.hpp>
 #include <string>
 
 #define ABL_SAFE_ANY 0
