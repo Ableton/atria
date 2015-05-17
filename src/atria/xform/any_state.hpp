@@ -18,12 +18,12 @@ class any_state
 {
 public:
   any_state() noexcept
-    : content(nullptr)
+    : content_(nullptr)
     {}
 
   any_state(any_state&&) = default;
   any_state(const any_state& other)
-    : content(other.content ? other.content->clone() : nullptr)
+    : content_(other.content_ ? other.content_->clone() : nullptr)
     {}
 
   template<typename ValueType>
@@ -31,7 +31,7 @@ public:
             estd::enable_if_t<
               !std::is_base_of<any_state, ValueType >::value
             >* = 0)
-    : content(estd::make_unique<holder<ValueType> >(value))
+    : content_(estd::make_unique<holder<ValueType> >(value))
     {}
 
   template<typename ValueType>
@@ -40,7 +40,7 @@ public:
               !std::is_base_of<any_state,
                                estd::decay_t<ValueType> >::value
             >* = 0)
-    : content(estd::make_unique<holder<estd::decay_t<ValueType> > >(
+    : content_(estd::make_unique<holder<estd::decay_t<ValueType> > >(
                 std::forward<ValueType>(value)))
     {}
 
@@ -77,11 +77,11 @@ public:
 
   template <typename T>
   bool has() const {
-    return content && content->type() == typeid(estd::decay_t<T>);
+    return content_ && content_->type() == typeid(estd::decay_t<T>);
   }
 
   const std::type_info& type() const noexcept {
-    return content ? content->type() : typeid(void);
+    return content_ ? content_->type() : typeid(void);
   }
 
 private:
@@ -90,7 +90,7 @@ private:
 #if ABL_SAFE_ANY
     check<T>();
 #endif
-    return static_cast<holder<T>*>(content.get())->held;
+    return static_cast<holder<T>*>(content_.get())->held;
   }
 
   any_state& as_impl(meta::pack<any_state>) {
@@ -137,28 +137,28 @@ private:
     { return state_data(held, any_state{}); }
   };
 
-  std::unique_ptr<holder_base> content;
+  std::unique_ptr<holder_base> content_;
 };
 
 template <>
 struct state_traits<any_state>
 {
   template <typename T>
-  static auto complete(T&& t) -> decltype(std::forward<T>(t).content->complete())
-  { return std::forward<T>(t).content->complete(); }
+  static auto complete(T&& t) -> decltype(std::forward<T>(t).content_->complete())
+  { return std::forward<T>(t).content_->complete(); }
 
   template <typename T>
-  static auto is_reduced(T&& t) -> decltype(std::forward<T>(t).content->is_reduced())
-  { return std::forward<T>(t).content->is_reduced(); }
+  static auto is_reduced(T&& t) -> decltype(std::forward<T>(t).content_->is_reduced())
+  { return std::forward<T>(t).content_->is_reduced(); }
 
   template <typename T>
-  static auto unwrap(T&& t) -> decltype(std::forward<T>(t).content->unwrap())
-  { return std::forward<T>(t).content->unwrap(); }
+  static auto unwrap(T&& t) -> decltype(std::forward<T>(t).content_->unwrap())
+  { return std::forward<T>(t).content_->unwrap(); }
 
   template <typename T, typename D>
   static auto data(T&& t, D&& d) -> estd::decay_t<D>
   {
-    auto data = t.content->data();
+    auto data = t.content_->data();
     return data.template has<D>()
       ? data.template as<D>()
       : std::forward<D>(d);
