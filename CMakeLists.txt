@@ -101,6 +101,7 @@ add_library(AtriaLib
   src/atria/variant/match.hpp
   src/atria/variant/visitor.hpp
   src/atria/xform/any_state.hpp
+  src/atria/xform/any_state.cpp
   src/atria/xform/functional.hpp
   src/atria/xform/reduce.hpp
   src/atria/xform/reducers.hpp

@@ -1,4 +1,4 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #pragma once
 
@@ -59,13 +59,11 @@ struct type_erased_reducer
     {
       ReducerT reducer;
 
-      template <typename StateT, typename ...InputTs>
-      auto operator() (StateT&& s, InputTs&& ...is)
-        -> decltype(reducer(std::forward<StateT>(s).template as<AsStateT>(),
-                            std::forward<InputTs>(is)...))
+      template <typename ...InputTs>
+      any_state operator() (any_state s, InputTs&& ...is)
       {
-        return reducer(std::forward<StateT>(s).template as<AsStateT>(),
-                       std::forward<InputTs>(is)...);
+        s = reducer(s.as<AsStateT>(), std::forward<InputTs>(is)...);
+        return std::move(s);
       }
     };
   };

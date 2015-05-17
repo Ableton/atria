@@ -8,6 +8,11 @@
 #include <string>
 
 #define ABL_SAFE_ANY 0
+#define ABL_TRACE_ANY_ALLOC 0
+
+#if ABL_TRACE_ANY_ALLOC
+#include <iostream>
+#endif
 
 namespace atria {
 namespace xform {
@@ -20,21 +25,34 @@ class any_state
 {
 public:
   any_state() noexcept
-    : content_(nullptr)
+    : data_(reinterpret_cast<char*>(&null_holder_))
+    , size_(0)
     {}
 
-  any_state(any_state&&) = default;
+  ~any_state() noexcept {
+    if (size_) {
+      content()->~holder_base();
+      delete [] data_;
+    }
+  }
+
+  any_state(any_state&& other)
+    : data_(other.data_)
+  {
+    auto size = other.size_;
+    other.size_ = 0;
+    size_ = size;
+  }
+
   any_state(const any_state& other)
-    : content_(other.content_ ? other.content_->clone() : nullptr)
-    {}
-
-  template<typename ValueType>
-  any_state(const ValueType& value,
-            estd::enable_if_t<
-              !std::is_base_of<any_state, ValueType >::value
-            >* = 0)
-    : content_(estd::make_unique<holder<ValueType> >(value))
-    {}
+    : data_(new char[other.size_])
+    , size_(other.size_)
+  {
+#if ABL_TRACE_ANY_ALLOC
+    std::cout << "alloc-c" << std::endl;
+#endif
+    other.content()->clone(data_);
+  }
 
   template<typename ValueType>
   any_state(ValueType&& value,
@@ -42,16 +60,40 @@ public:
               !std::is_base_of<any_state,
                                estd::decay_t<ValueType> >::value
             >* = 0)
-    : content_(estd::make_unique<holder<estd::decay_t<ValueType> > >(
-                std::forward<ValueType>(value)))
-    {}
+    : data_(new char[sizeof(holder<estd::decay_t<ValueType> >)])
+    , size_(sizeof(holder<estd::decay_t<ValueType> >))
+    {
+      new (data_) holder<estd::decay_t<ValueType> >(
+          std::forward<ValueType>(value));
+#if ABL_TRACE_ANY_ALLOC
+      std::cout << "alloc-n " << typeid(estd::decay_t<ValueType>).name() << std::endl;
+#endif
+    }
 
-  any_state& operator=(any_state&&) = default;
-
-  any_state & operator=(const any_state& rhs)
+  any_state& operator=(any_state&& other)
   {
-    auto obj = rhs;
-    return *this = std::move(obj);
+    data_ = other.data_;
+    size_ = other.size_;
+    other.size_ = 0;
+    return *this;
+  };
+
+  any_state& operator=(const any_state& rhs)
+  {
+    realloc_(rhs.content()->size());
+    rhs.content()->clone(data_);
+    return *this;
+  }
+
+  template <typename ValueType>
+  auto operator=(ValueType&& rhs)
+    -> estd::enable_if_t<
+      !std::is_base_of<any_state, estd::decay_t<ValueType> >::value,
+      any_state&>
+  {
+    realloc_(sizeof(holder<estd::decay_t<ValueType> >));
+    new (data_) holder<ValueType>(std::forward<ValueType>(rhs));
+    return *this;
   }
 
   template <typename T>
@@ -79,20 +121,32 @@ public:
 
   template <typename T>
   bool has() const {
-    return content_ && content_->type() == typeid(estd::decay_t<T>);
+    return content()->type() == typeid(estd::decay_t<T>);
   }
 
   const std::type_info& type() const noexcept {
-    return content_ ? content_->type() : typeid(void);
+    return content()->type();
   }
 
 private:
+  void realloc_(std::size_t size) {
+    content()->~holder_base();
+    if (size_ < size) {
+      delete [] data_;
+      data_ = new char[size];
+      size_ = size;
+#if ABL_TRACE_ANY_ALLOC
+      std::cout << "alloc-r" << std::endl;
+#endif
+    }
+  }
+
   template <typename T>
   T& as_impl(meta::pack<T>) {
 #if ABL_SAFE_ANY
     check<T>();
 #endif
-    return static_cast<holder<T>*>(content_.get())->held;
+    return reinterpret_cast<holder<T>*>(data_)->held;
   }
 
   any_state& as_impl(meta::pack<any_state>) {
@@ -105,11 +159,13 @@ private:
   {
     virtual ~holder_base() {};
     virtual const std::type_info& type() const noexcept = 0;
-    virtual std::unique_ptr<holder_base> clone() const = 0;
+    virtual void clone(char* data) const = 0;
+    virtual void move(char* data) const = 0;
     virtual any_state complete() const = 0;
     virtual bool is_reduced() const = 0;
     virtual any_state unwrap() const = 0;
     virtual any_state data() const = 0;
+    virtual std::size_t size() const = 0;
   };
 
   template <typename T>
@@ -123,8 +179,11 @@ private:
     const std::type_info& type() const noexcept override
     { return typeid(T); }
 
-    std::unique_ptr<holder_base> clone() const override
-    { return estd::make_unique<holder>(held); }
+    void clone(char* data) const override
+    { new (data) holder<T>(held); }
+
+    void move(char* data) const override
+    { new (data) holder<T>(std::move(held)); }
 
     any_state complete() const override
     { return state_complete(held); }
@@ -137,30 +196,52 @@ private:
 
     any_state data() const override
     { return state_data(held, any_state{}); }
+
+    std::size_t size() const override
+    { return sizeof(T); }
   };
 
-  std::unique_ptr<holder_base> content_;
+  struct null_holder : holder_base
+  {
+    const std::type_info& type() const noexcept override
+    { return typeid(void); }
+
+    void clone(char* data) const override { new (data) null_holder; }
+    void move(char* data) const override { new (data) null_holder; }
+    any_state complete() const override { return {}; }
+    bool is_reduced() const override { return false; }
+    any_state unwrap() const override { return {}; }
+    any_state data() const override { return {}; }
+    std::size_t size() const override { return 0; }
+  };
+
+  holder_base* content() const { return reinterpret_cast<holder_base*>(data_); };
+
+  char* data_;
+  std::size_t size_;
+
+  static null_holder null_holder_;
 };
 
 template <>
 struct state_traits<any_state>
 {
   template <typename T>
-  static auto complete(T&& t) -> decltype(std::forward<T>(t).content_->complete())
-  { return std::forward<T>(t).content_->complete(); }
+  static auto complete(T&& t) -> decltype(std::forward<T>(t).content()->complete())
+  { return std::forward<T>(t).content()->complete(); }
 
   template <typename T>
-  static auto is_reduced(T&& t) -> decltype(std::forward<T>(t).content_->is_reduced())
-  { return std::forward<T>(t).content_->is_reduced(); }
+  static auto is_reduced(T&& t) -> decltype(std::forward<T>(t).content()->is_reduced())
+  { return std::forward<T>(t).content()->is_reduced(); }
 
   template <typename T>
-  static auto unwrap(T&& t) -> decltype(std::forward<T>(t).content_->unwrap())
-  { return std::forward<T>(t).content_->unwrap(); }
+  static auto unwrap(T&& t) -> decltype(std::forward<T>(t).content()->unwrap())
+  { return std::forward<T>(t).content()->unwrap(); }
 
   template <typename T, typename D>
   static auto data(T&& t, D&& d) -> estd::decay_t<D>
   {
-    auto data = t.content_->data();
+    auto data = t.content()->data();
     return data.template has<D>()
       ? data.template as<D>()
       : std::forward<D>(d);
