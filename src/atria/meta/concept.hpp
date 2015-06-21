@@ -1,4 +1,4 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 //! @file
 //
@@ -33,7 +33,11 @@
 #include <atria/estd/type_traits.hpp>
 #include <atria/meta/utils.hpp>
 #include <atria/meta/pack.hpp>
+
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/apply.hpp>
 #include <algorithm>
+
 
 namespace atria {
 namespace meta {
@@ -80,8 +84,8 @@ constexpr bool valid()
 // };
 // @endcode
 //
-template <bool Requirement, typename Result=int>
-using require = estd::enable_if_t<Requirement, Result>;
+template <bool Requirement>
+using require = estd::enable_if_t<Requirement, int>;
 
 //!
 // Allows to validate a sequence of expressions in a single decltype.
@@ -226,11 +230,52 @@ struct concept<ConceptSpecTplT<Ts...>>
 
 template <typename ConceptSpecT, typename ...Ts>
 struct concept<ConceptSpecT(Ts...)>
+  : detail::satisfies_t<ConceptSpecT(Ts...)>
 {
-  constexpr operator bool() const {
-    return satisfies<ConceptSpecT(Ts...)>();
-  }
 };
+
+
+//!
+// Meta-function that returns a *concept* type @a T into an *integral
+// constant*.  @a T is a type for which `bool(T())` is a valid
+// constant expression.
+//
+template <typename T>
+struct eval_concept
+  : std::integral_constant<bool, (T())>
+{};
+
+//!
+// Metafunction that given a type @a T and a one or more of MPL
+// *metafunction classes* @a Mfs that return concepts, returns whether
+// any of the concepts returned by one of @a Mfs is modeled by @a T.
+//
+template <typename T, typename ...Mfs>
+struct eval_any_concept;
+
+template <typename T, typename Mf, typename ...Mfs>
+struct eval_any_concept<T, Mf, Mfs...> : boost::mpl::eval_if<
+    eval_concept<typename boost::mpl::apply<Mf, T>::type>,
+    std::true_type,
+    eval_any_concept<T, Mfs...>
+  >
+{
+};
+
+template <typename T, typename Mf>
+struct eval_any_concept<T, Mf> : eval_concept<
+  typename boost::mpl::apply<Mf, T>::type>
+{
+};
+
+//!
+// Like @a require, but based on the semantics of `eval_any_concept`.
+//
+template <typename T, typename... Mfs>
+using require_any = estd::enable_if_t<
+  eval_any_concept<T, Mfs...>::type::value,
+  int>;
+
 
 //!
 // Macro to check, at compile-time, that a concept is satisfied.  It

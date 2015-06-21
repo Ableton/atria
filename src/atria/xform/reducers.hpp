@@ -27,6 +27,19 @@ constexpr struct last_r_t
 } last_r {};
 
 //!
+// Reducer that returns the initial state
+//
+constexpr struct first_r_t
+{
+  template <typename StateT, typename ...InputTs>
+  constexpr auto operator() (StateT&& s, InputTs&& ...) const
+    -> StateT&&
+  {
+    return std::forward<StateT>(s);
+  }
+} first_r {};
+
+//!
 // Reducer that outputs to the iterator that is passed as state.
 //
 constexpr struct output_r_t

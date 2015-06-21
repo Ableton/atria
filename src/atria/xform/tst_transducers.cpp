@@ -1,6 +1,8 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #include <atria/estd/memory.hpp>
+#include <atria/estd/functional.hpp>
+#include <atria/xform/concepts.hpp>
 #include <atria/xform/transduce.hpp>
 #include <atria/xform/transducer.hpp>
 #include <atria/xform/transducers.hpp>
@@ -310,6 +312,15 @@ TEST(transducer, type_erasure_and_composition_erased)
   auto res = into(std::vector<float>{}, xform3,
                   std::vector<std::string> {"1", "2", "3"});
   EXPECT_EQ(res, (std::vector<float> { 0.5f, 1.0f, 1.5f }));
+}
+
+TEST(state, state_concept)
+{
+  meta::check<State<int> >();
+  meta::check<State<state_wrapper<void, int, int> > >();
+  meta::check<State<any_state> >();
+  meta::check<Reducer<estd::plus<>, int, int> >();
+  meta::check<Transducer<decltype(map(tuplify))> >();
 }
 
 } // namespace xform
