@@ -240,9 +240,9 @@ struct state_traits<any_state>
 
   template <typename T, typename D>
   static auto data(T&& t, D&& d)
-    -> decltype(std::forward<D>(d)())
+    -> estd::decay_t<decltype(std::forward<D>(d)())>
   {
-    using data_t = decltype(std::forward<D>(d)());
+    using data_t = estd::decay_t<decltype(std::forward<D>(d)())>;
     auto data = t.content()->data();
     return data.template has<data_t>()
       ? data.template as<data_t>()

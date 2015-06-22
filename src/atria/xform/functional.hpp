@@ -1,4 +1,4 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #pragma once
 
@@ -82,15 +82,14 @@ constexpr struct identity_t
 template <typename T>
 struct constantly_t
 {
-  using result_type = const T&;
   T value;
 
   template <typename ...ArgTs>
-  constexpr auto operator() (ArgTs&&...) const
-    -> result_type
-  {
-    return value;
-  }
+  auto operator() (ArgTs&&...) & -> T& { return value; }
+  template <typename ...ArgTs>
+  auto operator() (ArgTs&&...) const& -> const T& { return value; }
+  template <typename ...ArgTs>
+  auto operator() (ArgTs&&...) && -> T&& { return std::move(value); }
 };
 
 //!
