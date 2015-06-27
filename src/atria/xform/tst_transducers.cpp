@@ -48,6 +48,12 @@ TEST(compose, various_types)
   EXPECT_EQ(fn(42), 43.0);
 }
 
+TEST(reduce, protect_against_moved_self_assignment)
+{
+  auto v = std::vector<int> { 1, 2, 3, 6 };
+  EXPECT_EQ(reduce(first_r, v, v), v);
+}
+
 TEST(transduce, identity)
 {
   auto v = std::vector<int> { 1, 2, 3, 6 };

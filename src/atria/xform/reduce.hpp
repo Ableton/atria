@@ -114,7 +114,11 @@ auto reduce_nested_non_variadic(ReducerT&& reducer,
     //    while(++first != last)
     // but the for loop seems to make compilers generate better code.
     for (++first; !state_is_reduced(state) && first != last; ++first) {
-      state = reducer(std::move(state), *first);
+      // `x = std::move(x)` is undefined behaviour, hence the two
+      // steps approach to protect for when `reducer` just forwards
+      // the state back.
+      auto new_state = reducer(std::move(state), *first);
+      state = std::move(new_state);
     }
     return state;
   }
