@@ -1,4 +1,4 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #include <atria/funken/commit.hpp>
 #include <atria/funken/state.hpp>
@@ -16,10 +16,10 @@ using namespace xform;
 
 TEST(xformed, concepts)
 {
-  EXPECT_TRUE(meta::check<In_value<
-              decltype(xformed(identity, make_state(0)))>>());
-  EXPECT_TRUE(meta::check<Inout_value<
-              decltype(xformed(identity, identity, make_state(0)))>>());
+  EXPECT_TRUE(meta::check<In_value_spec(
+                decltype(xformed(identity, make_state(0))))>());
+  EXPECT_TRUE(meta::check<Inout_value_spec(
+                decltype(xformed(identity, identity, make_state(0))))>());
   EXPECT_FALSE(Out_value<decltype(xformed(identity, make_state(0)))>());
 }
 

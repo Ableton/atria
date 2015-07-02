@@ -1,4 +1,4 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #include <atria/funken/commit.hpp>
 #include <atria/funken/concepts.hpp>
@@ -21,9 +21,9 @@ struct counter
 
 TEST(sensor, concepts)
 {
-  EXPECT_TRUE(meta::check<In_value<sensor<counter>>>());
+  EXPECT_TRUE(meta::check<In_value_spec(sensor<counter>)>());
+  EXPECT_TRUE(meta::check<Root_value_spec(sensor<counter>)>());
   EXPECT_FALSE(Out_value<sensor<counter>>());
-  EXPECT_TRUE(meta::check<Root_value<sensor<counter>>>());
 }
 
 TEST(sensor, basic)

@@ -38,7 +38,6 @@
 #include <boost/mpl/apply.hpp>
 #include <algorithm>
 
-
 namespace atria {
 namespace meta {
 
@@ -77,7 +76,7 @@ constexpr bool valid()
 //   : meta::concept<Inout_value<Arg> >
 // {
 //   template <typename T>
-//   auto requires(T&& x) -> decltype(
+//   auto requires_(T&& x) -> decltype(
 //     meta::expressions(
 //       meta::require<(In_value<T>())>(),
 //       meta::require<(Out_value<T>())>()));
@@ -95,23 +94,6 @@ using require = estd::enable_if_t<Requirement, int>;
 template <typename ...Ts>
 void expressions(Ts&&...);
 
-namespace detail {
-
-template <typename ConceptSig, typename Enable=void>
-struct satisfies_t : std::false_type {};
-
-template <typename ConceptSpecT, typename ...Ts>
-struct satisfies_t<
-    ConceptSpecT(Ts...),
-    estd::void_t<
-        decltype(std::declval<ConceptSpecT>().requires(std::declval<Ts>()...))
-      >
-    >
-  : std::true_type
-{};
-
-} // namespace detail
-
 //!
 // Returns whether a concept signature `ConceptSig` is satisfied.  A
 // concept signature has the form `ConceptSpec(T0, T1, ...)` where
@@ -119,7 +101,7 @@ struct satisfies_t<
 // `T0`... are the types that we want to test against `ConceptSpec`.
 //
 // A *concept specification type* is a type that contains a template
-// constexpr method `requires(T0&&, T1&&...)` that is available iff
+// constexpr method `requires_(T0&&, T1&&...)` that is available iff
 // types `T0, T1...` satisfy the concept.  This method is never going
 // to be used in an evaluated context, and its return type is
 // irrelevant.  This enables usign a `decltype(...)` expression that
@@ -130,26 +112,38 @@ struct satisfies_t<
 // struct Equality_comparable_spec
 // {
 //    template <typename T>
-//    auto require(T&& x) -> decltype(
+//    auto requires_(T&& x) -> decltype(
 //      expressions(
 //        bool(x != x),
 //        bool(x == x)));
 //
 //    template <typename T, typename U>
-//    auto require(T&& x, U&& y) -> decltype(
+//    auto requires_(T&& x, U&& y) -> decltype(
 //      expressions(
 //        bool(x != y),
 //        bool(x == y)));
 // };
 //
-template<typename ConceptSig>
-constexpr bool satisfies()
-{
-  return detail::satisfies_t<ConceptSig>();
-}
+template <typename ConceptSig, typename Enable=void>
+struct models
+  : std::false_type {};
+
+template <typename ConceptSpecT, typename ...Ts>
+struct models<
+    ConceptSpecT(Ts...),
+    estd::void_t<
+        decltype(std::declval<ConceptSpecT>().requires_(
+                   std::declval<Ts>()...))
+      >
+    >
+  : std::true_type
+{};
+
+template <typename ConceptSpecT, typename T>
+struct models_ : models<ConceptSpecT(T)> {};
 
 //!
-// Like @a satisfies, but fails at compile-time when the specification
+// Like @a models, but fails at compile-time when the specification
 // is not met.  This is useful when debugging concept mismatches, as
 // it will normally fail at the line of the specification that is not
 // met.  However, it is not usable in SFINAE contexes.
@@ -164,7 +158,7 @@ template<typename ConceptSpecT, typename ...Ts>
 constexpr bool check(pack<ConceptSpecT(Ts...)>)
 {
   return valid<decltype(
-    std::declval<ConceptSpecT>().requires(
+    std::declval<ConceptSpecT>().requires_(
       std::declval<Ts>()...))>();
 }
 
@@ -172,108 +166,93 @@ template<template<typename...>class ConceptSpecT, typename ...Ts>
 constexpr bool check(pack<ConceptSpecT<Ts...> >)
 {
   return valid<decltype(
-    std::declval<ConceptSpecT<Ts...> >().requires(
+    std::declval<ConceptSpecT<Ts...> >().requires_(
       std::declval<Ts>()...))>();
 }
 
 //!
-// Type that, given a `templated concept specification`, returns objects
-// that convert to a boolean indicating whether the concept
-// specifcation is satisfied by its template parameters.
-//
-// The concept signature can be an incomplete type at declaration time,
-// allowing for it to be used as base class of concept specification
-// types, turning them into entities syntactically equivalent to C++14
-// constraints.  For example:
+// Macro for future-proof concept-lite like concepts.  In the
+// future, it will expand to the `concept` keyword, for now it expands
+// to `constexpr`. Example:
 //
 // @code{.cpp}
-// template <typename T, typename U=T>
-// struct Equality_comparable : concept<Equality_comparable<T, U>>
-// {
-//    template <typename T, typename U>
-//    auto require(T&& x, U&& y) -> decltype(
-//      expressions(
-//        bool(x != y),
-//        bool(x == y)));
+// struct My_concept_spec { ... };
+//
+// template <typename T>
+// ABL_CONCEPT bool My_concept() {
+//   return models<My_concept_spec(T)>();
 // };
 // @endcode
 //
-// Note that it can also take a `ConceptSig` similar to the one in
-// `satisfies`, allowing to declare the concept in two steps, as in:
-//
-// @code{.cpp}
-// struct Equality_comparable_spec
-// {
-//    template <typename T, typename U>
-//    auto require(T&& x, U&& y) -> decltype(
-//      expressions(
-//        bool(x != y),
-//        bool(x == y)));
-// };
-//
-// template <typename T, typename U=T>
-// using Equality_comparable = concept<Equality_comparable_spec(T, U)>;
-// @endcode
-//
-// @see satisfies
-//
-template <typename ConceptSpecT>
-struct concept;
-
-template <template<typename...> class ConceptSpecTplT, typename ...Ts>
-struct concept<ConceptSpecTplT<Ts...>>
-{
-  constexpr operator bool() const {
-    return satisfies<ConceptSpecTplT<Ts...>(Ts...)>();
-  }
-};
-
-template <typename ConceptSpecT, typename ...Ts>
-struct concept<ConceptSpecT(Ts...)>
-  : detail::satisfies_t<ConceptSpecT(Ts...)>
-{
-};
-
+#define ABL_CONCEPT constexpr
 
 //!
-// Meta-function that returns a *concept* type @a T into an *integral
-// constant*.  @a T is a type for which `bool(T())` is a valid
-// constant expression.
+// Helper macro to define concept-lite style concepts.  The macro
+// defines:
 //
-template <typename T>
-struct eval_concept
-  : std::integral_constant<bool, (T())>
-{};
+// - A concept-lite like *concept* named `{concept_name}`. In pre-C++17
+//   compilers this is just a `constexpr` function template that
+//   returns `bool`.
+//
+// - It opens the definition of a type `{concept_name}_spec` that is a
+//   meant to be a *concept spectification*. @see models.
+//
+// Example:
+//
+// @code{.cpp}
+// ABL_CONCEPT_SPEC(Equality_comparable)
+// {
+//    template <typename T, typename U>
+//    auto requires_(T&& x, U&& y) -> decltype(
+//      expressions(
+//        bool(x != y),
+//        bool(x == y)));
+//
+//    template <typename T>
+//    auto requires_(T&& x) -> decltype(
+//      requires_(x, x));
+// };
+// @endcode
+//
+#define ABL_CONCEPT_SPEC(concept_name)                                  \
+  struct concept_name ## _spec;                                         \
+  template <typename... Ts>                                             \
+  ABL_CONCEPT bool concept_name()                                       \
+  {                                                                     \
+    return ::atria::meta::models<concept_name ## _spec (Ts...)>();      \
+  }                                                                     \
+  struct concept_name ## _spec
+  /**/
 
 //!
 // Metafunction that given a type @a T and a one or more of MPL
-// *metafunction classes* @a Mfs that return concepts, returns whether
-// any of the concepts returned by one of @a Mfs is modeled by @a T.
+// *metafunction classes* @a Mfs that boolean metafunctions, returns
+// whether any of these metafunctios @a Mfs returns true when applied
+// with @a T.
 //
 template <typename T, typename ...Mfs>
-struct eval_any_concept;
+struct if_any;
 
 template <typename T, typename Mf, typename ...Mfs>
-struct eval_any_concept<T, Mf, Mfs...> : boost::mpl::eval_if<
-    eval_concept<typename boost::mpl::apply<Mf, T>::type>,
+struct if_any<T, Mf, Mfs...> : boost::mpl::eval_if<
+    typename boost::mpl::apply1<Mf, T>::type,
     std::true_type,
-    eval_any_concept<T, Mfs...>
+    if_any<T, Mfs...>
   >
 {
 };
 
 template <typename T, typename Mf>
-struct eval_any_concept<T, Mf> : eval_concept<
-  typename boost::mpl::apply<Mf, T>::type>
-{
+struct if_any<T, Mf> {
+  using type = typename boost::mpl::apply1<Mf, T>::type;
 };
 
 //!
-// Like @a require, but based on the semantics of `eval_any_concept`.
+// Like @a require, but based on the semantics of `if_any`.
 //
 template <typename T, typename... Mfs>
 using require_any = estd::enable_if_t<
-  eval_any_concept<T, Mfs...>::type::value,
+  if_any<T, Mfs...>::type::value,
   int>;
 
 

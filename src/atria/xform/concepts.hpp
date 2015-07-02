@@ -12,12 +12,10 @@
 namespace atria {
 namespace xform {
 
-template <typename _Arg>
-struct State
-  : meta::concept<State<_Arg> >
+ABL_CONCEPT_SPEC(State)
 {
   template <typename T>
-  auto requires(T&& t)
+  auto requires_(T&& t)
     -> decltype(
       meta::expressions(
         state_unwrap(t),
@@ -27,15 +25,13 @@ struct State
         meta::require_any<
           decltype(state_unwrap(t)),
           std::is_same<T, boost::mpl::_>,
-          State<boost::mpl::_> >()));
+          meta::models_<State_spec, boost::mpl::_> >()));
 };
 
-template <typename _Arg1, typename _Arg2, typename ..._Args>
-struct Reducer
-  : meta::concept<Reducer<_Arg1, _Arg2, _Args...> >
+ABL_CONCEPT_SPEC(Reducer)
 {
   template <typename R, typename S, typename... Is>
-  auto requires(R&& r, S&& s, Is&&... is)
+  auto requires_(R&& r, S&& s, Is&&... is)
     -> decltype(
       meta::expressions(
         r(s, is...),
@@ -50,12 +46,10 @@ struct Reducer
           State<decltype(r(r(s, is...), is...))>())>()));
 };
 
-template <typename _Arg>
-struct Transducer
-  : meta::concept<Transducer<_Arg> >
+ABL_CONCEPT_SPEC(Transducer)
 {
   template <typename T>
-  auto requires(T&& t)
+  auto requires_(T&& t)
     -> decltype(
       meta::expressions(
         meta::require<(

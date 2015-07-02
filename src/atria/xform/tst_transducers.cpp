@@ -322,11 +322,11 @@ TEST(transducer, type_erasure_and_composition_erased)
 
 TEST(state, state_concept)
 {
-  meta::check<State<int> >();
-  meta::check<State<state_wrapper<void, int, int> > >();
-  meta::check<State<any_state> >();
-  meta::check<Reducer<estd::plus<>, int, int> >();
-  meta::check<Transducer<decltype(map(tuplify))> >();
+  meta::check<State_spec(int)>();
+  meta::check<State_spec(state_wrapper<void, int, int>)>();
+  meta::check<State_spec(any_state)>();
+  meta::check<Reducer_spec(estd::plus<>, int, int)>();
+  meta::check<Transducer_spec(decltype(map(tuplify)))>();
 }
 
 } // namespace xform

@@ -1,4 +1,4 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #include <atria/funken/commit.hpp>
 #include <atria/funken/inout.hpp>
@@ -14,16 +14,16 @@ namespace funken {
 
 TEST(values, types_concepts)
 {
-  meta::check<In_value<input<int>>>();
-  meta::check<Out_value<output<int>>>();
-  meta::check<Inout_value<inoutput<int>>>();
+  meta::check<In_value_spec(input<int>)>();
+  meta::check<Out_value_spec(output<int>)>();
+  meta::check<Inout_value_spec(inoutput<int>)>();
 }
 
 TEST(values, factories_concepts)
 {
-  meta::check<In_value<decltype(in(make_state(0)))>>();
-  meta::check<Out_value<decltype(out(make_state(0)))>>();
-  meta::check<Inout_value<decltype(inout(make_state(0)))>>();
+  meta::check<In_value_spec(decltype(in(make_state(0))))>();
+  meta::check<Out_value_spec(decltype(out(make_state(0))))>();
+  meta::check<Inout_value_spec(decltype(inout(make_state(0))))>();
 }
 
 TEST(in, ConstructionAndAssignmentFromTemporary)

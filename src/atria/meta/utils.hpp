@@ -46,7 +46,7 @@ constexpr struct noop_t
 // struct swapable : concept<swapable<Arg1, Arg2>>
 // {
 //   template <typename T, typename U>
-//   auto requires(T&& x, T&& y) -> decltype(
+//   auto requires_(T&& x, T&& y) -> decltype(
 //     expressions(
 //       (swap(x, y), can_be_void),
 //       (swap(y, x), can_be_void)));

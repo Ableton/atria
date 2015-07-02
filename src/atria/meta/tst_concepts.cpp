@@ -1,4 +1,4 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #include <atria/meta/concept.hpp>
 #include <atria/testing/gtest.hpp>
@@ -13,7 +13,7 @@ namespace meta {
 // SFINAE-friendly concepts.
 //
 template <typename T>
-constexpr bool Example_concept()
+ABL_CONCEPT bool Example_concept()
 {
   using namespace std;
 
@@ -71,11 +71,10 @@ TEST(simple_concept, can_be_used_with_concept_assert)
 // `declval` is required less in the specification.  On the other
 // hand, it is a bit more "magical"
 //
-template <typename _>
-struct Example_concept_two : concept<Example_concept_two<_>>
+ABL_CONCEPT_SPEC(Example_concept_two)
 {
   template <typename T>
-  auto requires(T&& x) -> decltype(
+  auto requires_(T&& x) -> decltype(
     expressions(
       // Dereferenceable
       *x,
@@ -100,15 +99,15 @@ TEST(concept, can_be_used_with_concept_assert)
   ABL_ASSERT_NOT_CONCEPT(Example_concept_two, example_non_model);
 }
 
-TEST(concept, can_use_satisfies_with_concept_spec)
+TEST(concept, can_use_models_with_concept_spec)
 {
-  EXPECT_TRUE(satisfies<Example_concept_two<void>(example_model)>());
-  EXPECT_FALSE(satisfies<Example_concept_two<void>(example_non_model)>());
+  EXPECT_TRUE(models<Example_concept_two_spec(example_model)>());
+  EXPECT_FALSE(models<Example_concept_two_spec(example_non_model)>());
 }
 
 TEST(concept, can_use_check_with_concept_spec)
 {
-  EXPECT_TRUE(check<Example_concept_two<void>(example_model)>());
+  EXPECT_TRUE(check<Example_concept_two_spec(example_model)>());
   // This should fail to compiler, rising an error in the line of
   // the specification that is not met.
   //   EXPECT_FALSE(check<Example_concept_two<void>(ExampleNonModel)>());
@@ -121,7 +120,7 @@ TEST(concept, can_use_check_with_concept_spec)
 struct Example_concept_spec
 {
   template <typename T>
-  auto requires(T&& x) -> decltype(
+  auto requires_(T&& x) -> decltype(
     expressions(
       // Dereferenceable
       *x,
@@ -135,7 +134,10 @@ struct Example_concept_spec
 };
 
 template <typename T>
-using Example_concept_three = concept<Example_concept_spec(T)>;
+ABL_CONCEPT bool Example_concept_three()
+{
+  return models<Example_concept_spec(T)>();
+}
 
 TEST(concept, can_be_defined_in_two_steps)
 {
@@ -143,14 +145,17 @@ TEST(concept, can_be_defined_in_two_steps)
   EXPECT_FALSE(Example_concept_three<example_non_model>());
 }
 
-template <typename Arg1, typename Arg2=Arg1>
-struct adl_swapable : concept<adl_swapable<Arg1, Arg2>>
+ABL_CONCEPT_SPEC(adl_swapable)
 {
   template <typename T, typename U>
-  auto requires(T&& x, U&& y) -> decltype(
+  auto requires_(T&& x, U&& y) -> decltype(
     expressions(
       (swap(x, y), can_be_void),
       (swap(y, x), can_be_void)));
+
+  template <typename T>
+  auto requires_(T&& x) -> decltype(
+    requires_(x, x));
 };
 
 void swap(example_model&, example_model&);

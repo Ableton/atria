@@ -1,4 +1,4 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #include <atria/funken/concepts.hpp>
 #include <atria/funken/commit.hpp>
@@ -20,9 +20,9 @@ struct no_default_ctr
 
 TEST(state, Concepts)
 {
-  EXPECT_TRUE(meta::check<In_value<state<int>>>());
-  EXPECT_TRUE(meta::check<Out_value<state<int>>>());
-  EXPECT_TRUE(meta::check<Root_value<state<int>>>());
+  EXPECT_TRUE(meta::check<In_value_spec(state<int>)>());
+  EXPECT_TRUE(meta::check<Out_value_spec(state<int>)>());
+  EXPECT_TRUE(meta::check<Root_value_spec(state<int>)>());
 }
 
 TEST(state, holds_avalue)
