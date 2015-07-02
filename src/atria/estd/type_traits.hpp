@@ -1,4 +1,4 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #pragma once
 
@@ -7,6 +7,22 @@
 
 namespace atria {
 namespace estd {
+
+namespace detail {
+
+template<typename... Ts>
+struct make_void
+{
+  using type = void;
+};
+
+} // namespace detail
+
+//!
+// Similar to C++17 std::void_t
+//
+template<typename... Ts>
+using void_t = typename detail::make_void<Ts...>::type;
 
 //!
 // Similar to C++14 std::decay_t
@@ -37,13 +53,13 @@ namespace detail {
 template <typename T, typename Enable=void>
 struct has_value_type : std::false_type {};
 template <typename T>
-struct has_value_type<T, meta::enable_if_type_t<typename T::value_type> >
+struct has_value_type<T, void_t<typename T::value_type> >
   : std::true_type {};
 
 template <typename T, typename Enable=void>
 struct has_dereference : std::false_type {};
 template <typename T>
-struct has_dereference<T, meta::enable_if_type_t<decltype(*std::declval<T>())> >
+struct has_dereference<T, void_t<decltype(*std::declval<T>())> >
   : std::true_type {};
 
 template <typename T, typename Enable=void>

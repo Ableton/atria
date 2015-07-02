@@ -103,7 +103,7 @@ struct satisfies_t : std::false_type {};
 template <typename ConceptSpecT, typename ...Ts>
 struct satisfies_t<
     ConceptSpecT(Ts...),
-    enable_if_type_t<
+    estd::void_t<
         decltype(std::declval<ConceptSpecT>().requires(std::declval<Ts>()...))
       >
     >

@@ -1,9 +1,10 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #pragma once
 
 #include <atria/meta/utils.hpp>
 #include <atria/meta/pack.hpp>
+#include <atria/estd/type_traits.hpp>
 
 #include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
@@ -58,7 +59,7 @@ struct common_type2
 template <typename T, typename U>
 struct common_type2<
   T, U,
-  meta::enable_if_type_t<decltype(
+  estd::void_t<decltype(
     true ? std::declval<T>() : std::declval<U>())>>
 {
   using type = typename undeclval<

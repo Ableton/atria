@@ -1,22 +1,9 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #pragma once
 
 namespace atria {
 namespace meta {
-
-//!
-// Binary metafunction that always returns the second type.  Useful to
-// plug a dependent type expression in the second argument for SFINAE
-//
-template <typename CheckedType, typename Result = void>
-struct enable_if_type
-{
-  using type = Result;
-};
-
-template<typename CheckedType, typename Result = void>
-using enable_if_type_t = typename enable_if_type<CheckedType, Result>::type;
 
 //!
 // Type to enable making a type convertible from `void`.  The problem
