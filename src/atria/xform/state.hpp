@@ -206,7 +206,7 @@ struct state_traits<state_wrapper<TagT, StateT, DataT> >
   }
 
   template <typename T, typename D>
-  static auto data(T&& s, D&& d)
+  static auto data(T&& s, D&&)
     -> decltype(std::get<1>(std::forward<T>(s)))
   {
     return std::get<1>(std::forward<T>(s));

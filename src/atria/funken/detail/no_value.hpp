@@ -1,4 +1,4 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #pragma once
 
@@ -13,8 +13,7 @@ namespace funken {
 //
 struct no_value_error : std::exception
 {
-  const char* what() const noexcept override
-  { return "No value in funken object"; }
+  const char* what() const noexcept override;
 };
 
 namespace detail {

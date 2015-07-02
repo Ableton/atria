@@ -1,4 +1,4 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #pragma once
 
@@ -63,7 +63,7 @@ constexpr struct
 //
 struct down_signal_base
 {
-  virtual ~down_signal_base() {}
+  virtual ~down_signal_base();
   virtual void send_down() = 0;
   virtual void notify() = 0;
 };

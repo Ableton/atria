@@ -63,7 +63,7 @@ struct type_erased_reducer
       any_state operator() (any_state s, InputTs&& ...is)
       {
         s = reducer(s.as<AsStateT>(), std::forward<InputTs>(is)...);
-        return std::move(s);
+        return s;
       }
     };
   };

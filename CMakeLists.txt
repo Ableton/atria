@@ -32,8 +32,10 @@ endif()
 if(CMAKE_CXX_COMPILER_ID STREQUAL Clang
     OR CMAKE_CXX_COMPILER_ID STREQUAL AppleClang)
   set(warning_options
-    #-Werror
-    #-Weverything
+    -Werror
+    -Weverything
+    -Wno-string-conversion
+    -Wno-global-constructors
     -Wno-c++98-compat
     -Wno-c++98-compat-pedantic
     -Wno-documentation-unknown-command
@@ -80,8 +82,10 @@ add_library(AtriaLib
   src/atria/funken/detail
   src/atria/funken/detail/access.hpp
   src/atria/funken/detail/no_value.hpp
+  src/atria/funken/detail/no_value.cpp
   src/atria/funken/detail/root_signals.hpp
   src/atria/funken/detail/signals.hpp
+  src/atria/funken/detail/signals.cpp
   src/atria/funken/detail/watchable.hpp
   src/atria/funken/detail/xform_signals.hpp
   src/atria/funken/in.hpp

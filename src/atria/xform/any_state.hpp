@@ -76,7 +76,7 @@ public:
     size_ = other.size_;
     other.size_ = 0;
     return *this;
-  };
+  }
 
   any_state& operator=(const any_state& rhs)
   {
@@ -157,7 +157,7 @@ private:
 
   struct holder_base
   {
-    virtual ~holder_base() {};
+    virtual ~holder_base();
     virtual const std::type_info& type() const noexcept = 0;
     virtual void clone(char* data) const = 0;
     virtual void move(char* data) const = 0;
@@ -203,6 +203,8 @@ private:
 
   struct null_holder : holder_base
   {
+    virtual ~null_holder();
+
     const std::type_info& type() const noexcept override
     { return typeid(void); }
 
@@ -215,7 +217,7 @@ private:
     std::size_t size() const override { return 0; }
   };
 
-  holder_base* content() const { return reinterpret_cast<holder_base*>(data_); };
+  holder_base* content() const { return reinterpret_cast<holder_base*>(data_); }
 
   char* data_;
   std::size_t size_;

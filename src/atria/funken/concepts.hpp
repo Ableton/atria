@@ -14,7 +14,7 @@ template <typename T>
 auto declval_() -> typename std::add_rvalue_reference<T>::type
 {
   assert(!"You should never run this function!");
-  return *(estd::decay_t<T>*)(nullptr);
+  return *static_cast<estd::decay_t<T>*>(nullptr);
 }
 
 //!

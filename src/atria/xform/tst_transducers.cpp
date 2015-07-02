@@ -234,7 +234,7 @@ TEST(into, partition)
 {
   auto v = std::vector<int> { 1, 2, 3, 4, 5, 6 };
 
-  auto res = into(std::vector<std::vector<int> > {}, partition(2), v);
+  auto res = into(std::vector<std::vector<int> > {}, partition(2u), v);
   EXPECT_EQ(res, (std::vector<std::vector<int> > {
         {1, 2}, {3, 4}, {5, 6}
       }));
@@ -244,7 +244,7 @@ TEST(into, partition_flushing)
 {
   auto v = std::vector<int> { 1, 2, 3, 4, 5 };
 
-  auto res = into(std::vector<std::vector<int> > {}, partition(2), v);
+  auto res = into(std::vector<std::vector<int> > {}, partition(2u), v);
   EXPECT_EQ(res, (std::vector<std::vector<int> > {
         {1, 2}, {3, 4}, {5}
       }));
@@ -298,7 +298,7 @@ TEST(transducer, type_erasure_and_composition)
   auto xform1 = transducer<int(std::string)>{};
   auto xform2 = transducer<float(int)>{};
   xform1 = map([] (std::string a) { return std::stoi(a); });
-  xform2 = map([] (int a) { return float(a) / 2.0; });
+  xform2 = map([] (int a) { return float(a) / 2.0f; });
 
   auto xform3 = comp(xform1, xform2);
   auto res = into(std::vector<float>{}, xform3,
@@ -311,7 +311,7 @@ TEST(transducer, type_erasure_and_composition_erased)
   auto xform1 = transducer<int(std::string)>{};
   auto xform2 = transducer<float(int)>{};
   xform1 = map([] (std::string a) { return std::stoi(a); });
-  xform2 = map([] (int a) { return float(a) / 2.0; });
+  xform2 = map([] (int a) { return float(a) / 2.0f; });
 
   auto xform3 = transducer<float(std::string)>{};
   xform3 = comp(xform1, xform2);
