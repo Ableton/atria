@@ -34,6 +34,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL Clang
   set(warning_options
     -Werror
     -Weverything
+    -Wno-disabled-macro-expansion
     -Wno-string-conversion
     -Wno-global-constructors
     -Wno-c++98-compat
