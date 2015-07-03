@@ -133,9 +133,12 @@ template <typename TagT   = void,
 struct state_wrapper : std::tuple<StateT, DataT>
 {
   using tag = TagT;
-
   using base_t = std::tuple<StateT, DataT>;
-  using base_t::base_t;
+
+  template <typename T, typename U>
+  state_wrapper(T&& st, U&& data)
+    : base_t(std::forward<T>(st), std::forward<U>(data))
+  {}
 
   template <typename T>
   explicit state_wrapper(
