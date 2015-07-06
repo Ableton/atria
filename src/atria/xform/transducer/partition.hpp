@@ -22,33 +22,40 @@ struct partition_rf_gen
     ReducingFnT step;
     IntegralT size;
 
+    template <typename ...InputTs>
+    using container_t = std::vector<
+      estd::decay_t<
+        decltype(tuplify(std::declval<InputTs>()...))> >;
+
     template <typename StateT, typename ...InputTs>
     auto operator() (StateT&& s, InputTs&& ...is)
       -> decltype(
         wrap_state<partition_rf_gen::tag>(
-          step(state_unwrap(s), std::vector<estd::decay_t<decltype(tuplify(is...))>>{}),
-          make_tuple(std::vector<estd::decay_t<decltype(tuplify(is...))>>{}, step)))
+          step(state_unwrap(s), container_t<InputTs...>{}),
+          make_tuple(container_t<InputTs...>{}, step)))
     {
-      using elem_t = estd::decay_t<decltype(tuplify(is...))>;
-      auto data = state_data(s, [&] {
-          std::vector<elem_t> v;
+      auto data = state_data(std::forward<StateT>(s), [&] {
+          auto v = container_t<InputTs...>{};
           v.reserve(size);
           return make_tuple(v, step);
         });
-      auto& next = std::get<0>(data);
 
+      auto& next = std::get<0>(data);
       next.push_back(tuplify(std::forward<InputTs>(is)...));
+
       if (next.size() == size) {
         auto ss = step(state_unwrap(std::forward<StateT>(s)), next);
         next.clear();
         return wrap_state<partition_rf_gen::tag> (
           std::move(ss),
-          make_tuple(std::move(next), step));
+          make_tuple(std::move(next),
+                     std::get<1>(std::move(data))));
       }
       else {
         return wrap_state<partition_rf_gen::tag> (
           state_unwrap(std::forward<StateT>(s)),
-          make_tuple(std::move(next), step));
+          make_tuple(std::move(next),
+                     std::get<1>(std::move(data))));
       }
     }
   };
