@@ -38,5 +38,12 @@ TEST(into, partition_does_not_copy_step_function)
   EXPECT_EQ(step.copied.count(), 2);
 }
 
+TEST(reduce, partition_moves_the_state_through)
+{
+  auto v = std::vector<int> { 1, 2, 3, 4, 5 };
+  auto spy = reduce(partition(2u)(first_rf), testing::copy_spy<>{}, v);
+  EXPECT_EQ(spy.copied.count(), 0);
+}
+
 } // namespace xform
 } // namespace atria

@@ -1,11 +1,13 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #include <atria/xform/into.hpp>
+#include <atria/xform/reducing/first_rf.hpp>
 #include <atria/xform/transducer/filter.hpp>
 #include <atria/xform/transducer/map.hpp>
 #include <atria/xform/transducer/take.hpp>
 #include <atria/xform/transducer/transducer.hpp>
 
+#include <atria/testing/spies.hpp>
 #include <atria/testing/gtest.hpp>
 
 namespace atria {
@@ -79,6 +81,30 @@ TEST(transducer, type_erasure_and_composition_erased)
   auto res = into(std::vector<float>{}, xform3,
                   std::vector<std::string> {"1", "2", "3"});
   EXPECT_EQ(res, (std::vector<float> { 0.5f, 1.0f, 1.5f }));
+}
+
+TEST(transducer, performs_minimal_moves)
+{
+  auto v = std::vector<int> { 1, 2, 3, 4, 5 };
+  auto xform = transducer<int>{};
+
+  {
+    xform = map([] (int x) { return x + 2; });
+    auto spy = reduce(xform(first_rf), testing::copy_spy<>{}, v);
+    EXPECT_EQ(spy.copied.count(), 1);
+  }
+
+  {
+    xform = filter([] (int x) { return x % 2; });
+    auto spy = reduce(xform(first_rf), testing::copy_spy<>{}, v);
+    EXPECT_EQ(spy.copied.count(), 1);
+  }
+
+  {
+    xform = take(3);
+    auto spy = reduce(xform(first_rf), testing::copy_spy<>{}, v);
+    EXPECT_EQ(spy.copied.count(), 4);
+  }
 }
 
 } // namespace xform

@@ -62,7 +62,9 @@ struct transducer_rf_gen
       template <typename ...InputTs>
       any_state operator() (any_state s, InputTs&& ...is)
       {
-        s = step(s.as<AsStateT>(), std::forward<InputTs>(is)...);
+        auto next = step(std::move(s).as<AsStateT>(),
+                         std::forward<InputTs>(is)...);
+        s = std::move(next);
         return s;
       }
     };
@@ -101,9 +103,10 @@ struct transducer_rf_gen
             comp(xform, from_any_state<reduce_t>{}) (step));
         },
         [&](wrapped_t&& sst) {
-          std::get<0>(sst) = std::get<1>(sst)(
+          auto next = std::get<1>(sst)(
             std::move(std::get<0>(sst)),
             std::forward<InputTs>(ins)...);
+          std::get<0>(sst) = std::move(next);
           return std::move(sst);
         });
     }

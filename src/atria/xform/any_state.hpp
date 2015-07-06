@@ -78,8 +78,10 @@ public:
 
   any_state& operator=(const any_state& rhs)
   {
-    realloc_(rhs.content()->size());
-    rhs.content()->clone(data_);
+    if (&rhs != this) {
+      realloc_(rhs.content()->size());
+      rhs.content()->clone(data_);
+    }
     return *this;
   }
 
@@ -90,7 +92,8 @@ public:
       any_state&>
   {
     realloc_(sizeof(holder<estd::decay_t<ValueType> >));
-    new (data_) holder<ValueType>(std::forward<ValueType>(rhs));
+    new (data_) holder<estd::decay_t<ValueType> >(
+      std::forward<ValueType>(rhs));
     return *this;
   }
 
@@ -128,9 +131,11 @@ public:
 
 private:
   void realloc_(std::size_t size) {
-    content()->~holder_base();
+    if (size_ > 0)
+      content()->~holder_base();
     if (size_ < size) {
-      delete [] data_;
+      if (size_ > 0)
+        delete [] data_;
       data_ = new char[size];
       size_ = size;
 #if ABL_TRACE_ANY_STATE_ALLOC

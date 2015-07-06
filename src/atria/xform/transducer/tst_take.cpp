@@ -1,9 +1,12 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #include <atria/xform/into.hpp>
+#include <atria/xform/reducing/first_rf.hpp>
 #include <atria/xform/transducer/take.hpp>
 #include <atria/xform/transducer/cat.hpp>
 #include <atria/xform/transducer/map.hpp>
+
+#include <atria/testing/spies.hpp>
 #include <atria/testing/gtest.hpp>
 
 namespace atria {
@@ -63,6 +66,13 @@ TEST(into, take_stops_early_enough2)
         })),
     v);
   EXPECT_EQ(res, (std::vector<int> { 1, 2, 3 }));
+}
+
+TEST(reduce, take_moves_the_state_through)
+{
+  auto v = std::vector<int> { 1, 2, 3, 4, 5 };
+  auto spy = reduce(take(5)(first_rf), testing::copy_spy<>{}, v);
+  EXPECT_EQ(spy.copied.count(), 0);
 }
 
 } // namespace xform

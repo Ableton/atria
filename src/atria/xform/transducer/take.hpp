@@ -25,7 +25,7 @@ struct take_rf_gen
     auto operator() (StateT&& s, InputTs&& ...is)
       -> ABL_AUTO_RETURN(
         wrap_state<take_rf_gen::tag>(
-          step(state_unwrap(s), std::forward<InputTs>(is)...),
+          step(std::move(state_unwrap(s)), std::forward<InputTs>(is)...),
           state_data(s, constantly(total)) - 1))
   };
 
