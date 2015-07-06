@@ -84,24 +84,24 @@ using detail::update;
 
 namespace detail {
 
-struct at_reducer
+struct at_rf_gen
 {
-  template <typename ReducerT, typename KeyT>
+  template <typename ReducingFnT, typename KeyT>
   struct apply
   {
-    ReducerT reducer;
+    ReducingFnT step;
     KeyT key;
 
     //! @todo make variadic version
     template <typename StateT, typename InT>
     auto operator()(StateT&& s, InT&& i)
     -> decltype(true
-                ? reducer(std::forward<StateT>(s), i.at(key))
+                ? step(std::forward<StateT>(s), i.at(key))
                 : std::forward<StateT>(s))
     {
       try
       {
-        return reducer(std::forward<StateT>(s), i.at(key));
+        return step(std::forward<StateT>(s), i.at(key));
       }
       catch (const std::out_of_range&)
       {
@@ -137,7 +137,7 @@ struct at_updater
 //
 template <typename KeyT>
 auto xat(KeyT&& key)
-  -> xform::transducer_impl<detail::at_reducer, estd::decay_t<KeyT> >
+  -> xform::transducer_impl<detail::at_rf_gen, estd::decay_t<KeyT> >
 {
   return std::forward<KeyT>(key);
 }

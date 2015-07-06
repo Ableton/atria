@@ -9,7 +9,7 @@ namespace funken {
 
 //!
 // Raised by the view when it produces no value yet. This can happen
-// when the reducer that it uses is filtering some values.
+// when the reducing function that it uses is filtering some values.
 //
 struct no_value_error : std::exception
 {

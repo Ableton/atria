@@ -86,7 +86,7 @@ class xform_down_signal<XForm, meta::pack<Parents...>, Base>
   : public Base<get_xform_result_t<XForm, Parents...> >
 {
   using base_t = Base<get_xform_result_t<XForm, Parents...> >;
-  using down_reducer_t = decltype(std::declval<XForm>()(send_down_r));
+  using down_rf_t = decltype(std::declval<XForm>()(send_down_r));
 
   std::tuple<std::shared_ptr<Parents>...> parents_;
 
@@ -109,7 +109,7 @@ public:
         }
       }())
     , parents_(std::move(parents)...)
-    , down_reducer_(xform(send_down_r))
+    , down_step_(xform(send_down_r))
   {
   }
 
@@ -128,7 +128,7 @@ private:
   template <std::size_t ...Indices>
   void recompute(estd::index_sequence<Indices...>)
   {
-    down_reducer_(this, std::get<Indices>(parents_)->current()...);
+    down_step_(this, std::get<Indices>(parents_)->current()...);
   }
 
   template <std::size_t ...Indices>
@@ -140,13 +140,13 @@ private:
     recompute();
   }
 
-  down_reducer_t down_reducer_;
+  down_rf_t down_step_;
 };
 
 
 //!
-// Reducer that pushes the received values into the signal that is
-// passed as pointer as an accumulator.
+// Reducing function that pushes the received values into the signal
+// that is passed as pointer as an accumulator.
 //
 constexpr struct
 {
@@ -157,17 +157,17 @@ constexpr struct
     s->push_up(xform::tuplify(std::forward<Inputs>(is)...));
     return s;
   }
-} send_up_r {};
+} send_up_rf {};
 
 //!
 // @see update()
 //
-struct update_reducer
+struct update_rf_gen
 {
-  template <typename ReducerT, typename UpdateT>
+  template <typename ReducingFnT, typename UpdateT>
   struct apply
   {
-    ReducerT reducer;
+    ReducingFnT step;
     UpdateT updater;
 
     template <typename XformUpSignalPtr, typename ...Inputs>
@@ -176,8 +176,8 @@ struct update_reducer
     {
       auto indices = estd::make_index_sequence<
         std::tuple_size<estd::decay_t<decltype(s->parents())> >::value > {};
-      return reducer(s, updater(peek_parents(s, indices),
-                                std::forward<Inputs>(is)...));
+      return step(s, updater(peek_parents(s, indices),
+                             std::forward<Inputs>(is)...));
     }
 
     template <typename XformUpSignalPtr, std::size_t ...Indices>
@@ -203,7 +203,7 @@ struct update_reducer
 //
 template <typename UpdateT>
 auto update(UpdateT&& updater)
-  -> xform::transducer_impl<update_reducer, estd::decay_t<UpdateT> >
+  -> xform::transducer_impl<update_rf_gen, estd::decay_t<UpdateT> >
 {
   return std::forward<UpdateT>(updater);
 }
@@ -225,7 +225,7 @@ class xform_up_down_signal<XForm, SetXForm, meta::pack<Parents...>, Base>
   : public xform_down_signal<XForm, meta::pack<Parents...>, Base>
 {
   using base_t = xform_down_signal<XForm, meta::pack<Parents...>, Base>;
-  using up_reducer_t = decltype(std::declval<SetXForm>()(send_up_r));
+  using up_rf_t = decltype(std::declval<SetXForm>()(send_up_rf));
 
 public:
   using value_type = typename base_t::value_type;
@@ -240,7 +240,7 @@ public:
                        SetXForm2&& set_xform,
                        std::shared_ptr<Parents> ...parents)
     : base_t(std::forward<XForm2>(xform), std::move(parents)...)
-    , up_reducer_(set_xform(send_up_r))
+    , up_step_(set_xform(send_up_rf))
   {}
 
   void send_up(const value_type& value) final
@@ -266,7 +266,7 @@ private:
   template <typename T, std::size_t... Indices>
   void send_up(T&& x, estd::index_sequence<Indices...>)
   {
-    up_reducer_(this, std::forward<T>(x));
+    up_step_(this, std::forward<T>(x));
   }
 
   template <typename T, std::size_t ...Indices>
@@ -285,7 +285,7 @@ private:
     std::get<0>(this->parents())->send_up(std::forward<T>(value));
   }
 
-  up_reducer_t up_reducer_;
+  up_rf_t up_step_;
 };
 
 

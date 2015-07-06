@@ -28,7 +28,7 @@ ABL_CONCEPT_SPEC(State)
           meta::models_<State_spec, boost::mpl::_> >()));
 };
 
-ABL_CONCEPT_SPEC(Reducer)
+ABL_CONCEPT_SPEC(Reducing_function)
 {
   template <typename R, typename S, typename... Is>
   auto requires_(R&& r, S&& s, Is&&... is)
@@ -53,11 +53,11 @@ ABL_CONCEPT_SPEC(Transducer)
     -> decltype(
       meta::expressions(
         meta::require<(
-          Reducer<decltype(t(first_rf)), int, int>())>(),
+          Reducing_function<decltype(t(first_rf)), int, int>())>(),
         meta::require<(
-          Reducer<decltype(t(first_rf)), char*, int>())>(),
+          Reducing_function<decltype(t(first_rf)), char*, int>())>(),
         meta::require<(
-          Reducer<decltype(t(first_rf)), char*, int, float>())>()));
+          Reducing_function<decltype(t(first_rf)), char*, int, float>())>()));
 };
 
 } // namespace xform

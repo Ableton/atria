@@ -100,7 +100,7 @@ TEST(state, state_concept)
   meta::check<State_spec(int)>();
   meta::check<State_spec(state_wrapper<void, int, int>)>();
   meta::check<State_spec(any_state)>();
-  meta::check<Reducer_spec(estd::plus<>, int, int)>();
+  meta::check<Reducing_function_spec(estd::plus<>, int, int)>();
   meta::check<Transducer_spec(decltype(map(tuplify)))>();
 }
 
