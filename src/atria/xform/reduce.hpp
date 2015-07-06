@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <atria/xform/config.hpp>
 #include <atria/xform/functional.hpp>
 #include <atria/xform/state_traits.hpp>
 
@@ -11,31 +12,6 @@
 #include <algorithm>
 #include <numeric>
 #include <tuple>
-
-//!
-// When defined to 1, a tail-recursive definition will be used for the
-// non-variadic reduce.
-//
-#ifndef ABL_REDUCE_TAIL_RECURSIVE
-#define ABL_REDUCE_TAIL_RECURSIVE 0
-#endif
-
-//!
-// When defined to 1, std::accumulate will be used as an
-// implementation for reduce() over one single collection.  In that
-// case, halting reducers (e.g. take) might not work.
-//
-#ifndef ABL_REDUCE_WITH_ACCUMULATE
-#define ABL_REDUCE_WITH_ACCUMULATE 0
-#endif
-
-//!
-// When defined to 1, reduce will used a variadic implementation also
-// when one single input is provided.
-//
-#ifndef ABL_REDUCE_ALWAYS_VARIADIC
-#define ABL_REDUCE_ALWAYS_VARIADIC 0
-#endif
 
 namespace atria {
 namespace xform {
