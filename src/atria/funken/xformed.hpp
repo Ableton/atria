@@ -1,10 +1,11 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #pragma once
 
 #include <atria/funken/in.hpp>
 #include <atria/funken/inout.hpp>
 #include <atria/funken/detail/xform_signals.hpp>
+#include <atria/xform/transducer/map.hpp>
 
 namespace atria {
 namespace funken {
@@ -136,7 +137,7 @@ struct at_updater
 //
 template <typename KeyT>
 auto xat(KeyT&& key)
-  -> xform::detail::transducer_impl<detail::at_reducer, estd::decay_t<KeyT> >
+  -> xform::transducer_impl<detail::at_reducer, estd::decay_t<KeyT> >
 {
   return std::forward<KeyT>(key);
 }

@@ -9,8 +9,10 @@
 #define ABL_XFORM_BENCHMARK_ENABLE_ANY 0
 
 #include <atria/xform/transduce.hpp>
-#include <atria/xform/transducer.hpp>
-#include <atria/xform/transducers.hpp>
+#include <atria/xform/transducer/filter.hpp>
+#include <atria/xform/transducer/map.hpp>
+#include <atria/xform/transducer/transducer.hpp>
+
 #include <atria/testing/benchmark.hpp>
 #include <atria/testing/gtest.hpp>
 

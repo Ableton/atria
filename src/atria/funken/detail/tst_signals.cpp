@@ -3,6 +3,9 @@
 #include <atria/funken/detail/signals.hpp>
 #include <atria/funken/detail/xform_signals.hpp>
 #include <atria/funken/detail/root_signals.hpp>
+
+#include <atria/xform/transducer/map.hpp>
+
 #include <atria/testing/spies.hpp>
 #include <atria/testing/gtest.hpp>
 #include <array>

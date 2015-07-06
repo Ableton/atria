@@ -4,8 +4,12 @@
 
 #include <atria/funken/detail/signals.hpp>
 #include <atria/funken/detail/no_value.hpp>
-#include <atria/xform/transducers.hpp>
+
+#include <atria/meta/pack.hpp>
+#include <atria/xform/functional.hpp>
 #include <atria/xform/reducing/last_rf.hpp>
+#include <atria/xform/transducer_impl.hpp>
+
 #include <atria/estd/utility.hpp>
 #include <atria/estd/type_traits.hpp>
 
@@ -199,7 +203,7 @@ struct update_reducer
 //
 template <typename UpdateT>
 auto update(UpdateT&& updater)
-  -> xform::detail::transducer_impl<update_reducer, estd::decay_t<UpdateT> >
+  -> xform::transducer_impl<update_reducer, estd::decay_t<UpdateT> >
 {
   return std::forward<UpdateT>(updater);
 }

@@ -5,6 +5,9 @@
 #include <atria/funken/structure.hpp>
 #include <atria/funken/watch.hpp>
 #include <atria/funken/xformed.hpp>
+
+#include <atria/xform/transducer/filter.hpp>
+
 #include <atria/testing/gtest.hpp>
 #include <array>
 #include <map>

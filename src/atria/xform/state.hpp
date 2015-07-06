@@ -4,6 +4,7 @@
 
 #include <atria/estd/type_traits.hpp>
 #include <atria/estd/utility.hpp>
+#include <tuple>
 
 namespace atria {
 namespace xform {
