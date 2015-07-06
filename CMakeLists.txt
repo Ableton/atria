@@ -73,49 +73,12 @@ include(FeatureSummary)
 add_feature_info(GoogleTest ${GTEST_FOUND} "used for unit testing.")
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
+file(GLOB_RECURSE atria_sources "src/*.hpp" "src/*.cpp")
+file(GLOB_RECURSE atria_test_sources "src/*.hpp" "src/tst_*.cpp")
+list(REMOVE_ITEM  atria_sources ${atria_test_sources})
+
 # Defining Atria
-add_library(AtriaLib
-  src/atria/estd/memory.hpp
-  src/atria/estd/type_traits.hpp
-  src/atria/estd/utility.hpp
-  src/atria/funken/commit.hpp
-  src/atria/funken/concepts.hpp
-  src/atria/funken/detail
-  src/atria/funken/detail/access.hpp
-  src/atria/funken/detail/no_value.hpp
-  src/atria/funken/detail/no_value.cpp
-  src/atria/funken/detail/root_signals.hpp
-  src/atria/funken/detail/signals.hpp
-  src/atria/funken/detail/signals.cpp
-  src/atria/funken/detail/watchable.hpp
-  src/atria/funken/detail/xform_signals.hpp
-  src/atria/funken/in.hpp
-  src/atria/funken/inout.hpp
-  src/atria/funken/out.hpp
-  src/atria/funken/sensor.hpp
-  src/atria/funken/state.hpp
-  src/atria/funken/structure.hpp
-  src/atria/funken/watch.hpp
-  src/atria/funken/xformed.hpp
-  src/atria/meta/common_type.hpp
-  src/atria/meta/pack.hpp
-  src/atria/meta/std_tuple.hpp
-  src/atria/meta/utils.hpp
-  src/atria/testing/benchmark.hpp
-  src/atria/testing/spies.hpp
-  src/atria/variant/match.hpp
-  src/atria/variant/visitor.hpp
-  src/atria/xform/any_state.hpp
-  src/atria/xform/any_state.cpp
-  src/atria/xform/functional.hpp
-  src/atria/xform/reduce.hpp
-  src/atria/xform/reducers.hpp
-  src/atria/xform/state.hpp
-  src/atria/xform/transduce.hpp
-  src/atria/xform/transducer.hpp
-  src/atria/xform/transducers.hpp
-  src/atria/testing/benchmark.cpp
-  )
+add_library(AtriaLib ${atria_sources})
 set_target_properties(AtriaLib PROPERTIES LINKER_LANGUAGE CXX)
 target_include_directories(AtriaLib PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
@@ -129,27 +92,13 @@ target_link_libraries(AtriaLib)
 if(GTEST_FOUND)
   add_library(gtest_internal STATIC
     ${GTEST_SOURCE}/src/gtest-all.cc
-    ${GTEST_SOURCE}/src/gtest_main.cc
-    )
+    ${GTEST_SOURCE}/src/gtest_main.cc)
   target_include_directories(gtest_internal PUBLIC
     ${GTEST_SOURCE} ${GTEST_SOURCE}/include)
   target_compile_options(gtest_internal PUBLIC
     ${cxx11_options} -Wno-global-constructors)
 
-  add_executable(AtriaTest
-    src/atria/funken/tst_in_and_out.cpp
-    src/atria/funken/tst_sensor.cpp
-    src/atria/funken/tst_state.cpp
-    src/atria/funken/tst_structure.cpp
-    src/atria/funken/tst_xformed.cpp
-    src/atria/meta/tst_concepts.cpp
-    src/atria/meta/tst_pack.cpp
-    src/atria/meta/tst_std_tuple.cpp
-    src/atria/testing/tst_spies.cpp
-    src/atria/variant/tst_match.cpp
-    src/atria/xform/tst_transducers.cpp
-    src/atria/xform/tst_transducers_benchmark.cpp
-    )
+  add_executable(AtriaTest ${atria_test_sources})
 
   target_link_libraries(AtriaTest
     AtriaLib

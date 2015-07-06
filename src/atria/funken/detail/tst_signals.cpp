@@ -11,6 +11,8 @@ namespace atria {
 namespace funken {
 namespace detail {
 
+using namespace atria::xform;
+
 TEST(signal, instantiate_down_signal)
 {
   make_xform_down_signal(identity);
@@ -233,7 +235,7 @@ TEST(signal, one_signal_two_parents)
   auto y = make_state_signal(12);
   auto z = make_xform_down_signal(map([](int a, int b) { return a + b; }),
                                x, y);
-  auto s = testing::spy([&](int _, int r) {
+  auto s = testing::spy([&](int, int r) {
       EXPECT_EQ(x->last() + y->last(), r);
     });
   z->observe(s);
