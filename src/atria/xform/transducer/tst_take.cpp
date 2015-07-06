@@ -1,6 +1,6 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
-#include <atria/xform/transduce.hpp>
+#include <atria/xform/into.hpp>
 #include <atria/xform/transducer/take.hpp>
 #include <atria/xform/transducer/cat.hpp>
 #include <atria/xform/transducer/map.hpp>

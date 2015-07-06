@@ -8,7 +8,7 @@
 #define ABL_REDUCE_TAIL_RECURSIVE 0
 #define ABL_XFORM_BENCHMARK_ENABLE_ANY 0
 
-#include <atria/xform/transduce.hpp>
+#include <atria/xform/into.hpp>
 #include <atria/xform/transducer/filter.hpp>
 #include <atria/xform/transducer/map.hpp>
 #include <atria/xform/transducer/transducer.hpp>
