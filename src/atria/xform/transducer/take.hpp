@@ -3,6 +3,7 @@
 #pragma once
 
 #include <atria/xform/transducer_impl.hpp>
+#include <atria/xform/state_wrapper.hpp>
 
 namespace atria {
 namespace xform {

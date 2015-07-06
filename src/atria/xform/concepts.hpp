@@ -5,7 +5,7 @@
 #include <atria/meta/concept.hpp>
 #include <atria/xform/functional.hpp>
 #include <atria/xform/reducing/first_rf.hpp>
-#include <atria/xform/state.hpp>
+#include <atria/xform/state_traits.hpp>
 
 #include <boost/mpl/eval_if.hpp>
 

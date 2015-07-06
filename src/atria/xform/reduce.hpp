@@ -3,7 +3,7 @@
 #pragma once
 
 #include <atria/xform/functional.hpp>
-#include <atria/xform/state.hpp>
+#include <atria/xform/state_traits.hpp>
 
 #include <atria/estd/type_traits.hpp>
 #include <atria/estd/utility.hpp>

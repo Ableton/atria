@@ -15,9 +15,9 @@ namespace xform {
  *
  * @code{.hs}
  *  xducer params... =     -- 1. this returns a transducer
- *    \ reducer ->         -- 2. this is a transducer
- *       \ state, input -> -- 3. this is transformed version of 'reducer'
- *           f(params..., reducer, state, input)
+ *    \ step ->         -- 2. this is a transducer
+ *       \ state, input -> -- 3. this is transformed version of 'step'
+ *           f(params..., step, state, input)
  * @endocde
  *
  * Writing functions that return functions without erasing their type
@@ -25,7 +25,7 @@ namespace xform {
  * and decltype(auto) in the next standard).  The `transducer_impl`
  * type implements the first two calls. The `ReducingFnGenT` parameter
  * should have a nested template `apply` that implements the last
- * call.  It will be constructed `reducer, params...` and it should be
+ * call.  It will be constructed `step, params...` and it should be
  * callable with `state, input`.
  *
  * @see map
@@ -49,25 +49,25 @@ struct transducer_impl : std::tuple<ParamTs...>
     : base_t(std::move(ts)...)
   {}
 
-  template<typename ReducerT>
-  constexpr auto operator() (ReducerT&& reducer) const
+  template<typename ReducingFnT>
+  constexpr auto operator() (ReducingFnT&& reducer) const
     -> typename ReducingFnGenT::template apply<
-      estd::decay_t<ReducerT>,
+      estd::decay_t<ReducingFnT>,
       estd::decay_t<ParamTs>...
     >
   {
     using indexes_t = estd::make_index_sequence<sizeof...(ParamTs)>;
-    return this->make(std::forward<ReducerT>(reducer), indexes_t());
+    return this->make(std::forward<ReducingFnT>(reducer), indexes_t());
   }
 
-  template<typename ReducerT, std::size_t...indexes_t>
-  constexpr auto make(ReducerT&& reducer, estd::index_sequence<indexes_t...>) const
+  template<typename ReducingFnT, std::size_t...indexes_t>
+  constexpr auto make(ReducingFnT&& reducer, estd::index_sequence<indexes_t...>) const
     -> typename ReducingFnGenT::template apply<
-      estd::decay_t<ReducerT>,
+      estd::decay_t<ReducingFnT>,
       estd::decay_t<ParamTs>...
     >
   {
-    return { std::forward<ReducerT>(reducer),
+    return { std::forward<ReducingFnT>(reducer),
              std::get<indexes_t>(*this)... };
   }
 };

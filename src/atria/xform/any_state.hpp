@@ -2,25 +2,23 @@
 
 #pragma once
 
-#include <atria/xform/state.hpp>
+#include <atria/xform/config.hpp>
+#include <atria/xform/state_traits.hpp>
 #include <atria/estd/memory.hpp>
 #include <atria/meta/pack.hpp>
 #include <string>
 
-#define ABL_SAFE_ANY 0
-#define ABL_TRACE_ANY_ALLOC 0
-
-#if ABL_TRACE_ANY_ALLOC
+#if ABL_TRACE_ANY_STATE_ALLOC
 #include <iostream>
 #endif
 
 namespace atria {
 namespace xform {
 
-//!
-// Polymorphically holds any value implementing the `state_traits`.
-// This type is used for the implementation of `transducer`.
-//
+/*!
+ * Polymorphically holds any value implementing the `state_traits`.
+ * This type is used for the implementation of `transducer`.
+ */
 class any_state
 {
 public:
@@ -48,7 +46,7 @@ public:
     : data_(new char[other.size_])
     , size_(other.size_)
   {
-#if ABL_TRACE_ANY_ALLOC
+#if ABL_TRACE_ANY_STATE_ALLOC
     std::cout << "alloc-c" << std::endl;
 #endif
     other.content()->clone(data_);
@@ -65,7 +63,7 @@ public:
     {
       new (data_) holder<estd::decay_t<ValueType> >(
           std::forward<ValueType>(value));
-#if ABL_TRACE_ANY_ALLOC
+#if ABL_TRACE_ANY_STATE_ALLOC
       std::cout << "alloc-n " << typeid(estd::decay_t<ValueType>).name() << std::endl;
 #endif
     }
@@ -135,7 +133,7 @@ private:
       delete [] data_;
       data_ = new char[size];
       size_ = size;
-#if ABL_TRACE_ANY_ALLOC
+#if ABL_TRACE_ANY_STATE_ALLOC
       std::cout << "alloc-r" << std::endl;
 #endif
     }
@@ -143,7 +141,7 @@ private:
 
   template <typename T>
   T& as_impl(meta::pack<T>) {
-#if ABL_SAFE_ANY
+#if ABL_SAFE_ANY_STATE
     check<T>();
 #endif
     return reinterpret_cast<holder<T>*>(data_)->held;
@@ -256,6 +254,29 @@ struct state_traits<any_state>
 };
 
 
+/*!
+ * Given a value `st` that represents the state of a reduction, this
+ * function generically dispatches to the right function `UnwrappedFn`
+ * or `WrappedFn`, depending of whether the value is of type
+ * `WrappedStateT` or not.
+ *
+ * - Iff the value the `st` is of type `StateT` or is a `any_state`
+ *   containing a `WrappedStateT`, the `WrappedFn` function is called
+ *   with the contained state `WrappedStateT` value as a parameter.
+ *
+ * - Otherwise, `UnwrappedFn` is called with the original `StateT`
+ *   value an argument
+ *
+ * Both `WrappedFn` and `UnwrappedFn` are expected to return a
+ * `WrappedStateT` value.
+ *
+ * This function can dispatch both statically and dynamically in a
+ * transparent way.  It is thus very useful for writing stateful
+ * transducers that can be type erased in a `transducer<>` object.
+ *
+ * @see transducer
+ * @see take
+ */
 template <typename WrappedStateT,
           typename StateT,
           typename UnwrappedFn,

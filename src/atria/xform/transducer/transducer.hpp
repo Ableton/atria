@@ -3,7 +3,7 @@
 #pragma once
 
 #include <atria/xform/any_state.hpp>
-#include <atria/xform/state.hpp>
+#include <atria/xform/state_wrapper.hpp>
 #include <atria/xform/transducer_impl.hpp>
 
 #include <functional>

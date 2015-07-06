@@ -12,14 +12,14 @@ namespace xform {
  * Similar to clojure.core/transduce
  */
 template <typename XformT,
-          typename ReducerT,
+          typename ReducingFnT,
           typename StateT,
           typename ...InputRangeTs>
-auto transduce(XformT&& xform, ReducerT&& reducer,
+auto transduce(XformT&& xform, ReducingFnT&& reducer,
                StateT&& state, InputRangeTs&& ...ranges)
   -> estd::decay_t<StateT>
 {
-  auto xformed = xform(std::forward<ReducerT>(reducer));
+  auto xformed = xform(std::forward<ReducingFnT>(reducer));
   return reduce(
     xformed,
     state,
