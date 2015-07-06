@@ -243,5 +243,39 @@ inline auto spy_on(MockT& mock, const FnT& replacement)
   return { detail::scoped_intruder<MockT>(mock, s), s };
 }
 
+namespace detail {
+struct default_copy_spy_base_t {};
+} // namespace detail
+
+/*!
+ * Utility for testing how many times an object is copied.
+ */
+template <typename BaseT = detail::default_copy_spy_base_t>
+struct copy_spy : BaseT
+{
+  using base_t = BaseT;
+
+  testing::spy_fn<> copied;
+
+  copy_spy() = default;
+  copy_spy(copy_spy&&) = default;
+  copy_spy& operator=(copy_spy&&) = default;
+
+  copy_spy(const copy_spy& x)
+    : base_t(x)
+    , copied(x.copied)
+  {
+    copied();
+  }
+
+  copy_spy& operator=(const copy_spy& x)
+  {
+    base_t::operator=(x);
+    copied = x.copied;
+    copied();
+    return *this;
+  }
+};
+
 } // namespace testing
 } // namespace atria
