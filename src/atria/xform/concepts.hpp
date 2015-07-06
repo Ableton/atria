@@ -4,7 +4,7 @@
 
 #include <atria/meta/concept.hpp>
 #include <atria/xform/functional.hpp>
-#include <atria/xform/reducers.hpp>
+#include <atria/xform/reducing/first_rf.hpp>
 #include <atria/xform/state.hpp>
 
 #include <boost/mpl/eval_if.hpp>
@@ -53,11 +53,11 @@ ABL_CONCEPT_SPEC(Transducer)
     -> decltype(
       meta::expressions(
         meta::require<(
-          Reducer<decltype(t(first_r)), int, int>())>(),
+          Reducer<decltype(t(first_rf)), int, int>())>(),
         meta::require<(
-          Reducer<decltype(t(first_r)), char*, int>())>(),
+          Reducer<decltype(t(first_rf)), char*, int>())>(),
         meta::require<(
-          Reducer<decltype(t(first_r)), char*, int, float>())>()));
+          Reducer<decltype(t(first_rf)), char*, int, float>())>()));
 };
 
 } // namespace xform

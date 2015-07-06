@@ -1,16 +1,21 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #pragma once
 
+#include <atria/xform/config.hpp>
 #include <atria/xform/reduce.hpp>
-#include <atria/xform/reducers.hpp>
+#if ABL_STATEFUL_INTO
+#include <atria/xform/reducing/output_rf.hpp>
+#else
+#include <atria/xform/reducing/emplace_back_rf.hpp>
+#endif
 
 namespace atria {
 namespace xform {
 
-//!
-// Similar to clojure.core/transduce
-//
+/*!
+ * Similar to clojure.core/transduce
+ */
 template <typename XformT,
           typename ReducerT,
           typename StateT,
@@ -26,11 +31,9 @@ auto transduce(XformT&& xform, ReducerT&& reducer,
     std::forward<InputRangeTs>(ranges)...);
 }
 
-#define ABL_STATEFUL_INTO 1
-
-//!
-// Similar to clojure.core/into$4
-//
+/*!
+ * Similar to clojure.core/into$4
+ */
 #if ABL_STATEFUL_INTO
 template <typename CollectionT,
           typename XformT,
@@ -40,7 +43,7 @@ auto into(CollectionT&& col, XformT&& xform, InputRangeTs&& ...ranges)
 {
   transduce(
     std::forward<XformT>(xform),
-    output_r,
+    output_rf,
     std::back_inserter(col),
     std::forward<InputRangeTs>(ranges)...);
   return std::forward<CollectionT>(col);
@@ -56,7 +59,7 @@ auto into(CollectionT&& col, XformT&& xform, InputRangeTs&& ...ranges)
 {
   return transduce(
     std::forward<XformT>(xform),
-    emplace_back_r,
+    emplace_back_rf,
     std::forward<CollectionT>(col),
     std::forward<InputRangeTs>(ranges)...);
 }

@@ -1,11 +1,11 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #pragma once
 
 #include <atria/funken/detail/signals.hpp>
 #include <atria/funken/detail/no_value.hpp>
 #include <atria/xform/transducers.hpp>
-#include <atria/xform/reducers.hpp>
+#include <atria/xform/reducing/last_rf.hpp>
 #include <atria/estd/utility.hpp>
 #include <atria/estd/type_traits.hpp>
 
@@ -24,7 +24,7 @@ struct get_xform_result
 {
   using type = estd::decay_t<
     decltype(
-      std::declval<XForm>()(xform::last_r)(
+      std::declval<XForm>()(xform::last_rf)(
         std::declval<detail::no_value>(),
         std::declval<estd::Value_type<Sources> >()...))
     >;
@@ -98,7 +98,7 @@ public:
   xform_down_signal(XForm2&& xform, std::shared_ptr<Parents> ...parents)
     : base_t([&]() -> value_type {
         try {
-          return xform(xform::last_r)(detail::no_value{}, parents->current()...);
+          return xform(xform::last_rf)(detail::no_value{}, parents->current()...);
         }
         catch (const no_value_error&) {
           return default_construct_or_throw<value_type, no_value_error>();

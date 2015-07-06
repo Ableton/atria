@@ -51,7 +51,7 @@ TEST(compose, various_types)
 TEST(reduce, protect_against_moved_self_assignment)
 {
   auto v = std::vector<int> { 1, 2, 3, 6 };
-  EXPECT_EQ(reduce(first_r, v, v), v);
+  EXPECT_EQ(reduce(first_rf, v, v), v);
 }
 
 TEST(transduce, identity)
