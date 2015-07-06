@@ -1,4 +1,4 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #pragma once
 
@@ -52,10 +52,7 @@ public:
   {}
 
   auto get() const
-    -> decltype(signal_->last())
-  {
-    return signal_->last();
-  }
+    -> ABL_AUTO_RETURN(signal_->last())
 
   template <typename T>
   void set(T&& value)

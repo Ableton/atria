@@ -14,14 +14,10 @@ namespace xform {
 //
 template <typename MappingT>
 auto mapcat(MappingT&& mapping)
-  -> decltype(comp(
-                cat,
-                map(std::forward<MappingT>(mapping))))
-{
-  return comp(
-    cat,
-    map(std::forward<MappingT>(mapping)));
-}
+  -> ABL_AUTO_RETURN(
+    comp(
+      cat,
+      map(std::forward<MappingT>(mapping))))
 
 } // namespace xform
 } // namespace atria

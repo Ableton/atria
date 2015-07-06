@@ -21,16 +21,11 @@ struct filter_rf_gen
 
     template <typename State, typename ...Inputs>
     auto operator() (State&& s, Inputs&& ...is)
-      -> decltype(true
-                  ? reducer(std::forward<State>(s),
-                            std::forward<Inputs>(is)...)
-                  : std::forward<State>(s))
-    {
-      return predicate(std::forward<Inputs>(is)...)
-        ? reducer(std::forward<State>(s),
-                  std::forward<Inputs>(is)...)
-        : std::forward<State>(s);
-    }
+      -> ABL_AUTO_RETURN(
+        predicate(std::forward<Inputs>(is)...)
+          ? reducer(std::forward<State>(s),
+                    std::forward<Inputs>(is)...)
+          : std::forward<State>(s))
   };
 };
 

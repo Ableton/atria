@@ -229,16 +229,19 @@ template <>
 struct state_traits<any_state>
 {
   template <typename T>
-  static auto complete(T&& t) -> decltype(std::forward<T>(t).content()->complete())
-  { return std::forward<T>(t).content()->complete(); }
+  static auto complete(T&& t)
+    -> ABL_AUTO_RETURN(
+      std::forward<T>(t).content()->complete())
 
   template <typename T>
-  static auto is_reduced(T&& t) -> decltype(std::forward<T>(t).content()->is_reduced())
-  { return std::forward<T>(t).content()->is_reduced(); }
+  static auto is_reduced(T&& t)
+    -> ABL_AUTO_RETURN(
+      std::forward<T>(t).content()->is_reduced())
 
   template <typename T>
-  static auto unwrap(T&& t) -> decltype(std::forward<T>(t).content()->unwrap())
-  { return std::forward<T>(t).content()->unwrap(); }
+  static auto unwrap(T&& t)
+    -> ABL_AUTO_RETURN(
+      std::forward<T>(t).content()->unwrap())
 
   template <typename T, typename D>
   static auto data(T&& t, D&& d)

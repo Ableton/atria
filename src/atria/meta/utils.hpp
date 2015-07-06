@@ -55,5 +55,12 @@ constexpr struct noop_t
 //
 constexpr int can_be_void = 42;
 
+/*!
+ * Utility for defining generic functions with a deduced return type,
+ * that are composed of a single expression.
+ */
+#define ABL_AUTO_RETURN(body_expr)  \
+  decltype(body_expr) { return (body_expr); }
+
 } // namespace meta
 } // namespace atria

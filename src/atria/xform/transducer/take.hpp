@@ -22,14 +22,10 @@ struct take_rf_gen
 
     template <typename StateT, typename ...InputTs>
     auto operator() (StateT&& s, InputTs&& ...is)
-      -> decltype(wrap_state<take_rf_gen::tag>(
-                    step(state_unwrap(s), std::forward<InputTs>(is)...),
-                    state_data(s, constantly(total))))
-    {
-      return wrap_state<take_rf_gen::tag>(
-        step(state_unwrap(s), std::forward<InputTs>(is)...),
-        state_data(s, constantly(total)) - 1);
-    }
+      -> ABL_AUTO_RETURN(
+        wrap_state<take_rf_gen::tag>(
+          step(state_unwrap(s), std::forward<InputTs>(is)...),
+          state_data(s, constantly(total)) - 1))
   };
 
   template <typename T>

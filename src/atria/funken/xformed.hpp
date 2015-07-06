@@ -193,10 +193,8 @@ struct get_attr_fn
 
   //! @todo variadic version
   template <typename T>
-  auto operator()(T&& x) const -> decltype(x.*attr)
-  {
-    return x.*attr;
-  }
+  auto operator()(T&& x) const
+    -> ABL_AUTO_RETURN(x.*attr)
 };
 
 template <typename AttrPtr>

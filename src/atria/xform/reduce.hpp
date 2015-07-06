@@ -83,18 +83,12 @@ template <typename ReducerT,
 auto reduce_nested_tail_recursive(ReducerT&& reducer,
                                   StateT&& initial,
                                   InputRangeT&& range)
-  -> decltype(reduce_nested_tail_recursive_impl(
-                std::forward<ReducerT>(reducer),
-                std::forward<StateT>(initial),
-                std::begin(range),
-                std::end(range)))
-{
-  return reduce_nested_tail_recursive_impl(
-    std::forward<ReducerT>(reducer),
-    std::forward<StateT>(initial),
-    std::begin(range),
-    std::end(range));
-}
+  -> ABL_AUTO_RETURN(
+    reduce_nested_tail_recursive_impl(
+      std::forward<ReducerT>(reducer),
+      std::forward<StateT>(initial),
+      std::begin(range),
+      std::end(range)))
 
 template <typename ReducerT,
           typename StateT,
@@ -161,18 +155,12 @@ template <typename ReducerT,
           typename StateT,
           typename ...InputRangeTs>
 auto reduce_nested_variadic(ReducerT&& reducer, StateT&& state, InputRangeTs&& ...ranges)
-  -> decltype(detail::reduce_nested_variadic_impl(
-                std::forward<ReducerT>(reducer),
-                std::forward<StateT>(state),
-                estd::make_index_sequence<sizeof...(InputRangeTs)> {},
-                std::forward<InputRangeTs>(ranges)...))
-{
-  return detail::reduce_nested_variadic_impl(
-    std::forward<ReducerT>(reducer),
-    std::forward<StateT>(state),
-    estd::make_index_sequence<sizeof...(InputRangeTs)> {},
-    std::forward<InputRangeTs>(ranges)...);
-}
+  -> ABL_AUTO_RETURN(
+    reduce_nested_variadic_impl(
+      std::forward<ReducerT>(reducer),
+      std::forward<StateT>(state),
+      estd::make_index_sequence<sizeof...(InputRangeTs)> {},
+      std::forward<InputRangeTs>(ranges)...))
 
 } // namespace detail
 
@@ -200,16 +188,11 @@ template <typename ReducerT,
           typename StateT,
           typename InputRangeT>
 auto reduce_nested(ReducerT&& reducer, StateT&& state, InputRangeT&& range)
-  -> decltype(ABL_REDUCE_NESTED_NON_VARIADIC_IMPL(
-                std::forward<ReducerT>(reducer),
-                std::forward<StateT>(state),
-                std::forward<InputRangeT>(range)))
-{
-  return ABL_REDUCE_NESTED_NON_VARIADIC_IMPL(
-    std::forward<ReducerT>(reducer),
-    std::forward<StateT>(state),
-    std::forward<InputRangeT>(range));
-}
+  -> ABL_AUTO_RETURN(
+    ABL_REDUCE_NESTED_NON_VARIADIC_IMPL(
+      std::forward<ReducerT>(reducer),
+      std::forward<StateT>(state),
+      std::forward<InputRangeT>(range)))
 
 template <typename ReducerT,
           typename StateT,
@@ -217,18 +200,12 @@ template <typename ReducerT,
           typename ...InputRangeTs>
 auto reduce_nested(ReducerT&& reducer, StateT&& state, InputRangeT&& range,
                    InputRangeTs&& ...ranges)
-  -> decltype(detail::reduce_nested_variadic(
-                std::forward<ReducerT>(reducer),
-                std::forward<StateT>(state),
-                std::forward<InputRangeT>(range),
-                std::forward<InputRangeTs>(ranges)...))
-{
-  return detail::reduce_nested_variadic(
-    std::forward<ReducerT>(reducer),
-    std::forward<StateT>(state),
-    std::forward<InputRangeT>(range),
-    std::forward<InputRangeTs>(ranges)...);
-}
+  -> ABL_AUTO_RETURN(
+    detail::reduce_nested_variadic(
+      std::forward<ReducerT>(reducer),
+      std::forward<StateT>(state),
+      std::forward<InputRangeT>(range),
+      std::forward<InputRangeTs>(ranges)...))
 
 //!
 // Similar to clojure.core/reduce.  Unlike `std::accumulate`, this

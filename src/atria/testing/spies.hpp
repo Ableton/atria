@@ -2,6 +2,8 @@
 
 #define BOOST_OPTIONAL_CONFIG_ALLOW_BINDING_TO_RVALUES
 
+#include <atria/meta/utils.hpp>
+
 #include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
 #include <boost/variant/static_visitor.hpp>
@@ -43,18 +45,12 @@ public:
 
   template<typename VariantT>
   auto visitor()
-    -> decltype(std::bind(
-                  static_cast<void (*) (variant_spy&, const VariantT&)>(
-                    &boost::apply_visitor<variant_spy, const VariantT>),
-                  std::ref(*this),
-                  std::placeholders::_1))
-  {
-    return std::bind(
-      static_cast<void (*) (variant_spy&, const VariantT&)>(
-        &boost::apply_visitor<variant_spy, const VariantT>),
-      std::ref(*this),
-      std::placeholders::_1);
-  }
+    -> ABL_AUTO_RETURN(
+      std::bind(
+        static_cast<void (*) (variant_spy&, const VariantT&)>(
+          &boost::apply_visitor<variant_spy, const VariantT>),
+        std::ref(*this),
+        std::placeholders::_1))
 
 private:
   std::unordered_multiset<std::type_index> calls_;
@@ -138,11 +134,9 @@ public:
 
   template <typename... Args>
   auto operator() (Args&& ...args)
-    -> decltype(this->mock_(std::forward<Args>(args)...))
-  {
-    called();
-    return this->mock_(std::forward<Args>(args)...);
-  }
+    -> ABL_AUTO_RETURN(
+      (called(),
+       this->mock_(std::forward<Args>(args)...)))
 };
 
 //!

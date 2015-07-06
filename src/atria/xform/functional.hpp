@@ -20,10 +20,8 @@ struct composed
 
   template <class X, class ...Y >
   auto operator() (X&& x, Y&& ...ys)
-    -> decltype(f(g(std::forward<X>(x)), std::forward<Y>(ys)...))
-  {
-    return f(g(std::forward<X>(x)), std::forward<Y>(ys)...);
-  }
+    -> ABL_AUTO_RETURN(
+      f(g(std::forward<X>(x)), std::forward<Y>(ys)...))
 };
 
 template <typename ...Fns>
@@ -70,10 +68,9 @@ auto comp(Fn&& f, Fns&& ...fns)
 constexpr struct identity_t
 {
   template <typename ArgT>
-  constexpr auto operator() (ArgT&& x) const -> ArgT&&
-  {
-    return std::forward<ArgT>(x);
-  }
+  constexpr auto operator() (ArgT&& x) const
+    -> ABL_AUTO_RETURN(
+      std::forward<ArgT>(x))
 } identity {};
 
 //!
@@ -109,25 +106,19 @@ auto constantly(T&& value)
 constexpr struct tuplify_t
 {
   constexpr auto operator() () const
-    -> std::tuple<>
-  {
-    return std::tuple<>{};
-  }
+    -> ABL_AUTO_RETURN(
+      std::tuple<>{})
 
   template <typename InputT>
-  constexpr auto operator() (InputT&& in) const -> InputT&&
-  {
-    return std::forward<InputT>(in);
-  }
+  constexpr auto operator() (InputT&& in) const
+    -> ABL_AUTO_RETURN(
+      std::forward<InputT>(in))
 
   template <typename InputT, typename ...InputTs>
   constexpr auto operator() (InputT&& in, InputTs&& ...ins) const
-    -> decltype(std::make_tuple(std::forward<InputT>(in),
-                                std::forward<InputTs>(ins)...))
-  {
-    return std::make_tuple(std::forward<InputT>(in),
-                           std::forward<InputTs>(ins)...);
-  }
+    -> ABL_AUTO_RETURN(
+      std::make_tuple(std::forward<InputT>(in),
+                      std::forward<InputTs>(ins)...))
 } tuplify {};
 
 } // namespace xform

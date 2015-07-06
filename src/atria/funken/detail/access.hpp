@@ -1,8 +1,9 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #pragma once
 
 #include <atria/estd/type_traits.hpp>
+#include <utility>
 
 namespace atria {
 namespace funken {
@@ -22,26 +23,23 @@ public:
   //! Returns a smart pointer to the underlying root signal or signals
   //! of an object, if exist.
   template<typename T>
-  static auto roots(T&& object) -> decltype(object.roots())
-  {
-    return object.roots();
-  }
+  static auto roots(T&& object)
+    -> ABL_AUTO_RETURN(
+      std::forward<T>(object).roots())
 
   //! Returns a pointer to th underlying signal of an object, if
   //! exists.
   template<typename T>
-  static auto signal(T&& object) -> decltype(object.signal())
-  {
-    return object.signal();
-  }
+  static auto signal(T&& object)
+    -> ABL_AUTO_RETURN(
+      std::forward<T>(object).signal())
 
   //! Returns a a optional boost.signal to the specific watchers of
   //! the underlying signal of an object.
   template<typename T>
-  static auto watchers(T&& object) -> decltype(object.watchers())
-  {
-    return object.watchers();
-  }
+  static auto watchers(T&& object)
+    -> ABL_AUTO_RETURN(
+      std::forward<T>(object).watchers())
 };
 
 //!

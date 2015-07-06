@@ -41,22 +41,21 @@ struct state_traits
   //
   template <typename T, typename D>
   static auto data(T&&, D&& d)
-    -> decltype(std::forward<D>(d)())
-    { return std::forward<D>(d)(); }
+    -> ABL_AUTO_RETURN(std::forward<D>(d)())
 
   //!
   // Unwraps all the layers of state wrappers returning the deepmost
   template <typename T>
-  static auto complete(T&& state) -> T&&
-    { return std::forward<T>(state); }
+  static auto complete(T&& state)
+    -> ABL_AUTO_RETURN(std::forward<T>(state))
 
   //!
   // Unwraps this layers of state wrappers, returning the nested
   // state for the next reducer.
   //
   template <typename T>
-  static auto unwrap(T&& state) -> T&&
-    { return std::forward<T>(state); }
+  static auto unwrap(T&& state)
+    -> ABL_AUTO_RETURN(std::forward<T>(state))
 };
 
 template <typename T>
@@ -67,10 +66,8 @@ using state_traits_t = state_traits<estd::decay_t<T> >;
 //
 template <typename T>
 auto state_complete(T&& s)
-  -> decltype(state_traits_t<T>::complete(std::forward<T>(s)))
-{
-  return state_traits_t<T>::complete(std::forward<T>(s));
-}
+  -> ABL_AUTO_RETURN(
+    state_traits_t<T>::complete(std::forward<T>(s)))
 
 //!
 // Convenience function for calling `state_traits::is_reduced`
@@ -86,22 +83,17 @@ auto state_is_reduced(T&& s) -> bool
 //
 template <typename T, typename D>
 auto state_data(T&& s, D&& d)
-  -> decltype(state_traits_t<T>::data(std::forward<T>(s),
-                                      std::forward<D>(d)))
-{
-  return state_traits_t<T>::data(std::forward<T>(s),
-                                 std::forward<D>(d));
-}
+  -> ABL_AUTO_RETURN(
+    state_traits_t<T>::data(std::forward<T>(s),
+                            std::forward<D>(d)))
 
 //!
 // Convenience function for calling `state_traits::unwrap`
 //
 template <typename T>
 auto state_unwrap(T&& s)
-  -> decltype(state_traits_t<T>::unwrap(std::forward<T>(s)))
-{
-  return state_traits_t<T>::unwrap(std::forward<T>(s));
-}
+  -> ABL_AUTO_RETURN(
+    state_traits_t<T>::unwrap(std::forward<T>(s)))
 
 //!
 // A decorator for the accumulator of a reduction.
@@ -196,10 +188,8 @@ struct state_traits<state_wrapper<TagT, StateT, DataT> >
 {
   template <typename T>
   static auto complete(T&& s)
-    -> decltype(state_complete(state_unwrap(std::forward<T>(s))))
-  {
-    return state_complete(state_unwrap(std::forward<T>(s)));
-  }
+    -> ABL_AUTO_RETURN(
+      state_complete(state_unwrap(std::forward<T>(s))))
 
   template <typename T>
   static auto is_reduced(T&& s) -> bool
@@ -211,17 +201,13 @@ struct state_traits<state_wrapper<TagT, StateT, DataT> >
 
   template <typename T, typename D>
   static auto data(T&& s, D&&)
-    -> decltype(std::get<1>(std::forward<T>(s)))
-  {
-    return std::get<1>(std::forward<T>(s));
-  }
+    -> ABL_AUTO_RETURN(
+      std::get<1>(std::forward<T>(s)))
 
   template <typename T>
   static auto unwrap(T&& s)
-    -> decltype(std::get<0>(std::forward<T>(s)))
-  {
-    return std::get<0>(std::forward<T>(s));
-  }
+    -> ABL_AUTO_RETURN(
+      std::get<0>(std::forward<T>(s)))
 };
 
 } // namespace xform

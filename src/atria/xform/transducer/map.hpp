@@ -3,6 +3,7 @@
 #pragma once
 
 #include <atria/xform/transducer_impl.hpp>
+#include <atria/meta/utils.hpp>
 
 namespace atria {
 namespace xform {
@@ -20,12 +21,9 @@ struct map_rf_gen
 
     template <typename State, typename ...Inputs>
     auto operator() (State&& s, Inputs&& ...is)
-      -> decltype(step(std::forward<State>(s),
-                       mapping(std::forward<Inputs>(is)...)))
-    {
-      return step(std::forward<State>(s),
-                  mapping(std::forward<Inputs>(is)...));
-    }
+      -> ABL_AUTO_RETURN(
+        step(std::forward<State>(s),
+             mapping(std::forward<Inputs>(is)...)))
   };
 };
 
