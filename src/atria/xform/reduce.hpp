@@ -18,76 +18,76 @@ namespace xform {
 
 namespace detail {
 
-template <typename ReducerT,
+template <typename ReducingFnT,
           typename StateT,
           typename InputRangeT>
-auto reduce_nested_accumulate(ReducerT&& reducer, StateT&& state, InputRangeT&& range)
+auto reduce_nested_accumulate(ReducingFnT&& step, StateT&& state, InputRangeT&& range)
   -> estd::decay_t<StateT>
 {
   return std::accumulate(
     std::begin(range),
     std::end(range),
     std::forward<StateT>(state),
-    std::forward<ReducerT>(reducer));
+    std::forward<ReducingFnT>(step));
 }
 
-template <typename ReducerT,
+template <typename ReducingFnT,
           typename StateT,
           typename InputIterT>
-auto reduce_nested_tail_recursive_impl(ReducerT&& reducer,
+auto reduce_nested_tail_recursive_impl(ReducingFnT&& step,
                                        StateT&& state,
                                        InputIterT&& first,
                                        InputIterT&& last)
-  -> estd::decay_t<decltype(reducer(state, *first))>
+  -> estd::decay_t<decltype(step(state, *first))>
 {
-  using result_t = estd::decay_t<decltype(reducer(state, *first))>;
+  using result_t = estd::decay_t<decltype(step(state, *first))>;
 
   if (state_is_reduced(state) || first == last) {
     return result_t { std::forward<StateT>(state) };
   }
-  auto next_state = reducer(std::forward<StateT>(state), *first);
+  auto next_state = step(std::forward<StateT>(state), *first);
   return reduce_nested_tail_recursive_impl(
-    std::forward<ReducerT>(reducer),
+    std::forward<ReducingFnT>(step),
     std::move(next_state),
     std::forward<InputIterT>(++first),
     std::forward<InputIterT>(last));
 }
 
-template <typename ReducerT,
+template <typename ReducingFnT,
           typename StateT,
           typename InputRangeT>
-auto reduce_nested_tail_recursive(ReducerT&& reducer,
+auto reduce_nested_tail_recursive(ReducingFnT&& step,
                                   StateT&& initial,
                                   InputRangeT&& range)
   -> ABL_DECLTYPE_RETURN(
     reduce_nested_tail_recursive_impl(
-      std::forward<ReducerT>(reducer),
+      std::forward<ReducingFnT>(step),
       std::forward<StateT>(initial),
       std::begin(range),
       std::end(range)))
 
-template <typename ReducerT,
+template <typename ReducingFnT,
           typename StateT,
           typename InputRangeT>
-auto reduce_nested_non_variadic(ReducerT&& reducer,
+auto reduce_nested_non_variadic(ReducingFnT&& step,
                                 StateT&& initial,
                                 InputRangeT&& range)
-  -> estd::decay_t<decltype(reducer(initial, *std::begin(range)))>
+  -> estd::decay_t<decltype(step(initial, *std::begin(range)))>
 {
-  using result_t = estd::decay_t<decltype(reducer(initial, *std::begin(range)))>;
+  using result_t = estd::decay_t<decltype(step(initial, *std::begin(range)))>;
 
   auto first = std::begin(range);
   auto last  = std::end(range);
   if (first != last) {
-    auto state = reducer(std::forward<StateT>(initial), *first);
+    auto state = step(std::forward<StateT>(initial), *first);
     // This may be expressed more brief with a:
     //    while(++first != last)
     // but the for loop seems to make compilers generate better code.
     for (++first; !state_is_reduced(state) && first != last; ++first) {
       // `x = std::move(x)` is undefined behaviour, hence the two
-      // steps approach to protect for when `reducer` just forwards
+      // steps approach to protect for when `step` just forwards
       // the state back.
-      auto new_state = reducer(std::move(state), *first);
+      auto new_state = step(std::move(state), *first);
       state = std::move(new_state);
     }
     return state;
@@ -96,30 +96,30 @@ auto reduce_nested_non_variadic(ReducerT&& reducer,
   return result_t { std::forward<StateT>(initial) };
 }
 
-template <typename ReducerT,
+template <typename ReducingFnT,
           typename StateT,
           std::size_t ...Indices,
           typename ...InputRangeTs>
-auto reduce_nested_variadic_impl(ReducerT&& reducer,
+auto reduce_nested_variadic_impl(ReducingFnT&& step,
                                  StateT&& initial,
                                  estd::index_sequence<Indices...>,
                                  InputRangeTs&& ...ranges)
-  -> estd::decay_t<decltype(reducer(initial, *std::begin(ranges)...))>
+  -> estd::decay_t<decltype(step(initial, *std::begin(ranges)...))>
 {
   using result_t = estd::decay_t<decltype(
-    reducer(initial, *std::begin(ranges)...))>;
+    step(initial, *std::begin(ranges)...))>;
 
   auto firsts = std::make_tuple(std::begin(ranges)...);
   auto lasts  = std::make_tuple(std::end(ranges)...);
   if (std::min({std::get<Indices>(firsts) !=
                 std::get<Indices>(lasts)...}))
   {
-    auto state = reducer(std::forward<StateT>(initial),
+    auto state = step(std::forward<StateT>(initial),
                          *std::get<Indices>(firsts)...);
     while (!state_is_reduced(state)
            && std::min({ ++std::get<Indices>(firsts) !=
                          std::get<Indices>(lasts)... })) {
-      state = reducer(std::move(state), *std::get<Indices>(firsts)...);
+      state = step(std::move(state), *std::get<Indices>(firsts)...);
     }
     return state;
   }
@@ -127,13 +127,13 @@ auto reduce_nested_variadic_impl(ReducerT&& reducer,
   return result_t { initial };
 }
 
-template <typename ReducerT,
+template <typename ReducingFnT,
           typename StateT,
           typename ...InputRangeTs>
-auto reduce_nested_variadic(ReducerT&& reducer, StateT&& state, InputRangeTs&& ...ranges)
+auto reduce_nested_variadic(ReducingFnT&& step, StateT&& state, InputRangeTs&& ...ranges)
   -> ABL_DECLTYPE_RETURN(
     reduce_nested_variadic_impl(
-      std::forward<ReducerT>(reducer),
+      std::forward<ReducingFnT>(step),
       std::forward<StateT>(state),
       estd::make_index_sequence<sizeof...(InputRangeTs)> {},
       std::forward<InputRangeTs>(ranges)...))
@@ -160,25 +160,25 @@ auto reduce_nested_variadic(ReducerT&& reducer, StateT&& state, InputRangeTs&& .
 // useful when calling reduce recursively inside a transducer.
 // @see take
 //
-template <typename ReducerT,
+template <typename ReducingFnT,
           typename StateT,
           typename InputRangeT>
-auto reduce_nested(ReducerT&& reducer, StateT&& state, InputRangeT&& range)
+auto reduce_nested(ReducingFnT&& step, StateT&& state, InputRangeT&& range)
   -> ABL_DECLTYPE_RETURN(
     ABL_REDUCE_NESTED_NON_VARIADIC_IMPL(
-      std::forward<ReducerT>(reducer),
+      std::forward<ReducingFnT>(step),
       std::forward<StateT>(state),
       std::forward<InputRangeT>(range)))
 
-template <typename ReducerT,
+template <typename ReducingFnT,
           typename StateT,
           typename InputRangeT,
           typename ...InputRangeTs>
-auto reduce_nested(ReducerT&& reducer, StateT&& state, InputRangeT&& range,
+auto reduce_nested(ReducingFnT&& step, StateT&& state, InputRangeT&& range,
                    InputRangeTs&& ...ranges)
   -> ABL_DECLTYPE_RETURN(
     detail::reduce_nested_variadic(
-      std::forward<ReducerT>(reducer),
+      std::forward<ReducingFnT>(step),
       std::forward<StateT>(state),
       std::forward<InputRangeT>(range),
       std::forward<InputRangeTs>(ranges)...))
@@ -189,15 +189,15 @@ auto reduce_nested(ReducerT&& reducer, StateT&& state, InputRangeT&& range,
 // reduce over several ranges at the same time.  It also supports
 // early termination for transducers.
 //
-template <typename ReducerT,
+template <typename ReducingFnT,
           typename StateT,
           typename ...InputRangeTs>
-auto reduce(ReducerT&& reducer, StateT&& state, InputRangeTs&& ...ranges)
+auto reduce(ReducingFnT&& step, StateT&& state, InputRangeTs&& ...ranges)
   -> estd::decay_t<StateT>
 {
   return state_complete(
     reduce_nested(
-      std::forward<ReducerT>(reducer),
+      std::forward<ReducingFnT>(step),
       std::forward<StateT>(state),
       std::forward<InputRangeTs>(ranges)...));
 }

@@ -14,7 +14,7 @@
 /*!
  * When tryish, dynamic type checks are performed when accessing the
  * underlying state of `any_state` instances.  Useful when debugging
- * `transducer<>` and stateful reducers.
+ * `transducer<>` and stateful reducing functions.
  */
 #ifndef ABL_SAFE_ANY_STATE
 #define ABL_SAFE_ANY_STATE 0
@@ -40,7 +40,7 @@
 /*!
  * When defined to 1, std::accumulate will be used as an
  * implementation for reduce() over one single collection.  In that
- * case, halting reducers (e.g. take) might not work.
+ * case, halting reducing functions (e.g. take) might not work.
  */
 #ifndef ABL_REDUCE_WITH_ACCUMULATE
 #define ABL_REDUCE_WITH_ACCUMULATE 0

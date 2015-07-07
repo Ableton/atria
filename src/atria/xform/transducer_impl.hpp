@@ -50,24 +50,24 @@ struct transducer_impl : std::tuple<ParamTs...>
   {}
 
   template<typename ReducingFnT>
-  constexpr auto operator() (ReducingFnT&& reducer) const
+  constexpr auto operator() (ReducingFnT&& step) const
     -> typename ReducingFnGenT::template apply<
       estd::decay_t<ReducingFnT>,
       estd::decay_t<ParamTs>...
     >
   {
     using indexes_t = estd::make_index_sequence<sizeof...(ParamTs)>;
-    return this->make(std::forward<ReducingFnT>(reducer), indexes_t());
+    return this->make(std::forward<ReducingFnT>(step), indexes_t());
   }
 
   template<typename ReducingFnT, std::size_t...indexes_t>
-  constexpr auto make(ReducingFnT&& reducer, estd::index_sequence<indexes_t...>) const
+  constexpr auto make(ReducingFnT&& step, estd::index_sequence<indexes_t...>) const
     -> typename ReducingFnGenT::template apply<
       estd::decay_t<ReducingFnT>,
       estd::decay_t<ParamTs>...
     >
   {
-    return { std::forward<ReducingFnT>(reducer),
+    return { std::forward<ReducingFnT>(step),
              std::get<indexes_t>(*this)... };
   }
 };
