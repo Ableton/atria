@@ -1,5 +1,6 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
+#include <atria/xform/concepts.hpp>
 #include <atria/xform/functional.hpp>
 #include <atria/xform/transduce.hpp>
 #include <atria/xform/transducer/filter.hpp>
@@ -8,6 +9,12 @@
 
 namespace atria {
 namespace xform {
+
+TEST(filter, concept)
+{
+  meta::check<Transducer_spec(decltype(filter(std::less<int>{})),
+                              meta::pack<int, int>)>();
+}
 
 TEST(transduce, composition)
 {

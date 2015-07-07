@@ -28,10 +28,12 @@ struct cat_rf_gen
 
 } // namespace detail
 
+using cat_t = transducer_impl<detail::cat_rf_gen>;
+
 /*!
  * Similar to clojure.core/cat$1
  */
-constexpr auto cat = transducer_impl<detail::cat_rf_gen> {};
+constexpr auto cat = cat_t {};
 
 } // namespace xform
 } // namespace atria

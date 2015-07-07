@@ -1,5 +1,6 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
+#include <atria/xform/concepts.hpp>
 #include <atria/xform/into.hpp>
 #include <atria/xform/reducing/first_rf.hpp>
 #include <atria/xform/transducer/partition.hpp>
@@ -8,6 +9,13 @@
 
 namespace atria {
 namespace xform {
+
+TEST(partition, concept)
+{
+  meta::check<Transducer_spec(decltype(partition(2)),
+                              int,
+                              std::vector<int>)>();
+}
 
 TEST(into, partition)
 {
