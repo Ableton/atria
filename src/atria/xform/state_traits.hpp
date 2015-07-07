@@ -40,14 +40,14 @@ struct state_traits
    */
   template <typename T, typename D>
   static auto data(T&&, D&& d)
-    -> ABL_AUTO_RETURN(std::forward<D>(d)())
+    -> ABL_DECLTYPE_RETURN(std::forward<D>(d)())
 
   /*!
    * Unwraps all the layers of state wrappers returning the deepmost
    */
   template <typename T>
   static auto complete(T&& state)
-    -> ABL_AUTO_RETURN(std::forward<T>(state))
+    -> ABL_DECLTYPE_RETURN(std::forward<T>(state))
 
   /*!
    * Unwraps this layers of state wrappers, returning the nested
@@ -55,7 +55,7 @@ struct state_traits
    */
   template <typename T>
   static auto unwrap(T&& state)
-    -> ABL_AUTO_RETURN(std::forward<T>(state))
+    -> ABL_DECLTYPE_RETURN(std::forward<T>(state))
 };
 
 template <typename T>
@@ -66,7 +66,7 @@ using state_traits_t = state_traits<estd::decay_t<T> >;
  */
 template <typename T>
 auto state_complete(T&& s)
-  -> ABL_AUTO_RETURN(
+  -> ABL_DECLTYPE_RETURN(
     state_traits_t<T>::complete(std::forward<T>(s)))
 
 /*!
@@ -83,7 +83,7 @@ auto state_is_reduced(T&& s) -> bool
  */
 template <typename T, typename D>
 auto state_data(T&& s, D&& d)
-  -> ABL_AUTO_RETURN(
+  -> ABL_DECLTYPE_RETURN(
     state_traits_t<T>::data(std::forward<T>(s),
                             std::forward<D>(d)))
 
@@ -92,7 +92,7 @@ auto state_data(T&& s, D&& d)
  */
 template <typename T>
 auto state_unwrap(T&& s)
-  -> ABL_AUTO_RETURN(
+  -> ABL_DECLTYPE_RETURN(
     state_traits_t<T>::unwrap(std::forward<T>(s)))
 
 } // namespace xform

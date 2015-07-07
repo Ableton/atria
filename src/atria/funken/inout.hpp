@@ -52,7 +52,7 @@ public:
   {}
 
   auto get() const
-    -> ABL_AUTO_RETURN(signal_->last())
+    -> ABL_DECLTYPE_RETURN(signal_->last())
 
   template <typename T>
   void set(T&& value)

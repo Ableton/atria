@@ -20,7 +20,7 @@ struct composed
 
   template <class X, class ...Y >
   auto operator() (X&& x, Y&& ...ys)
-    -> ABL_AUTO_RETURN(
+    -> ABL_DECLTYPE_RETURN(
       f(g(std::forward<X>(x)), std::forward<Y>(ys)...))
 };
 
@@ -69,7 +69,7 @@ constexpr struct identity_t
 {
   template <typename ArgT>
   constexpr auto operator() (ArgT&& x) const
-    -> ABL_AUTO_RETURN(
+    -> ABL_DECLTYPE_RETURN(
       std::forward<ArgT>(x))
 } identity {};
 
@@ -106,17 +106,17 @@ auto constantly(T&& value)
 constexpr struct tuplify_t
 {
   constexpr auto operator() () const
-    -> ABL_AUTO_RETURN(
+    -> ABL_DECLTYPE_RETURN(
       std::tuple<>{})
 
   template <typename InputT>
   constexpr auto operator() (InputT&& in) const
-    -> ABL_AUTO_RETURN(
+    -> ABL_DECLTYPE_RETURN(
       std::forward<InputT>(in))
 
   template <typename InputT, typename ...InputTs>
   constexpr auto operator() (InputT&& in, InputTs&& ...ins) const
-    -> ABL_AUTO_RETURN(
+    -> ABL_DECLTYPE_RETURN(
       std::make_tuple(std::forward<InputT>(in),
                       std::forward<InputTs>(ins)...))
 } tuplify {};

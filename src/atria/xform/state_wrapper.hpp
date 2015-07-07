@@ -101,7 +101,7 @@ struct state_traits<state_wrapper<TagT, StateT, DataT> >
 {
   template <typename T>
   static auto complete(T&& s)
-    -> ABL_AUTO_RETURN(
+    -> ABL_DECLTYPE_RETURN(
       state_complete(state_unwrap(std::forward<T>(s))))
 
   template <typename T>
@@ -114,12 +114,12 @@ struct state_traits<state_wrapper<TagT, StateT, DataT> >
 
   template <typename T, typename D>
   static auto data(T&& s, D&&)
-    -> ABL_AUTO_RETURN(
+    -> ABL_DECLTYPE_RETURN(
       std::get<1>(std::forward<T>(s)))
 
   template <typename T>
   static auto unwrap(T&& s)
-    -> ABL_AUTO_RETURN(
+    -> ABL_DECLTYPE_RETURN(
       std::get<0>(std::forward<T>(s)))
 };
 

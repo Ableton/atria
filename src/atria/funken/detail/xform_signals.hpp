@@ -182,7 +182,7 @@ struct update_rf_gen
 
     template <typename XformUpSignalPtr, std::size_t ...Indices>
     auto peek_parents(XformUpSignalPtr s, estd::index_sequence<Indices...>) const
-      -> ABL_AUTO_RETURN((
+      -> ABL_DECLTYPE_RETURN((
         s->recompute_deep(),
         xform::tuplify(std::get<Indices>(s->parents())->current()...)))
   };

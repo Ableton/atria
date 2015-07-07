@@ -14,7 +14,7 @@ namespace xform {
 //
 template <typename MappingT>
 auto mapcat(MappingT&& mapping)
-  -> ABL_AUTO_RETURN(
+  -> ABL_DECLTYPE_RETURN(
     comp(
       cat,
       map(std::forward<MappingT>(mapping))))

@@ -21,7 +21,7 @@ struct map_rf_gen
 
     template <typename State, typename ...Inputs>
     auto operator() (State&& s, Inputs&& ...is)
-      -> ABL_AUTO_RETURN(
+      -> ABL_DECLTYPE_RETURN(
         step(std::forward<State>(s),
              mapping(std::forward<Inputs>(is)...)))
   };

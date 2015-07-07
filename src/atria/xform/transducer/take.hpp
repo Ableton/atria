@@ -23,7 +23,7 @@ struct take_rf_gen
 
     template <typename StateT, typename ...InputTs>
     auto operator() (StateT&& s, InputTs&& ...is)
-      -> ABL_AUTO_RETURN(
+      -> ABL_DECLTYPE_RETURN(
         wrap_state<take_rf_gen::tag>(
           step(std::move(state_unwrap(s)), std::forward<InputTs>(is)...),
           state_data(s, constantly(total)) - 1))

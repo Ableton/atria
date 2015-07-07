@@ -24,21 +24,21 @@ public:
   //! of an object, if exist.
   template<typename T>
   static auto roots(T&& object)
-    -> ABL_AUTO_RETURN(
+    -> ABL_DECLTYPE_RETURN(
       std::forward<T>(object).roots())
 
   //! Returns a pointer to th underlying signal of an object, if
   //! exists.
   template<typename T>
   static auto signal(T&& object)
-    -> ABL_AUTO_RETURN(
+    -> ABL_DECLTYPE_RETURN(
       std::forward<T>(object).signal())
 
   //! Returns a a optional boost.signal to the specific watchers of
   //! the underlying signal of an object.
   template<typename T>
   static auto watchers(T&& object)
-    -> ABL_AUTO_RETURN(
+    -> ABL_DECLTYPE_RETURN(
       std::forward<T>(object).watchers())
 };
 

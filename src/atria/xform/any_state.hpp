@@ -233,17 +233,17 @@ struct state_traits<any_state>
 {
   template <typename T>
   static auto complete(T&& t)
-    -> ABL_AUTO_RETURN(
+    -> ABL_DECLTYPE_RETURN(
       std::forward<T>(t).content()->complete())
 
   template <typename T>
   static auto is_reduced(T&& t)
-    -> ABL_AUTO_RETURN(
+    -> ABL_DECLTYPE_RETURN(
       std::forward<T>(t).content()->is_reduced())
 
   template <typename T>
   static auto unwrap(T&& t)
-    -> ABL_AUTO_RETURN(
+    -> ABL_DECLTYPE_RETURN(
       std::forward<T>(t).content()->unwrap())
 
   template <typename T, typename D>

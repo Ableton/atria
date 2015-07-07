@@ -19,7 +19,7 @@ struct cat_rf_gen
 
     template <typename State, typename ...Inputs>
     auto operator() (State&& s, Inputs&& ...is)
-      -> ABL_AUTO_RETURN(
+      -> ABL_DECLTYPE_RETURN(
         reduce_nested(step,
                       std::forward<State>(s),
                       std::forward<Inputs>(is)...))

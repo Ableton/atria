@@ -52,7 +52,7 @@ public:
     : signal_(std::move(sig)) {}
 
   auto get() const
-    -> ABL_AUTO_RETURN(signal_->last())
+    -> ABL_DECLTYPE_RETURN(signal_->last())
 };
 
 } // namespace detail

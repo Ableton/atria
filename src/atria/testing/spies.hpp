@@ -45,7 +45,7 @@ public:
 
   template<typename VariantT>
   auto visitor()
-    -> ABL_AUTO_RETURN(
+    -> ABL_DECLTYPE_RETURN(
       std::bind(
         static_cast<void (*) (variant_spy&, const VariantT&)>(
           &boost::apply_visitor<variant_spy, const VariantT>),
@@ -135,7 +135,7 @@ public:
 
   template <typename... Args>
   auto operator() (Args&& ...args)
-    -> ABL_AUTO_RETURN(
+    -> ABL_DECLTYPE_RETURN(
       (called(),
        this->mock_(std::forward<Args>(args)...)))
 };
