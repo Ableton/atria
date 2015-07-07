@@ -46,7 +46,7 @@ TEST(transduce, early_termination_does_not_leak)
 TEST(state, state_concept)
 {
   meta::check<State_spec(int)>();
-  meta::check<State_spec(state_wrapper<void, int, int>)>();
+  meta::check<State_spec(state_wrapper<no_tag, int, int>)>();
   meta::check<State_spec(any_state)>();
   meta::check<Reducing_function_spec(estd::plus<>, int, int)>();
   meta::check<Transducer_spec(decltype(map(tuplify)))>();

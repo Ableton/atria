@@ -24,13 +24,15 @@ struct take_rf_gen
     template <typename StateT, typename ...InputTs>
     auto operator() (StateT&& s, InputTs&& ...is)
       -> ABL_DECLTYPE_RETURN(
-        wrap_state<take_rf_gen::tag>(
-          step(std::move(state_unwrap(s)), std::forward<InputTs>(is)...),
-          state_data(s, constantly(total)) - 1))
+        wrap_state<tag>(
+          step(state_unwrap(std::forward<StateT>(s)),
+               std::forward<InputTs>(is)...),
+          state_data(std::forward<StateT>(s),
+                     constantly(total)) - 1))
   };
 
   template <typename T>
-  friend bool state_data_is_reduced(take_rf_gen::tag, T&& n)
+  friend bool state_wrapper_data_is_reduced(tag, T&& n)
   {
     return std::forward<T>(n) == 0;
   }

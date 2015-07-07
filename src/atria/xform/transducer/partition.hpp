@@ -31,49 +31,42 @@ struct partition_rf_gen
     template <typename StateT, typename ...InputTs>
     auto operator() (StateT&& s, InputTs&& ...is)
       -> decltype(
-        wrap_state<partition_rf_gen::tag>(
+        wrap_state<tag>(
           step(state_unwrap(s), container_t<InputTs...>{}),
           make_tuple(container_t<InputTs...>{}, step)))
     {
       auto data = state_data(std::forward<StateT>(s), [&] {
           auto v = container_t<InputTs...>{};
           v.reserve(size);
-          return make_tuple(v, step);
+          return make_tuple(std::move(v), step);
         });
 
-      auto& next = std::get<0>(data);
-      next.push_back(tuplify(std::forward<InputTs>(is)...));
+      auto& next_vector = std::get<0>(data);
+      auto& next_step   = std::get<1>(data);
 
-      if (next.size() == size) {
-        auto ss = step(state_unwrap(std::forward<StateT>(s)), next);
-        next.clear();
-        return wrap_state<partition_rf_gen::tag> (
-          std::move(ss),
-          make_tuple(std::move(next),
-                     std::get<1>(std::move(data))));
-      }
-      else {
-        return wrap_state<partition_rf_gen::tag> (
-          state_unwrap(std::forward<StateT>(s)),
-          make_tuple(std::move(next),
-                     std::get<1>(std::move(data))));
-      }
+      next_vector.push_back(tuplify(std::forward<InputTs>(is)...));
+      const auto complete_group = next_vector.size() == size;
+
+      auto next_state = complete_group
+        ? step(state_unwrap(std::forward<StateT>(s)), next_vector)
+        : state_unwrap(std::forward<StateT>(s));
+
+      if (complete_group)
+        next_vector.clear();
+
+      return wrap_state<tag> (
+        std::move(next_state),
+        make_tuple(std::move(next_vector),
+                   std::move(next_step)));
     }
   };
-};
 
-} // namespace detail
-
-template <typename _1, typename _2>
-struct state_traits<state_wrapper<detail::partition_rf_gen::tag, _1, _2> >
-  : state_traits<state_wrapper<> >
-{
   template <typename T>
-  static auto complete(T&& wrapper)
+  friend auto state_wrapper_complete(tag, T&& wrapper)
     -> decltype(state_complete(state_unwrap(std::forward<T>(wrapper))))
   {
-    auto next = std::get<0>(std::get<1>(std::forward<T>(wrapper)));
-    auto step = std::get<1>(std::get<1>(std::forward<T>(wrapper)));
+    auto next = std::get<0>(state_wrapper_data(std::forward<T>(wrapper)));
+    auto step = std::get<1>(state_wrapper_data(std::forward<T>(wrapper)));
     return state_complete(
       next.empty()
       ? state_unwrap(std::forward<T>(wrapper))
@@ -81,6 +74,8 @@ struct state_traits<state_wrapper<detail::partition_rf_gen::tag, _1, _2> >
              std::move(next)));
   }
 };
+
+} // namespace detail
 
 template <typename T>
 using partition_t = transducer_impl<detail::partition_rf_gen, T>;

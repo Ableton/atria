@@ -103,34 +103,22 @@ struct transducer_rf_gen
             comp(xform, from_any_state<reduce_t>{}) (step));
         },
         [&](wrapped_t&& sst) {
-          auto next = std::get<1>(sst)(
-            std::move(std::get<0>(sst)),
+          auto next = state_wrapper_data(sst)(
+            std::move(state_unwrap(sst)),
             std::forward<InputTs>(ins)...);
-          std::get<0>(sst) = std::move(next);
+          state_unwrap(sst) = std::move(next);
           return std::move(sst);
         });
     }
   };
 };
 
-} // namespace detail
-
-template <typename _1, typename _2, typename _3, typename _4>
-struct state_traits<
-  state_wrapper<detail::transducer_tag<_1, _2>, _3, _4>
-  >
-  : state_traits<state_wrapper<> >
+template <typename C, typename R, typename T>
+auto state_wrapper_complete(transducer_tag<C, R>, T&& wrapper) -> C
 {
-  template <typename T>
-  static auto complete(T&& wrapper)
-    -> typename estd::decay_t<T>::tag::complete_t
-  {
-    return state_complete(state_unwrap(std::forward<T>(wrapper)))
-      .template as<typename estd::decay_t<T>::tag::complete_t>();
-  }
-};
-
-namespace detail {
+  return state_complete(state_unwrap(std::forward<T>(wrapper)))
+    .template as<C>();
+}
 
 template <typename InputT>
 struct transducer_function
