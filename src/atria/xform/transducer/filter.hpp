@@ -22,7 +22,7 @@ struct filter_rf_gen
     template <typename State, typename ...Inputs>
     auto operator() (State&& s, Inputs&& ...is)
       -> ABL_DECLTYPE_RETURN(
-        predicate(std::forward<Inputs>(is)...)
+        predicate(is...)
           ? step(std::forward<State>(s),
                  std::forward<Inputs>(is)...)
           : std::forward<State>(s))
