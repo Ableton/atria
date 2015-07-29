@@ -11,14 +11,18 @@ include(CheckCXXCompilerFlag)
 if(WIN32)
   # Check if we are using Visual Studio 2013 or later
   if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 12)
-    message(FATAL_ERROR "You are using an unsupported Windows compiler! (Visual C++ 2013 or later required)")
+    message(FATAL_ERROR
+      "You are using an unsupported Windows compiler! "
+      "(Visual C++ 2013 or later required)")
   endif()
 else()
   set(cxx11_options -std=c++11)
   CHECK_CXX_COMPILER_FLAG(${cxx11_options} COMPILER_SUPPORTS_CXX11)
 
   if(NOT COMPILER_SUPPORTS_CXX11)
-    message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has insufficient C++11 support. Please use a different C++ compiler.")
+    message(FATAL_ERROR
+      "The compiler ${CMAKE_CXX_COMPILER} has insufficient C++11 support. "
+      "Please use a different C++ compiler.")
   endif()
 endif()
 
