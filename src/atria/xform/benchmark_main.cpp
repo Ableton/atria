@@ -3,10 +3,6 @@
 //! @note Turn to one to check if our custom accumulate has any
 //! performance cost or not.
 
-#define ABL_REDUCE_WITH_ACCUMULATE 0
-#define ABL_REDUCE_ALWAYS_VARIADIC 0
-#define ABL_REDUCE_TAIL_RECURSIVE 0
-
 #include <atria/xform/into.hpp>
 #include <atria/xform/transducer/filter.hpp>
 #include <atria/xform/transducer/map.hpp>
@@ -17,6 +13,7 @@
 #include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
 #include <boost/range/adaptors.hpp>
+#include <boost/range/adaptor/type_erased.hpp>
 #include <boost/range/numeric.hpp>
 #include <boost/range/algorithm.hpp>
 #include <boost/range/algorithm_ext/iota.hpp>
@@ -46,6 +43,19 @@ void benchmarks(testing::benchmark_runner runner)
         data
         | filtered([](unsigned x) { return x % 2 == 0; })
         | transformed([](unsigned x) { return x * 2; }),
+        std::back_inserter(result));
+      return result;
+    })
+
+    ("boost::range, erased", [] (std::vector<unsigned> const& data)
+    {
+      using namespace boost::adaptors;
+      auto result = std::vector<unsigned>{};
+      boost::copy(
+        data
+        | filtered([](unsigned x) { return x % 2 == 0; })
+        | transformed([](unsigned x) { return x * 2; })
+        | type_erased<unsigned, boost::single_pass_traversal_tag>{},
         std::back_inserter(result));
       return result;
     })
@@ -92,6 +102,18 @@ void benchmarks(testing::benchmark_runner runner)
         data
         | filtered([](unsigned x) { return x % 2 == 0; })
         | transformed([](unsigned x) { return x * 2u; }),
+        0u,
+        std::plus<unsigned>{});
+    })
+
+    ("boost::range, erased", [] (std::vector<unsigned> const& data)
+    {
+      using namespace boost::adaptors;
+      return boost::accumulate(
+        data
+        | filtered([](unsigned x) { return x % 2 == 0; })
+        | transformed([](unsigned x) { return x * 2u; })
+        | type_erased<unsigned, boost::single_pass_traversal_tag>{},
         0u,
         std::plus<unsigned>{});
     })
@@ -143,6 +165,28 @@ void benchmarks(testing::benchmark_runner runner)
         std::plus<unsigned>{},
         0u,
         data);
+    })
+
+    ("atria::xform, recursive", [] (std::vector<unsigned> const& data)
+    {
+      return state_complete(
+        detail::reduce_nested_tail_recursive(
+          comp(filter([](unsigned x) { return x % 2 == 0; }),
+               map([](unsigned x) { return x * 2u; }))(
+                 std::plus<unsigned>{}),
+          0u,
+          data));
+    })
+
+    ("atria::xform, variadic", [] (std::vector<unsigned> const& data)
+    {
+      return state_complete(
+        detail::reduce_nested_variadic(
+          comp(filter([](unsigned x) { return x % 2 == 0; }),
+               map([](unsigned x) { return x * 2u; }))(
+                 std::plus<unsigned>{}),
+          0u,
+          data));
     })
 
     ("atria::xform, erased", [] (std::vector<unsigned> const& data)
