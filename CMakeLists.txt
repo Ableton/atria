@@ -78,8 +78,10 @@ add_feature_info(GoogleTest ${GTEST_FOUND} "used for unit testing.")
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 file(GLOB_RECURSE atria_sources "src/*.hpp" "src/*.cpp")
-file(GLOB_RECURSE atria_test_sources "src/*.hpp" "src/tst_*.cpp")
+file(GLOB_RECURSE atria_test_sources "src/tst_*.cpp")
+file(GLOB_RECURSE atria_main_sources "src/*_main.cpp")
 list(REMOVE_ITEM  atria_sources ${atria_test_sources})
+list(REMOVE_ITEM  atria_sources ${atria_main_sources})
 
 # Defining Atria
 add_library(atria ${atria_sources})
@@ -111,5 +113,9 @@ if(GTEST_FOUND)
     ${CMAKE_THREAD_LIBS_INIT})
   add_test(atria-test-all atria-test-all)
 
-  add_test(AtriaTestCase AtriaTest)
+  add_executable(atria-benchmark-xform
+    src/atria/xform/benchmark_main.cpp)
+  target_link_libraries(atria-benchmark-xform
+    atria)
+  add_test(atria-benchmark-xform atria-benchmark-xform)
 endif()
