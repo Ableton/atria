@@ -47,7 +47,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL Clang
     -Wno-exit-time-destructors
     -Wno-padded
     -Wno-undefined-reinterpret-cast
-  )
+    -Wno-weak-vtables)
 elseif(MSVC)
   set(warning_options /WX /W4 /wd4503 /wd4512)
 endif()
@@ -61,7 +61,7 @@ enable_testing()
 if(DEFINED Boost_INCLUDE_DIR)
   get_filename_component(Boost_INCLUDE_DIR ${Boost_INCLUDE_DIR} ABSOLUTE)
 endif()
-find_package(Boost 1.54 REQUIRED)
+find_package(Boost 1.54 COMPONENTS program_options REQUIRED)
 
 set(GTEST_SOURCE
   "${CMAKE_CURRENT_SOURCE_DIR}/../googletest"
@@ -82,15 +82,16 @@ file(GLOB_RECURSE atria_test_sources "src/*.hpp" "src/tst_*.cpp")
 list(REMOVE_ITEM  atria_sources ${atria_test_sources})
 
 # Defining Atria
-add_library(AtriaLib ${atria_sources})
-set_target_properties(AtriaLib PROPERTIES LINKER_LANGUAGE CXX)
-target_include_directories(AtriaLib PUBLIC
+add_library(atria ${atria_sources})
+set_target_properties(atria PROPERTIES LINKER_LANGUAGE CXX)
+target_include_directories(atria PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/compat>
   ${Boost_INCLUDE_DIRS})
-target_compile_options(AtriaLib
+target_compile_options(atria
   PUBLIC ${cxx11_options} ${warning_options})
-target_link_libraries(AtriaLib)
+target_link_libraries(atria
+  ${Boost_LIBRARIES})
 
 # Definining tests
 if(GTEST_FOUND)
@@ -102,12 +103,13 @@ if(GTEST_FOUND)
   target_compile_options(gtest_internal PUBLIC
     ${cxx11_options} -Wno-global-constructors)
 
-  add_executable(AtriaTest ${atria_test_sources})
-
-  target_link_libraries(AtriaTest
-    AtriaLib
+  add_executable(atria-test-all
+    ${atria_test_sources})
+  target_link_libraries(atria-test-all
+    atria
     gtest_internal
     ${CMAKE_THREAD_LIBS_INIT})
+  add_test(atria-test-all atria-test-all)
 
   add_test(AtriaTestCase AtriaTest)
 endif()
