@@ -122,7 +122,7 @@ public:
 
   template <typename T>
   bool has() const {
-    return content()->type() == typeid(estd::decay_t<T>);
+    return has_impl(meta::pack<estd::decay_t<T> >{});
   }
 
   const std::type_info& type() const noexcept {
@@ -154,6 +154,15 @@ private:
 
   any_state& as_impl(meta::pack<any_state>) {
     return *this;
+  }
+
+  template <typename T>
+  bool has_impl(meta::pack<T>) const {
+    return content()->type() == typeid(T);
+  }
+
+  bool has_impl(meta::pack<any_state>) const {
+    return true;
   }
 
   friend struct state_traits<any_state>;
