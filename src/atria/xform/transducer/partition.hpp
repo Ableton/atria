@@ -5,6 +5,7 @@
 #include <atria/xform/reduce.hpp>
 #include <atria/xform/state_wrapper.hpp>
 #include <atria/xform/transducer_impl.hpp>
+#include <atria/xform/skip.hpp>
 #include <vector>
 
 namespace atria {
@@ -32,7 +33,7 @@ struct partition_rf_gen
     auto operator() (StateT&& s, InputTs&& ...is)
       -> decltype(
         wrap_state<tag>(
-          step(state_unwrap(s), container_t<InputTs...>{}),
+          call(step, state_unwrap(s), container_t<InputTs...>{}),
           make_tuple(container_t<InputTs...>{}, step)))
     {
       auto data = state_data(std::forward<StateT>(s), [&] {
@@ -48,8 +49,8 @@ struct partition_rf_gen
       const auto complete_group = next_vector.size() == size;
 
       auto next_state = complete_group
-        ? step(state_unwrap(std::forward<StateT>(s)), next_vector)
-        : state_unwrap(std::forward<StateT>(s));
+        ? call(step, state_unwrap(std::forward<StateT>(s)), next_vector)
+        : skip(step, state_unwrap(std::forward<StateT>(s)), next_vector);
 
       if (complete_group)
         next_vector.clear();

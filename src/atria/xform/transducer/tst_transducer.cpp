@@ -7,6 +7,7 @@
 #include <atria/xform/transducer/map.hpp>
 #include <atria/xform/transducer/take.hpp>
 #include <atria/xform/transducer/transducer.hpp>
+#include <atria/xform/transducer/traced.hpp>
 
 #include <atria/testing/spies.hpp>
 #include <atria/testing/gtest.hpp>
@@ -111,6 +112,16 @@ TEST(transducer, type_erasure_and_composition_erased)
   auto res = into(std::vector<float>{}, xform3,
                   std::vector<std::string> {"1", "2", "3"});
   EXPECT_EQ(res, (std::vector<float> { 0.5f, 1.0f, 1.5f }));
+}
+
+TEST(transducer, type_erasure_and_composition_stateful_transducers)
+{
+  auto xform = transducer<int>{
+    comp(transducer<int>{take(2)},
+         transducer<int>{take(3)})};
+  auto res = into(std::vector<int>{}, xform,
+                  std::vector<int> { 1, 2, 3, 4, 5 });
+  EXPECT_EQ(res, (std::vector<int> { 1, 2 }));
 }
 
 TEST(transducer, performs_minimal_moves)

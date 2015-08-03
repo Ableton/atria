@@ -4,6 +4,7 @@
 
 #include <atria/xform/transducer_impl.hpp>
 #include <atria/xform/maybe_reduced.hpp>
+#include <atria/xform/skip.hpp>
 
 namespace atria {
 namespace xform {
@@ -24,13 +25,14 @@ struct take_while_rf_gen
     template <typename StateT, typename ...InputTs>
     auto operator() (StateT&& s, InputTs&& ...is)
       -> maybe_reduced<estd::decay_t<decltype(
-           step(state_unwrap(std::forward<StateT>(s)),
-                std::forward<InputTs>(is)...))> >
+      call(step, state_unwrap(std::forward<StateT>(s)),
+           std::forward<InputTs>(is)...))> >
     {
         return predicate(is...)
-          ? not_reduced(step(state_unwrap(std::forward<StateT>(s)),
+          ? not_reduced(call(step, state_unwrap(std::forward<StateT>(s)),
                              std::forward<InputTs>(is)...))
-          : reduced(state_unwrap(std::forward<StateT>(s)));
+          : reduced(skip(step, state_unwrap(std::forward<StateT>(s)),
+                         std::forward<InputTs>(is)...));
     }
   };
 };

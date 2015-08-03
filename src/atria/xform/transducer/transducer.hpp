@@ -43,8 +43,8 @@ struct transducer_state
     using type      = state_wrapper<tag_t, WrappedT, xformed_t>;
   };
 
-  using type = typename boost::mpl::eval_if_c<
-      is_state_wrapper<StateT>::value,
+  using type = typename boost::mpl::eval_if<
+      is_state_wrapper<StateT>,
       boost::mpl::identity<estd::decay_t<StateT> >,
       make_state_wrapper<any_state>
     >::type;
@@ -60,7 +60,7 @@ using transducer_state_t = typename transducer_state<
 template <typename... OutputTs>
 struct transducer_rf_gen
 {
-  template <typename AsStateT>
+  template <typename TagT>
   struct from_any_state_rf_gen
   {
     template <typename ReducingFnT>
@@ -71,17 +71,27 @@ struct transducer_rf_gen
       template <typename ...InputTs>
       any_state operator() (any_state s, InputTs&& ...is)
       {
-        auto next = step(std::move(s).as<AsStateT>(),
-                         std::forward<InputTs>(is)...);
-        s = std::move(next);
+        using reduce_t   = typename TagT::reduce_t;
+        using complete_t = typename TagT::complete_t;
+
+        if (s.has<reduce_t>()) {
+          auto next = step(std::move(s).as<reduce_t>(),
+                           std::forward<InputTs>(is)...);
+          s = std::move(next);
+        } else if (s.has<complete_t>()) {
+          auto next = step(std::move(s).as<complete_t>(),
+                           std::forward<InputTs>(is)...);
+          s = std::move(next);
+        } else {
+          assert(!"oops!");
+        }
         return s;
       }
     };
   };
 
-  template <typename AsStateT>
-  using from_any_state = transducer_impl<
-    from_any_state_rf_gen<estd::decay_t<AsStateT> > >;
+  template <typename TagT>
+  using from_any_state = transducer_impl<from_any_state_rf_gen<TagT> >;
 
   template <typename ReducingFnT,
             typename XformT>
@@ -99,17 +109,15 @@ struct transducer_rf_gen
       using wrapped_t = transducer_state_t<
         StateT, ReducingFnT, XformT, OutputTs...>;
       using tag_t = typename wrapped_t::tag;
-      using reduce_t = typename tag_t::reduce_t;
-      using complete_t = typename tag_t::complete_t;
 
       return with_state<wrapped_t>(
         std::move(st),
         [&](StateT&& sst) {
+          auto xformed = comp(xform, from_any_state<tag_t>{})(step);
+          auto next = xformed(std::move(sst), std::forward<InputTs>(ins)...);
           return wrap_state<tag_t> (
-            comp(xform, from_any_state<complete_t>{}) (step) (
-              std::move(sst),
-              std::forward<InputTs>(ins)...),
-            comp(xform, from_any_state<reduce_t>{}) (step));
+            std::move(next),
+            std::move(xformed));
         },
         [&](wrapped_t&& sst) {
           auto next = state_wrapper_data(sst)(

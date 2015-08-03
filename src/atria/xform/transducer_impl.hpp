@@ -37,7 +37,12 @@ struct transducer_impl : std::tuple<ParamTs...>
 {
   using base_t = std::tuple<ParamTs...>;
 
-  // using base_t::base_t;
+  // Constructors need to be semi-manually defined.  Otherwise
+  // confusion arises because of the way Clang's std::tuple uses
+  // enable_if to dispatch to the right move constructors.
+  //
+  //    using base_t::base_t;
+
   transducer_impl() = default;
   transducer_impl(const transducer_impl&) = default;
   transducer_impl(transducer_impl&&) = default;

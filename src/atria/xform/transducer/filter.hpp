@@ -1,9 +1,9 @@
-
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #pragma once
 
 #include <atria/xform/transducer_impl.hpp>
+#include <atria/xform/skip.hpp>
 
 namespace atria {
 namespace xform {
@@ -23,9 +23,8 @@ struct filter_rf_gen
     auto operator() (State&& s, Inputs&& ...is)
       -> ABL_DECLTYPE_RETURN(
         predicate(is...)
-          ? step(std::forward<State>(s),
-                 std::forward<Inputs>(is)...)
-          : std::forward<State>(s))
+          ? call(step, std::forward<State>(s), std::forward<Inputs>(is)...)
+          : skip(step, std::forward<State>(s), std::forward<Inputs>(is)...))
   };
 };
 
