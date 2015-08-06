@@ -6,6 +6,7 @@
 #include <atria/xform/into.hpp>
 #include <atria/xform/transducer/filter.hpp>
 #include <atria/xform/transducer/map.hpp>
+#include <atria/xform/transducer/take.hpp>
 #include <atria/xform/transducer/transducer.hpp>
 
 #include <atria/testing/benchmark.hpp>
@@ -23,6 +24,11 @@ namespace atria {
 namespace xform {
 
 namespace {
+
+std::size_t num_to_take(std::vector<unsigned> const& data)
+{
+  return data.size() >> 1;
+};
 
 void benchmarks(testing::benchmark_runner runner)
 {
@@ -199,6 +205,145 @@ void benchmarks(testing::benchmark_runner runner)
         std::plus<unsigned>{},
         0u,
       data);
+    });
+
+  runner.suite("take sum", make_benchmark_data)
+
+    ("accumulate", [] (std::vector<unsigned> const& data)
+    {
+      const auto n = static_cast<std::ptrdiff_t>(num_to_take(data));
+      // take
+      auto first = data.begin();
+      auto last  = data.end();
+      auto remaining = std::distance(first, last);
+      std::advance(first, std::min(remaining, n));
+      // sum
+      return std::accumulate(
+        first,
+        last,
+        0u,
+        std::plus<unsigned>{});
+    })
+
+    ("loop", [] (std::vector<unsigned> const& data)
+    {
+      auto n = num_to_take(data);
+      unsigned state = 0u;
+      for (const auto& input : data) {
+        if (n == 0) break;
+        --n;
+        state += input;
+      }
+      return state;
+    })
+
+    ("atria::xform", [] (std::vector<unsigned> const& data)
+    {
+      return transduce(
+        take(num_to_take(data)),
+        std::plus<unsigned>{},
+        0u,
+        data);
+    })
+
+    ("atria::xform, recursive", [] (std::vector<unsigned> const& data)
+    {
+      return state_complete(
+        detail::reduce_nested_tail_recursive(
+          take(num_to_take(data))(
+            std::plus<unsigned>{}),
+          0u,
+          data));
+    })
+
+    ("atria::xform, impure", [] (std::vector<unsigned> const& data)
+    {
+      return impure::transduce(
+        impure::take(num_to_take(data)),
+        std::plus<unsigned>{},
+        0u,
+        data);
+    });
+
+  runner.suite("filter take sum", make_benchmark_data)
+
+    ("loop", [] (std::vector<unsigned> const& data)
+    {
+      auto n = num_to_take(data);
+      unsigned state = 0u;
+      for (const auto& input : data) {
+        if (input % 2 == 0) {
+          if (n == 0) break;
+          --n;
+          state += input;
+        }
+      }
+      return state;
+    })
+
+    ("atria::xform", [] (std::vector<unsigned> const& data)
+    {
+      return transduce(
+        comp(filter([](unsigned x) { return x % 2 == 0; }),
+             take(num_to_take(data))),
+        std::plus<unsigned>{},
+        0u,
+        data);
+    })
+
+    ("atria::xform, recursive", [] (std::vector<unsigned> const& data)
+    {
+      return state_complete(
+        detail::reduce_nested_tail_recursive(
+          comp(filter([](unsigned x) { return x % 2 == 0; }),
+               take(num_to_take(data)))(
+                 std::plus<unsigned>{}),
+          0u,
+          data));
+    })
+
+    ("atria::xform, impure", [] (std::vector<unsigned> const& data)
+    {
+      return impure::transduce(
+        comp(filter([](unsigned x) { return x % 2 == 0; }),
+             impure::take(num_to_take(data))),
+        std::plus<unsigned>{},
+        0u,
+        data);
+    });
+
+  runner.suite("filter take into", make_benchmark_data)
+
+    ("loop", [] (std::vector<unsigned> const& data)
+    {
+      auto n = num_to_take(data);
+      std::vector<unsigned> state ;
+      for (const auto& input : data) {
+        if (input % 2 == 0) {
+          if (n == 0) break;
+          --n;
+          state.push_back(input);
+        }
+      }
+      return state;
+    })
+
+    ("atria::xform", [] (std::vector<unsigned> const& data)
+    {
+      return into(
+        std::vector<unsigned>{},
+        comp(filter([](unsigned x) { return x % 2 == 0; }),
+             take(num_to_take(data))),
+        data);
+    })
+
+    ("atria::xform, impure", [] (std::vector<unsigned> const& data)
+    {
+      return impure::into(
+        std::vector<unsigned>{},
+        comp(filter([](unsigned x) { return x % 2 == 0; }),
+             impure::take(num_to_take(data))),
+        data);
     });
 }
 

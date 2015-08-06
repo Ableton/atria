@@ -5,6 +5,7 @@
 #include <atria/xform/config.hpp>
 #include <atria/xform/functional.hpp>
 #include <atria/xform/state_traits.hpp>
+#include <atria/xform/abort_reduce.hpp>
 
 #include <atria/estd/type_traits.hpp>
 #include <atria/estd/utility.hpp>
@@ -201,6 +202,27 @@ auto reduce(ReducingFnT&& step, StateT&& state, InputRangeTs&& ...ranges)
       std::forward<StateT>(state),
       std::forward<InputRangeTs>(ranges)...));
 }
+
+namespace impure {
+
+template <typename ReducingFnT,
+          typename StateT,
+          typename ...InputRangeTs>
+auto reduce(ReducingFnT&& step, StateT&& state, InputRangeTs&& ...ranges)
+  -> estd::decay_t<StateT>
+{
+  try {
+    return state_complete(
+      reduce_nested(
+        std::forward<ReducingFnT>(step),
+        std::forward<StateT>(state),
+        std::forward<InputRangeTs>(ranges)...));
+  } catch (reduce_aborted_error<estd::decay_t<StateT> >& err) {
+    return std::move(err.result);
+  }
+}
+
+} // namespace impure
 
 } // namespace xform
 } // namespace atria

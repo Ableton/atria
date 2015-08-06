@@ -18,7 +18,7 @@ TEST(take, concept)
   meta::check<Transparent_transducer_spec(decltype(take(42)))>();
 }
 
-TEST(into, take)
+TEST(take, take)
 {
   auto v = std::vector<int> { 1, 2, 3, 4, 5 };
 
@@ -26,7 +26,7 @@ TEST(into, take)
   EXPECT_EQ(res, (std::vector<int> { 1, 2, 3 }));
 }
 
-TEST(into, take_cat_terminates_early)
+TEST(take, take_cat_terminates_early)
 {
   auto v = std::vector<std::vector<int>> { { 1, 2 }, { 3 }, { 4, 5, 6 } };
 
@@ -40,7 +40,7 @@ TEST(into, take_cat_terminates_early)
   EXPECT_EQ(res, (std::vector<int> { 1, 2, 3, 4 }));
 }
 
-TEST(into, take_stops_early_enough)
+TEST(take, take_stops_early_enough)
 {
   auto v = std::vector<int> { 1, 2, 3, 4, 5, 6 };
 
@@ -57,7 +57,7 @@ TEST(into, take_stops_early_enough)
   EXPECT_EQ(res, (std::vector<int> { 1, 2, 3 }));
 }
 
-TEST(into, take_stops_early_enough2)
+TEST(take, take_stops_early_enough2)
 {
   auto v = std::vector<int> { 1, 2, 3, 4, 5, 6 };
 
@@ -74,12 +74,41 @@ TEST(into, take_stops_early_enough2)
   EXPECT_EQ(res, (std::vector<int> { 1, 2, 3 }));
 }
 
-TEST(reduce, take_moves_the_state_through)
+TEST(take, take_moves_the_state_through)
 {
   auto v = std::vector<int> { 1, 2, 3, 4, 5 };
   auto spy = reduce(take(5)(first_rf), testing::copy_spy<>{}, v);
   EXPECT_EQ(spy.copied.count(), 0);
 }
+
+namespace impure {
+
+TEST(take_impure, take)
+{
+  auto v = std::vector<int> { 1, 2, 3, 4, 5 };
+
+  auto res = impure::into(std::vector<int> {}, impure::take(3), v);
+  EXPECT_EQ(res, (std::vector<int> { 1, 2, 3 }));
+}
+
+TEST(take_impure, take_stops_early_enough2)
+{
+  auto v = std::vector<int> { 1, 2, 3, 4, 5, 6 };
+
+  auto res = impure::into(
+    std::vector<int> {},
+    comp(
+      impure::take(3),
+      map([](int x) {
+          if (x > 4)
+            throw std::runtime_error("bad!");
+          return x;
+        })),
+    v);
+  EXPECT_EQ(res, (std::vector<int> { 1, 2, 3 }));
+}
+
+} // namespace impure
 
 } // namespace xform
 } // namespace atria
