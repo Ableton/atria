@@ -1,0 +1,109 @@
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+
+#pragma once
+
+#include <atria/xform/transducer_impl.hpp>
+#include <atria/xform/state_wrapper.hpp>
+#include <atria/xform/functional.hpp>
+
+namespace atria {
+namespace xform {
+
+namespace detail {
+
+struct enumerate_rf_gen
+{
+  struct tag {};
+
+  template <typename ReducingFnT,
+            typename IntegralT>
+  struct apply
+  {
+    ReducingFnT step;
+    IntegralT initial;
+
+    template <typename StateT, typename ...InputTs>
+    auto operator() (StateT&& s, InputTs&& ...is)
+      -> decltype(wrap_state<tag>(step(state_unwrap(s), initial, is...), initial))
+    {
+      auto next  = state_data(std::forward<StateT>(s), constantly(initial));
+      auto count = next++;
+      return wrap_state<tag>(
+        step(state_unwrap(std::forward<StateT>(s)),
+             std::move(count),
+             std::forward<InputTs>(is)...),
+        std::move(next));
+    }
+  };
+};
+
+} // namespace detail
+
+template <typename T>
+using enumerate_t = transducer_impl<detail::enumerate_rf_gen, T>;
+
+/*!
+ * Transducer that given a sequence:
+ *
+ *   $$x_0, x_1, ..., x_n$$
+ *
+ * produces a sequence
+ *
+ *   $$(init, x_0), (init+1, x_1), ..., (init+n, x_n)$$
+ *
+ * It is inspired by Python's `enumerate` generator.
+ */
+template <typename IntegralT>
+constexpr auto enumerate_from(IntegralT&& init)
+  -> enumerate_t<estd::decay_t<IntegralT> >
+{
+  return enumerate_t<estd::decay_t<IntegralT> > {
+    std::forward<IntegralT>(init) };
+}
+
+/*!
+ * Equivalent to `enumerate_from(std::size_t{})`.
+ * @todo Should be `constexpr` in C++14
+ */
+extern const enumerate_t<std::size_t> enumerate;
+
+namespace impure {
+
+namespace detail {
+
+struct enumerate_rf_gen
+{
+  template <typename ReducingFnT, typename CountT>
+  struct apply
+  {
+    ReducingFnT step;
+    CountT count;
+
+    template <typename StateT, typename ...InputTs>
+    auto operator() (StateT&& s, InputTs&& ...is)
+      -> ABL_DECLTYPE_RETURN(
+          step(std::forward<StateT>(s),
+               count++,
+               std::forward<InputTs>(is)...))
+  };
+};
+
+} // namespace detail
+
+template <typename T>
+using enumerate_t = transducer_impl<detail::enumerate_rf_gen, T>;
+
+template <typename IntegralT>
+constexpr auto enumerate_from(IntegralT&& init)
+  -> enumerate_t<estd::decay_t<IntegralT> >
+{
+  return enumerate_t<estd::decay_t<IntegralT> > {
+    std::forward<IntegralT>(init) };
+}
+
+extern const enumerate_t<std::size_t> enumerate;
+
+} // namespace impure
+
+} // namespace xform
+} // namespace atria
