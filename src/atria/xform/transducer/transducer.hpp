@@ -37,9 +37,7 @@ struct transducer_state
     using xformed_t = typename XformT::result_type;
     using tag_t     = transducer_tag<
       estd::decay_t<StateT>,
-      estd::decay_t<decltype(std::declval<ReducingFnT>()(
-                               std::declval<StateT>(),
-                               std::declval<OutputTs>()...))> >;
+      estd::decay_t<estd::result_of_t<ReducingFnT(StateT, OutputTs...)> > >;
     using type      = state_wrapper<tag_t, WrappedT, xformed_t>;
   };
 
@@ -137,15 +135,6 @@ auto state_wrapper_complete(transducer_tag<C, R>, T&& wrapper) -> C
     .template as<C>();
 }
 
-template <template<typename...> class MF, typename ArgT>
-struct unpack : MF<ArgT> {};
-
-template <template<typename...> class MF, typename... ArgTs>
-struct unpack<MF, meta::pack<ArgTs...> > : MF<ArgTs...> {};
-
-template <template<typename...> class MF, typename T>
-using unpack_t = typename unpack<MF, T>::type;
-
 template <typename... ArgTs>
 struct reducing_function
 {
@@ -154,8 +143,8 @@ struct reducing_function
 
 template <typename InputT, typename OutputT>
 using transducer_function_t = std::function<
-  unpack_t<reducing_function, InputT> (
-    unpack_t<reducing_function, OutputT>)>;
+  meta::unpack_t<reducing_function, InputT> (
+    meta::unpack_t<reducing_function, OutputT>)>;
 
 } // namespace detail
 
@@ -219,7 +208,7 @@ using transducer_function_t = std::function<
  */
 template <typename InputT, typename OutputT=InputT>
 using transducer = transducer_impl<
-  detail::unpack<detail::transducer_rf_gen, OutputT>,
+  meta::unpack<detail::transducer_rf_gen, OutputT>,
   detail::transducer_function_t<InputT, OutputT> >;
 
 } // namespace xform

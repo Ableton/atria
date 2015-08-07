@@ -1,4 +1,4 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #pragma once
 
@@ -30,7 +30,36 @@ namespace meta {
 // paremeter pack.
 //
 template <typename ...Ts>
-struct pack {};
+struct pack
+{
+};
+
+namespace detail {
+
+template <template<typename...> class MF, typename ArgT>
+struct unpack
+{
+  using type = MF<ArgT>;
+};
+
+template <template<typename...> class MF, typename... ArgTs>
+struct unpack<MF, meta::pack<ArgTs...> >
+{
+  using type = MF<ArgTs...>;
+};
+
+} // namespace detail
+
+/*!
+ * Metafunction that given a variadic template `MF` and a type `ArgT`,
+ * returns `MF<ArgT>`, or if ArgT is of the form `pack<Args...>` then
+ * returns `MF<Args...>`.
+ */
+template <template<typename...> class MF, typename T>
+using unpack = typename detail::unpack<MF, T>::type;
+
+template <template<typename...> class MF, typename T>
+using unpack_t = typename unpack<MF, T>::type;
 
 struct pack_tag;
 
