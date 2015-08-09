@@ -32,6 +32,18 @@ TEST(transduce, variadic)
             21);
 }
 
+TEST(transduce, variadic_different_lengths)
+{
+  auto v1 = std::vector<int> { 1, 2, 3, 6 };
+  auto v2 = std::vector<int> { 1, 2, 1 };
+
+  EXPECT_EQ(transduce(map(std::multiplies<int>{}),
+                      std::plus<int>{},
+                      1,
+                      v1, v2),
+            9);
+}
+
 TEST(transduce, early_termination_does_not_leak)
 {
   auto v1 = { 1, 2, 3, 4 };

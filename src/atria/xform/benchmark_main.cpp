@@ -8,6 +8,8 @@
 #include <atria/xform/transducer/map.hpp>
 #include <atria/xform/transducer/take.hpp>
 #include <atria/xform/transducer/transducer.hpp>
+#include <atria/xform/transducer/zip.hpp>
+#include <atria/xform/transducer/unzip.hpp>
 
 #include <atria/testing/benchmark.hpp>
 
@@ -328,6 +330,15 @@ void benchmarks(testing::benchmark_runner runner)
       return state;
     })
 
+    ("atria::xform, impure", [] (std::vector<unsigned> const& data)
+    {
+      return impure::into(
+        std::vector<unsigned>{},
+        comp(filter([](unsigned x) { return x % 2 == 0; }),
+             impure::take(num_to_take(data))),
+        data);
+    })
+
     ("atria::xform", [] (std::vector<unsigned> const& data)
     {
       return into(
@@ -335,14 +346,39 @@ void benchmarks(testing::benchmark_runner runner)
         comp(filter([](unsigned x) { return x % 2 == 0; }),
              take(num_to_take(data))),
         data);
+    });
+
+  runner.suite("variadic sum", make_benchmark_data)
+
+    ("loop", [] (std::vector<unsigned> const& data)
+    {
+      auto result = 0u;
+      for (auto x = data.begin(), y = data.begin();
+           x != data.end() && y != data.end();
+           ++x, ++y)
+      {
+        result += *x + *y;
+      }
+      return result;
     })
 
-    ("atria::xform, impure", [] (std::vector<unsigned> const& data)
+    ("atria::xform", [] (std::vector<unsigned> const& data)
     {
-      return impure::into(
-        std::vector<unsigned>{},
-        comp(filter([](unsigned x) { return x % 2 == 0; }),
-             impure::take(num_to_take(data))),
+      return transduce(
+        identity,
+        [] (unsigned x, unsigned y, unsigned z) { return x + y + z; },
+        0u,
+        data,
+        data);
+    })
+
+    ("atria::xform, zip unzip", [] (std::vector<unsigned> const& data)
+    {
+      return transduce(
+        comp(zip, unzip),
+        [] (unsigned x, unsigned y, unsigned z) { return x + y + z; },
+        0u,
+        data,
         data);
     });
 }
