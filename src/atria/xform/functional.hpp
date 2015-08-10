@@ -121,5 +121,26 @@ constexpr struct tuplify_t
                       std::forward<InputTs>(ins)...))
 } tuplify {};
 
+template <typename FnT>
+struct complement_t
+{
+  FnT fn;
+
+  template <typename... ArgTs>
+  auto operator() (ArgTs&& ...args)
+    -> ABL_DECLTYPE_RETURN(
+      fn(std::forward<ArgTs>(args)...))
+};
+
+/*!
+ * Similar to clojure.core/complement$1
+ */
+template <typename FnT>
+auto complement(FnT&& fn)
+  -> complement_t<estd::decay_t<FnT> >
+{
+  return { std::forward<FnT>(fn) };
+}
+
 } // namespace xform
 } // namespace atria
