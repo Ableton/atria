@@ -7,23 +7,15 @@ set(Atria_VERSION_MAJOR 0)
 set(Atria_VERSION_MINOR 0)
 
 # Enable C++11
-include(CheckCXXCompilerFlag)
-if(WIN32)
-  # Check if we are using Visual Studio 2013 or later
-  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 12)
-    message(FATAL_ERROR
-      "You are using an unsupported Windows compiler! "
-      "(Visual C++ 2013 or later required)")
-  endif()
-else()
-  set(cxx11_options -std=c++11)
-  CHECK_CXX_COMPILER_FLAG(${cxx11_options} COMPILER_SUPPORTS_CXX11)
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 11)
+endif()
+set(CMAKE_CXX_STANDARD_REQUIRED on)
 
-  if(NOT COMPILER_SUPPORTS_CXX11)
-    message(FATAL_ERROR
-      "The compiler ${CMAKE_CXX_COMPILER} has insufficient C++11 support. "
-      "Please use a different C++ compiler.")
-  endif()
+if(CMAKE_CXX_STANDARD STREQUAL 14)
+  add_definitions(-DABL_CXX14=1)
+else()
+  add_definitions(-DABL_CXX14=0)
 endif()
 
 # Build debug by default
@@ -92,7 +84,8 @@ target_include_directories(atria PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third-party/eggs-variant/include>
   ${Boost_INCLUDE_DIRS})
 target_compile_options(atria
-  PUBLIC ${cxx11_options} ${warning_options})
+  PUBLIC
+  ${warning_options})
 target_link_libraries(atria
   ${Boost_LIBRARIES})
 
