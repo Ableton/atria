@@ -11,6 +11,7 @@
 #include <boost/mpl/identity.hpp>
 
 #include <functional>
+#include <cassert>
 
 namespace atria {
 namespace xform {

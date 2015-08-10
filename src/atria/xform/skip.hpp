@@ -212,6 +212,13 @@ auto skip(ReducingFnT&&, StateT&& state, InputTs&& ...)
   return std::forward<StateT>(state);
 }
 
+template <typename StateT>
+auto skip(StateT&& state)
+  -> StateT&&
+{
+  return std::forward<StateT>(state);
+}
+
 /*!
  * Call the next reducing function in a transducer that could
  * otherwise skip calling the next reducing function.  Returns the

@@ -178,7 +178,7 @@ void benchmarks(testing::benchmark_runner runner)
     ("atria::xform, recursive", [] (std::vector<unsigned> const& data)
     {
       return state_complete(
-        detail::reduce_nested_tail_recursive(
+        detail::reduce_nested_non_empty_tail_recursive(
           comp(filter([](unsigned x) { return x % 2 == 0; }),
                map([](unsigned x) { return x * 2u; }))(
                  std::plus<unsigned>{}),
@@ -189,7 +189,7 @@ void benchmarks(testing::benchmark_runner runner)
     ("atria::xform, variadic", [] (std::vector<unsigned> const& data)
     {
       return state_complete(
-        detail::reduce_nested_variadic(
+        detail::reduce_nested_non_empty_variadic(
           comp(filter([](unsigned x) { return x % 2 == 0; }),
                map([](unsigned x) { return x * 2u; }))(
                  std::plus<unsigned>{}),
@@ -251,7 +251,7 @@ void benchmarks(testing::benchmark_runner runner)
     ("atria::xform, recursive", [] (std::vector<unsigned> const& data)
     {
       return state_complete(
-        detail::reduce_nested_tail_recursive(
+        detail::reduce_nested_non_empty_tail_recursive(
           take(num_to_take(data))(
             std::plus<unsigned>{}),
           0u,
@@ -293,10 +293,22 @@ void benchmarks(testing::benchmark_runner runner)
         data);
     })
 
+    ("atria::xform, 2-filter", [] (std::vector<unsigned> const& data)
+    {
+      // This is to ensure that skip_states are flattened
+      return transduce(
+        comp(filter([](unsigned x) { return x % 2 == 0; }),
+             filter([](unsigned) { return true; }),
+             take(num_to_take(data))),
+        std::plus<unsigned>{},
+        0u,
+        data);
+    })
+
     ("atria::xform, recursive", [] (std::vector<unsigned> const& data)
     {
       return state_complete(
-        detail::reduce_nested_tail_recursive(
+        detail::reduce_nested_non_empty_tail_recursive(
           comp(filter([](unsigned x) { return x % 2 == 0; }),
                take(num_to_take(data)))(
                  std::plus<unsigned>{}),

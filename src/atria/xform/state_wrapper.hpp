@@ -47,18 +47,14 @@ struct state_wrapper : std::tuple<StateT, DataT>
   using tag = TagT;
   using base_t = std::tuple<StateT, DataT>;
 
+  state_wrapper(const state_wrapper&) = default;
+  state_wrapper(state_wrapper&&) = default;
+  state_wrapper& operator=(const state_wrapper&) = default;
+  state_wrapper& operator=(state_wrapper&&) = default;
+
   template <typename T, typename U>
   state_wrapper(T&& st, U&& data)
     : base_t(std::forward<T>(st), std::forward<U>(data))
-  {}
-
-  template <typename T>
-  explicit state_wrapper(
-    T&& st,
-    estd::enable_if_t<
-      !std::is_base_of<state_wrapper, estd::decay_t<T> >::value
-    >* = 0)
-    : base_t(std::forward<T>(st), DataT{})
   {}
 };
 
