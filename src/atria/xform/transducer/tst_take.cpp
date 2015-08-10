@@ -110,5 +110,22 @@ TEST(take_impure, take_stops_early_enough2)
 
 } // namespace impure
 
+TEST(take, take_reduce_nested_finished)
+{
+  auto v = std::vector<std::vector<int>> { {1}, {2}, {3} };
+
+  auto res = into(std::vector<int> {},
+                  comp(cat, take(1)), v);
+  EXPECT_EQ(res, (std::vector<int> {1}));
+}
+
+TEST(take, take_zero_not_supported)
+{
+  auto v = std::vector<int> { 1, 2, 3, 4, 5 };
+
+  auto res = into(std::vector<int> {}, take(0), v);
+  EXPECT_NE(res, (std::vector<int> {}));
+}
+
 } // namespace xform
 } // namespace atria
