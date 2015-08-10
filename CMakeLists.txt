@@ -89,6 +89,7 @@ set_target_properties(atria PROPERTIES LINKER_LANGUAGE CXX)
 target_include_directories(atria PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/compat>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third-party/eggs-variant/include>
   ${Boost_INCLUDE_DIRS})
 target_compile_options(atria
   PUBLIC ${cxx11_options} ${warning_options})

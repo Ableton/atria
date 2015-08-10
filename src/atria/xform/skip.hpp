@@ -3,12 +3,12 @@
 #pragma once
 
 #include <atria/xform/state_traits.hpp>
-#include <atria/variant/match.hpp>
+#include <atria/variant/match_eggs.hpp>
 #include <atria/meta/common_type.hpp>
 
 #include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
-#include <boost/variant.hpp>
+#include <eggs/variant.hpp>
 ABL_RESTORE_WARNINGS
 
 #include <functional>
@@ -21,32 +21,51 @@ namespace xform {
  * @a CalledT types.
  *
  * @see skip
+ *
+ * @todo To make the inherit-from technique (in order to achieve the
+ *       effect that `newtype` has in Haskell) work with
+ *       `egg::variants` we needed to specialize the detail
+ *       meta-function `eggs::variants::detail::is_variant`. We should
+ *       consider making a patch for `eggs::variant` that would
+ *       deprecate this.
  */
 template <typename SkippedT, typename CalledT>
-struct skip_state : boost::variant<SkippedT, CalledT>
+struct skip_state : eggs::variant<SkippedT, CalledT>
 {
-  using base_t = boost::variant<SkippedT, CalledT>;
+  using base_t = eggs::variant<SkippedT, CalledT>;
 
   using skipped_t = SkippedT;
   using called_t  = CalledT;
 
-  // Constructors need to be semi-manually defined.  Otherwise
-  // confusion arises because of the way boost::variant uses enable_if
-  // to dispatch to the right move constructors.
-  //
-  //    using base_t::base_t;
-
-  skip_state() = default;
-  skip_state(const skip_state&) = default;
-  skip_state(skip_state&&) = default;
-  skip_state& operator=(const skip_state&) = default;
-  skip_state& operator=(skip_state&&) = default;
-
-  template <typename ...Ts>
-  skip_state(Ts ...ts)
-    : base_t(std::move(ts)...)
-  {}
+  using base_t::base_t;
 };
+
+} // namespace xform
+} // namespace atria
+
+namespace eggs {
+namespace variants {
+namespace detail {
+
+template <typename ...Ts>
+struct is_variant<atria::xform::skip_state<Ts...>>
+  : std::true_type {};
+template <typename ...Ts>
+struct is_variant<atria::xform::skip_state<Ts...> const>
+  : std::true_type {};
+template <typename ...Ts>
+struct is_variant<atria::xform::skip_state<Ts...> volatile>
+  : std::true_type {};
+template <typename ...Ts>
+struct is_variant<atria::xform::skip_state<Ts...> const volatile>
+  : std::true_type {};
+
+} // namespace detail
+} // namespace variants
+} // namespace eggs
+
+namespace atria {
+namespace xform {
 
 template <typename T>
 struct is_skip_state

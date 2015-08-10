@@ -1,0 +1,3 @@
+[submodule "third-party/eggs-variant"]
+	path = third-party/eggs-variant
+	url = https://github.com/eggs-cpp/variant.git

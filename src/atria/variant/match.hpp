@@ -26,7 +26,7 @@ typename decltype(visitor(std::declval<Fns>()...))::result_type
 match(const VariantT& variant, Fns&& ...fns)
 {
   auto visit = visitor(std::forward<Fns>(fns)...);
-  return variant.apply_visitor(visit);
+  return boost::apply_visitor(visit, variant);
 }
 
 } // namespace variant
