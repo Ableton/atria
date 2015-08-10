@@ -99,6 +99,17 @@ void benchmarks(testing::benchmark_runner runner)
         std::vector<unsigned>{},
         xform,
         data);
+    })
+
+    ("atria::xform, erased, impure", [] (std::vector<unsigned> const& data)
+    {
+      impure::transducer<unsigned> xform = comp(
+        filter([](unsigned x) { return x % 2 == 0; }),
+        map([](unsigned x) { return x * 2u; }));
+      return impure::into(
+        std::vector<unsigned>{},
+        xform,
+        data);
     });
 
   runner.suite("filter map sum", make_benchmark_data)
@@ -203,6 +214,18 @@ void benchmarks(testing::benchmark_runner runner)
         filter([](unsigned x) { return x % 2 == 0; }),
         map([](unsigned x) { return x * 2u; }));
       return transduce(
+        xform,
+        std::plus<unsigned>{},
+        0u,
+      data);
+    })
+
+    ("atria::xform, erased, impure", [] (std::vector<unsigned> const& data)
+    {
+      impure::transducer<unsigned> xform = comp(
+        filter([](unsigned x) { return x % 2 == 0; }),
+        map([](unsigned x) { return x * 2u; }));
+      return impure::transduce(
         xform,
         std::plus<unsigned>{},
         0u,

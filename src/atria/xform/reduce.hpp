@@ -6,6 +6,7 @@
 #include <atria/xform/functional.hpp>
 #include <atria/xform/state_traits.hpp>
 #include <atria/xform/abort_reduce.hpp>
+#include <atria/xform/any_state.hpp>
 #include <atria/xform/skip.hpp>
 
 #include <atria/estd/type_traits.hpp>
@@ -270,6 +271,26 @@ auto reduce(ReducingFnT&& step, StateT&& state, InputRangeTs&& ...ranges)
 
 namespace impure {
 
+namespace detail {
+
+template <typename ResultT, typename ArgT>
+auto from_any_state(ArgT&& s)
+  -> estd::enable_if_t<std::is_same<estd::decay_t<ArgT>, any_state>{},
+                       estd::decay_t<ResultT> >
+{
+  return std::forward<ArgT>(s).template as<ResultT>();
+}
+
+template <typename ResultT, typename ArgT>
+auto from_any_state(ArgT&& s)
+  -> estd::enable_if_t<!std::is_same<estd::decay_t<ArgT>, any_state>{},
+                       ArgT&&>
+{
+  return std::forward<ArgT>(s);
+}
+
+} // namespace detail
+
 template <typename ReducingFnT,
           typename StateT,
           typename ...InputRangeTs>
@@ -277,13 +298,16 @@ auto reduce(ReducingFnT&& step, StateT&& state, InputRangeTs&& ...ranges)
   -> estd::decay_t<StateT>
 {
   try {
-    return state_complete(
-      reduce_nested(
-        std::forward<ReducingFnT>(step),
-        std::forward<StateT>(state),
-        std::forward<InputRangeTs>(ranges)...));
+    return detail::from_any_state<StateT>(
+      state_complete(
+        reduce_nested(
+          std::forward<ReducingFnT>(step),
+          std::forward<StateT>(state),
+          std::forward<InputRangeTs>(ranges)...)));
   } catch (reduce_aborted_error<estd::decay_t<StateT> >& err) {
     return std::move(err.result);
+  } catch (reduce_aborted_error<any_state>& err) {
+    return std::move(err.result).as<StateT>();
   }
 }
 
