@@ -18,18 +18,28 @@ struct interleave_rf_gen
     ReducingFnT step;
 
     template <typename StateT>
-    auto operator() (StateT&& s) -> StateT&&
+    auto impl(StateT&& s) -> StateT&&
     {
       return std::forward<StateT>(s);
     }
 
     template <typename StateT, typename InputT, typename ...InputTs>
+    auto impl(StateT&& s, InputT&& i, InputTs&& ...is)
+      -> decltype(step(std::forward<StateT>(s), std::forward<InputT>(i)))
+    {
+      return !state_is_reduced(s)
+        ? impl(step(std::forward<StateT>(s), std::forward<InputT>(i)),
+               std::forward<InputTs>(is)...)
+        : std::forward<StateT>(s);
+    }
+
+
+    template <typename StateT, typename InputT, typename ...InputTs>
     auto operator() (StateT&& s, InputT&& i, InputTs&& ...is)
       -> decltype(step(std::forward<StateT>(s), std::forward<InputT>(i)))
     {
-      return operator()(
-        step(std::forward<StateT>(s), std::forward<InputT>(i)),
-        std::forward<InputTs>(is)...);
+      return impl(step(std::forward<StateT>(s), std::forward<InputT>(i)),
+                  std::forward<InputTs>(is)...);
     }
   };
 };

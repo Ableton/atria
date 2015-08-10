@@ -2,6 +2,7 @@
 
 #include <atria/xform/into_vector.hpp>
 #include <atria/xform/transducer/interleave.hpp>
+#include <atria/xform/transducer/take.hpp>
 #include <atria/testing/gtest.hpp>
 
 #include <vector>
@@ -16,6 +17,15 @@ TEST(interleave, interleave)
 
   auto res = into_vector(interleave, v1, v2);
   EXPECT_EQ(res, (std::vector<int> { 1, 4, 2, 5, 3, 6 }));
+}
+
+TEST(interleave, interleave_termineates_early_enough)
+{
+  auto v1 = std::vector<int> {{ 1, 2, 3 }};
+  auto v2 = std::vector<int> {{ 4, 5, 6 }};
+
+  auto res = into_vector(comp(interleave, take(3)), v1, v2);
+  EXPECT_EQ(res, (std::vector<int> { 1, 4, 2 }));
 }
 
 } // namespace xform

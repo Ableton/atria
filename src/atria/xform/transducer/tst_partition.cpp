@@ -6,6 +6,7 @@
 #include <atria/xform/transducer/partition.hpp>
 #include <atria/xform/transducer/transducer.hpp>
 #include <atria/xform/transducer/cat.hpp>
+#include <atria/xform/transducer/take.hpp>
 #include <atria/testing/spies.hpp>
 #include <atria/testing/gtest.hpp>
 
@@ -53,6 +54,16 @@ TEST(reduce, partition_moves_the_state_through)
   auto v = std::vector<int> { 1, 2, 3, 4, 5 };
   auto spy = reduce(partition(2u)(first_rf), testing::copy_spy<>{}, v);
   EXPECT_EQ(spy.copied.count(), 0);
+}
+
+TEST(reduce, defining_early_termination_with_completion)
+{
+  auto v = std::vector<int> {{1, 2, 3, 4, 5}};
+  auto res = into(
+    std::vector<std::vector<int>>{},
+    comp(take(3), partition(2u)),
+    v);
+  EXPECT_EQ(res, (std::vector<std::vector<int> > {{1, 2}, {3}}));
 }
 
 TEST(reduce, reduce_nested_deals_with_empty_sequence_properly)
