@@ -6,8 +6,7 @@
 
 #include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
-#include <boost/program_options.hpp>
-#include <boost/lexical_cast.hpp>
+#include <cxxopts.hpp>
 ABL_RESTORE_WARNINGS
 
 #include <vector>
@@ -55,41 +54,44 @@ benchmark_suite_base::~benchmark_suite_base()
 
 } // namespace detail
 
+namespace {
+
+auto optv(bool& x)
+  -> ABL_DECLTYPE_RETURN(
+    cxxopts::value<bool>(x))
+
+template <typename T>
+auto optv(T& x)
+  -> ABL_DECLTYPE_RETURN(
+    cxxopts::value<T>(x)
+    ->default_value(std::to_string(x)))
+
+} // namespace
+
 benchmark_runner::benchmark_runner(int argc, char const*const* argv,
                                    benchmark_settings settings)
   : settings_(std::move(settings))
 {
-#define ABL_BENCHMARK_OPTION_S_(name__, sname__, desc__)              \
-  (#name__ "," #sname__,                                              \
-   ::boost::program_options::value<decltype(settings_.name__)>(       \
-     &settings_.name__)                                               \
-   ->default_value(settings_.name__)                                  \
-   ->value_name("<value>"),                                           \
-   desc__)                                                            \
-    /**/
+  auto opts = cxxopts::Options{ argv[0], "" };
+  auto help = bool{};
 
-  namespace po = boost::program_options;
-  auto desc = po::options_description{};
-  desc.add_options()
-    ("help,h", "print help message")
-    ABL_BENCHMARK_OPTION_S_(
-      iterations, i, "number of times to run the benchmark per measurement")
-    ABL_BENCHMARK_OPTION_S_(
-      measurements, m, "number of times to measure each benchmark")
-    ABL_BENCHMARK_OPTION_S_(
-      size, s, "amount of data to pass to each benchmark")
+  opts.add_options()
+    ("h,help", "print help message",
+     optv(help))
+    ("v,verbose", "show more output",
+     optv(settings_.verbose))
+    ("i,iterations", "number of times to run the benchmark per measurement",
+     optv(settings_.iterations), "NUM")
+    ("m,measurements", "number of times to measure each benchmark",
+     optv(settings_.measurements), "NUM")
     ;
 
-  auto args = po::variables_map{};
-  po::store(po::parse_command_line(argc, argv, desc), args);
-  po::notify(args);
+  auto argv_ = const_cast<char**>(argv);
+  opts.parse(argc, argv_);
 
-  if (args.count("help")) {
-    throw benchmark_runner_error {
-      boost::lexical_cast<std::string>(desc) };
+  if (help) {
+    throw benchmark_runner_error{ opts.help() };
   }
-
-#undef ABL_BENCHMARK_OPTION_S_
 }
 
 } // namespace testing

@@ -53,7 +53,7 @@ enable_testing()
 if(DEFINED Boost_INCLUDE_DIR)
   get_filename_component(Boost_INCLUDE_DIR ${Boost_INCLUDE_DIR} ABSOLUTE)
 endif()
-find_package(Boost 1.54 COMPONENTS program_options REQUIRED)
+find_package(Boost 1.54 REQUIRED)
 
 set(GTEST_SOURCE
   "${CMAKE_CURRENT_SOURCE_DIR}/../googletest"
@@ -82,6 +82,7 @@ target_include_directories(atria PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/compat>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third-party/eggs-variant/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third-party/cxxopts/src>
   ${Boost_INCLUDE_DIRS})
 target_compile_options(atria
   PUBLIC

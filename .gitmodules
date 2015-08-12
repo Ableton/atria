@@ -1,3 +1,6 @@
 [submodule "third-party/eggs-variant"]
 	path = third-party/eggs-variant
 	url = https://github.com/eggs-cpp/variant.git
+[submodule "third-party/cxxopts"]
+	path = third-party/cxxopts
+	url = https://github.com/jarro2783/cxxopts.git
