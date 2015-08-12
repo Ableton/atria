@@ -84,6 +84,8 @@ benchmark_runner::benchmark_runner(int argc, char const*const* argv,
      optv(settings_.iterations), "NUM")
     ("m,measurements", "number of times to measure each benchmark",
      optv(settings_.measurements), "NUM")
+    ("s,size", "amount of data to pass to each benchmark",
+     optv(settings_.size), "NUM")
     ;
 
   auto argv_ = const_cast<char**>(argv);

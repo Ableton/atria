@@ -70,6 +70,10 @@ struct benchmark_settings
   //! Amount of data to use in the benchmark.  This is to be
   //! interpreted by the benchmark initialization code.
   std::size_t size         = 100;
+
+  //! Amount of data to use in the benchmark.  This is to be
+  //! interpreted by the benchmark initialization code.
+  bool verbose             = false;
 };
 
 namespace detail {
@@ -82,7 +86,10 @@ public:
   benchmark_suite_base(std::string name, benchmark_settings settings)
     : name_(std::move(name))
     , settings_(std::move(settings))
-  {}
+  {
+    if (settings_.verbose)
+      std::cout << std::endl << "running: " << name_ << " ..." << std::endl;
+  }
 
 protected:
   const benchmark_settings& settings() { return settings_; }
@@ -90,6 +97,9 @@ protected:
   template <typename TestFnT>
   void run(std::string name, TestFnT test_fn)
   {
+    if (settings_.verbose)
+      std::cout << "    ... " << name << std::endl;
+
     auto minimum   = [] (double x, double y) { return std::min(x, y); };
     auto iteration = [&] (unsigned) { unoptimize(test_fn()); };
     auto measure   = [&] (unsigned) {
