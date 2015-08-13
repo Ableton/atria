@@ -6,7 +6,7 @@
 #include <iostream>
 
 namespace atria {
-namespace xform {
+namespace prelude {
 
 /*!
  * Prints "<message> <x>" to `std::cerr` and returns the value,
@@ -38,5 +38,9 @@ struct tracer
     trace(std::forward<T>(x), message))
 };
 
-} // namespace xform
+} // namespace prelude
+
+using prelude::tracer;
+using prelude::trace;
+
 } // namespace atria

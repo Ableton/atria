@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <atria/xform/functional.hpp>
+#include <atria/prelude/tuplify.hpp>
 #include <atria/xform/transducer/map.hpp>
 
 namespace atria {

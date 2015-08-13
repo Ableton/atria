@@ -1,12 +1,11 @@
 // Copyright: 2015, Ableton AG, Berlin. All rights reserved.
 
 #include <atria/xform/concepts.hpp>
-#include <atria/xform/functional.hpp>
 #include <atria/xform/reducing/last_rf.hpp>
 #include <atria/xform/transduce.hpp>
 #include <atria/xform/transducer/remove.hpp>
 #include <atria/xform/transducer/map.hpp>
-
+#include <atria/prelude/comp.hpp>
 #include <atria/testing/gtest.hpp>
 
 namespace atria {

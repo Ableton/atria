@@ -5,12 +5,7 @@
 #include <atria/xform/state_traits.hpp>
 #include <atria/variant/match_eggs.hpp>
 #include <atria/meta/common_type.hpp>
-
-#include <ableton/build_system/Warnings.hpp>
-ABL_DISABLE_WARNINGS
-#include <eggs/variant.hpp>
-ABL_RESTORE_WARNINGS
-
+#include <atria/estd/utility.hpp>
 #include <functional>
 
 namespace atria {
@@ -81,7 +76,7 @@ struct state_traits<skip_state<SkippedT, CalledT> >
   template <typename T>
   static auto complete(T&& s)
     -> ABL_DECLTYPE_RETURN(
-        variant::match(
+      variant::match(
         std::forward<T>(s),
         variant::otherwise<SkippedT>(detail::state_complete_t{})))
 

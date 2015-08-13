@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include <atria/xform/functional.hpp>
 #include <atria/xform/transducer/cat.hpp>
 #include <atria/xform/transducer/map.hpp>
+#include <atria/prelude/comp.hpp>
 
 namespace atria {
 namespace xform {

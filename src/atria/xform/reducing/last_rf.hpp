@@ -4,6 +4,7 @@
 
 #include <atria/estd/utility.hpp>
 #include <atria/estd/type_traits.hpp>
+#include <atria/prelude/tuplify.hpp>
 
 namespace atria {
 namespace xform {
@@ -22,7 +23,8 @@ constexpr struct last_rf_t
   }
 
   template <typename StateT, typename ...InputTs>
-  constexpr auto operator() (StateT&& s) const -> StateT&&
+  constexpr auto operator() (StateT&& s) const
+    -> StateT&&
   {
     return std::forward<StateT>(s);
   }

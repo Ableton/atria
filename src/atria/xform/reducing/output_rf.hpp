@@ -4,7 +4,7 @@
 #pragma once
 
 #include <atria/estd/utility.hpp>
-#include <atria/xform/functional.hpp>
+#include <atria/prelude/tuplify.hpp>
 
 namespace atria {
 namespace xform {

@@ -3,7 +3,8 @@
 #include <atria/xform/into.hpp>
 #include <atria/xform/transducer/filter.hpp>
 #include <atria/xform/transducer/map.hpp>
-
+#include <atria/prelude/comp.hpp>
+#include <atria/prelude/identity.hpp>
 #include <atria/estd/functional.hpp>
 #include <atria/testing/gtest.hpp>
 #include <vector>

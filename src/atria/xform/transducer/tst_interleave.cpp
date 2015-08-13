@@ -3,6 +3,7 @@
 #include <atria/xform/into_vector.hpp>
 #include <atria/xform/transducer/interleave.hpp>
 #include <atria/xform/transducer/take.hpp>
+#include <atria/prelude/comp.hpp>
 #include <atria/testing/gtest.hpp>
 
 #include <vector>

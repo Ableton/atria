@@ -6,6 +6,7 @@
 #include <atria/xform/any_state.hpp>
 #include <atria/xform/state_wrapper.hpp>
 #include <atria/xform/transducer_impl.hpp>
+#include <atria/prelude/comp.hpp>
 
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>

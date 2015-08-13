@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include <atria/xform/functional.hpp>
 #include <atria/xform/transducer_impl.hpp>
 #include <atria/meta/get_index_sequence.hpp>
 #include <atria/estd/type_traits.hpp>

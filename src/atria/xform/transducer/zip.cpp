@@ -1,6 +1,6 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
-#include <atria/xform/functional.hpp>
+#include <atria/prelude/tuplify.hpp>
 #include <atria/xform/transducer/map.hpp>
 #include <atria/xform/transducer/zip.hpp>
 

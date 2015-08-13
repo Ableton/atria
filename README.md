@@ -12,6 +12,9 @@ While not yet, we plan to release this library as **open source**.
 
 ## Modules
 
+* `atria::prelude` provides basic functional programming tools in the
+  spirit of those in Clojure `core` and Haskell's `Prelude`.
+
 * `atria::variant` provides tools for better usability of Boost.Variant
   and potentially other implementations of sum types.
 

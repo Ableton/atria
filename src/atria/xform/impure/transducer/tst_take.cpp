@@ -4,6 +4,7 @@
 #include <atria/xform/impure/into.hpp>
 #include <atria/xform/impure/transducer/take.hpp>
 #include <atria/xform/transducer/map.hpp>
+#include <atria/prelude/comp.hpp>
 #include <atria/testing/gtest.hpp>
 
 namespace atria {

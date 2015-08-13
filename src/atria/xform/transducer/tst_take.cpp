@@ -6,9 +6,12 @@
 #include <atria/xform/transducer/take.hpp>
 #include <atria/xform/transducer/cat.hpp>
 #include <atria/xform/transducer/map.hpp>
+#include <atria/prelude/comp.hpp>
 
 #include <atria/testing/spies.hpp>
 #include <atria/testing/gtest.hpp>
+
+#include <vector>
 
 namespace atria {
 namespace xform {

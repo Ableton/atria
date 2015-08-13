@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <atria/xform/trace.hpp>
+#include <atria/prelude/trace.hpp>
 
 namespace atria {
 namespace xform {

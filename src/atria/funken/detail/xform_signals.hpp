@@ -6,7 +6,8 @@
 #include <atria/funken/detail/no_value.hpp>
 
 #include <atria/meta/pack.hpp>
-#include <atria/xform/functional.hpp>
+#include <atria/prelude/identity.hpp>
+#include <atria/prelude/tuplify.hpp>
 #include <atria/xform/reducing/last_rf.hpp>
 #include <atria/xform/transducer_impl.hpp>
 
@@ -44,7 +45,7 @@ constexpr struct
   auto operator () (DownSignalPtr s, Inputs&& ...is) const
     -> DownSignalPtr
   {
-    s->push_down(xform::tuplify(std::forward<Inputs>(is)...));
+    s->push_down(tuplify(std::forward<Inputs>(is)...));
     return s;
   }
 
@@ -74,7 +75,7 @@ auto default_construct_or_throw()
 //!
 // Implementation of a signal with a transducer.
 //
-template <typename XForm            = decltype(xform::identity),
+template <typename XForm            = identity_t,
           typename ParentsPack      = meta::pack<>,
           template<class>class Base = down_signal>
 class xform_down_signal;
@@ -154,7 +155,7 @@ constexpr struct
   auto operator () (UpSignalPtr s, Inputs&& ...is) const
     -> UpSignalPtr
   {
-    s->push_up(xform::tuplify(std::forward<Inputs>(is)...));
+    s->push_up(tuplify(std::forward<Inputs>(is)...));
     return s;
   }
 } send_up_rf {};
@@ -184,7 +185,7 @@ struct update_rf_gen
     auto peek_parents(XformUpSignalPtr s, estd::index_sequence<Indices...>) const
       -> ABL_DECLTYPE_RETURN((
         s->recompute_deep(),
-        xform::tuplify(std::get<Indices>(s->parents())->current()...)))
+        tuplify(std::get<Indices>(s->parents())->current()...)))
   };
 };
 
@@ -209,8 +210,8 @@ auto update(UpdateT&& updater)
 //!
 // Implementation of a signal with a transducer
 //
-template <typename XForm            = decltype(xform::identity),
-          typename SetXForm         = decltype(xform::identity),
+template <typename XForm            = identity_t,
+          typename SetXForm         = identity_t,
           typename ParentsPack      = meta::pack<>,
           template<class>class Base = up_down_signal>
 class xform_up_down_signal;

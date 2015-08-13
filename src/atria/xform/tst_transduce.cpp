@@ -7,6 +7,7 @@
 #include <atria/xform/transducer/map.hpp>
 #include <atria/xform/transducer/take.hpp>
 
+#include <atria/prelude/identity.hpp>
 #include <atria/estd/functional.hpp>
 #include <atria/testing/gtest.hpp>
 #include <vector>

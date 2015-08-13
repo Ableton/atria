@@ -1,7 +1,6 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #include <atria/xform/concepts.hpp>
-#include <atria/xform/functional.hpp>
 #include <atria/xform/reducing/last_rf.hpp>
 #include <atria/xform/transduce.hpp>
 #include <atria/xform/transducer/filter.hpp>
@@ -12,7 +11,7 @@
 #include <atria/xform/transducer/mapcat.hpp>
 #include <atria/xform/transducer/take_while.hpp>
 #include <atria/xform/transducer/traced.hpp>
-
+#include <atria/prelude/comp.hpp>
 #include <atria/testing/gtest.hpp>
 
 namespace atria {
