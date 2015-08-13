@@ -8,18 +8,17 @@ namespace atria {
 namespace xform {
 namespace detail {
 
-template <typename RangeT>
-bool is_non_empty(const RangeT& r)
+inline bool is_non_empty()
 {
-  using std::begin;
-  using std::end;
-  return begin(r) != end(r);
+  return true;
 }
 
 template <typename RangeT, typename ...RangeTs>
 bool is_non_empty(const RangeT& r, const RangeTs& ...rs)
 {
-  return is_non_empty(r) && is_non_empty(rs...);
+  using std::begin;
+  using std::end;
+  return begin(r) != end(r) && is_non_empty(rs...);
 }
 
 } // namespace detail

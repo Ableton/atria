@@ -6,6 +6,7 @@
 #include <atria/xform/transducer/filter.hpp>
 #include <atria/xform/transducer/map.hpp>
 #include <atria/xform/transducer/take.hpp>
+#include <atria/xform/transducer/enumerate.hpp>
 #include <atria/xform/transducer/transducer.hpp>
 #include <atria/xform/transducer/traced.hpp>
 
@@ -159,6 +160,16 @@ TEST(transducer, simple_transduction)
     0,
     std::vector<int>{ 1, 2, 3, 4});
   EXPECT_EQ(res, 12);
+}
+
+TEST(transducer, generator)
+{
+  transducer<meta::pack<>, std::size_t> xform = comp(take(5), enumerate);
+  auto res = transduce(
+    xform,
+    std::plus<std::size_t>{},
+    0u);
+  EXPECT_EQ(res, 10);
 }
 
 } // namespace xform

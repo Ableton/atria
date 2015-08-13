@@ -206,7 +206,7 @@ using transducer_function_t = std::function<
  *       auto sum = reduce(step, 0, {1, 2, 3})
  *       @endcode
  */
-template <typename InputT, typename OutputT=InputT>
+template <typename InputT=meta::pack<>, typename OutputT=InputT>
 using transducer = transducer_impl<
   meta::unpack<detail::transducer_rf_gen, OutputT>,
   detail::transducer_function_t<InputT, OutputT> >;

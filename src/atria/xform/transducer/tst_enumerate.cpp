@@ -3,6 +3,8 @@
 #include <atria/xform/concepts.hpp>
 #include <atria/xform/into_vector.hpp>
 #include <atria/xform/transducer/enumerate.hpp>
+#include <atria/xform/transducer/take.hpp>
+#include <atria/prelude/comp.hpp>
 #include <atria/testing/gtest.hpp>
 
 namespace atria {
@@ -32,6 +34,12 @@ TEST(enumerate, enumerate_from)
         tup('b', 42),
         tup('c', 5)
   }}));
+}
+
+TEST(enumerate, generator)
+{
+  auto res = into_vector(comp(enumerate_from('a'), take(3)));
+  EXPECT_EQ(res, (std::vector<char> {{ 'a', 'b', 'c' }}));
 }
 
 } // namespace xform

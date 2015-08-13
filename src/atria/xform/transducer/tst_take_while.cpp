@@ -3,6 +3,8 @@
 #include <atria/xform/concepts.hpp>
 #include <atria/xform/into_vector.hpp>
 #include <atria/xform/transducer/take_while.hpp>
+#include <atria/xform/transducer/map.hpp>
+#include <atria/prelude/comp.hpp>
 #include <atria/estd/functional.hpp>
 
 #include <atria/testing/spies.hpp>
@@ -26,6 +28,18 @@ TEST(take_while, into)
 
   auto res = into_vector(take_while(pred), v);
   EXPECT_EQ(res, (decltype(res) { 1, 2, 3 }));
+}
+
+TEST(take_while, generate_with_map)
+{
+  auto count = int{};
+  auto counter = [&]() mutable { return count++; };
+  auto lt10 = [] (int x) { return x < 10; };
+  auto res = transduce(
+    comp(map(counter), take_while(lt10)),
+    std::plus<int>{},
+    1);
+  EXPECT_EQ(res, 46);
 }
 
 } // namespace xform

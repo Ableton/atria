@@ -6,6 +6,7 @@
 
 #include <atria/xform/config.hpp>
 #include <atria/xform/detail/reduce_nested_non_empty_variadic.hpp>
+#include <atria/xform/detail/reduce_nested_non_empty_nullary.hpp>
 
 #if   ABL_REDUCE_TAIL_RECURSIVE
 #  include <atria/xform/detail/reduce_nested_non_empty_tail_recursive.hpp>
@@ -31,6 +32,15 @@
 namespace atria {
 namespace xform {
 namespace detail {
+
+template <typename ReducingFnT,
+          typename StateT>
+auto reduce_nested_non_empty(ReducingFnT&& step,
+                             StateT&& state)
+  -> ABL_DECLTYPE_RETURN(
+    reduce_nested_non_empty_nullary(
+      std::forward<ReducingFnT>(step),
+      std::forward<StateT>(state)))
 
 template <typename ReducingFnT,
           typename StateT,

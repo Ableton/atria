@@ -14,6 +14,7 @@
 #include <atria/xform/transducer/transducer.hpp>
 #include <atria/xform/transducer/zip.hpp>
 #include <atria/xform/transducer/unzip.hpp>
+#include <atria/xform/transducer/enumerate.hpp>
 #include <atria/xform/impure/into.hpp>
 #include <atria/xform/impure/transducer/transducer.hpp>
 #include <atria/xform/impure/transducer/take.hpp>
@@ -50,6 +51,11 @@ void benchmarks(testing::benchmark_runner runner)
     auto data = std::vector<unsigned>(settings.size);
     boost::iota(data, 0);
     return data;
+  };
+
+  auto get_benchmark_size = [](testing::benchmark_settings settings)
+  {
+    return settings.size;
   };
 
   runner.suite("filter map into", make_benchmark_data)
@@ -431,6 +437,46 @@ void benchmarks(testing::benchmark_runner runner)
         data,
         data);
     });
+
+  struct counter
+  {
+    std::size_t count = 0;
+    std::size_t operator() () { return count++; }
+  };
+
+  runner.suite("generate", get_benchmark_size)
+
+    ("stl, generate_n", [] (std::size_t size)
+    {
+      auto res = std::vector<std::size_t>{};
+      res.reserve(size);
+      std::generate_n(std::back_inserter(res), size, counter{});
+      return res;
+    })
+
+    ("stl, itoa", [] (std::size_t size)
+    {
+      auto res = std::vector<std::size_t>(size);
+      std::iota(std::begin(res), std::end(res), 0u);
+      return res;
+    })
+
+    ("atria::xform, map", [] (std::size_t size)
+    {
+      auto res = std::vector<std::size_t>{};
+      res.reserve(size);
+      into(res, comp(map(counter{}), take(size)));
+      return res;
+    })
+
+    ("atria::xform, enumerate", [] (std::size_t size)
+    {
+      auto res = std::vector<std::size_t>{};
+      res.reserve(size);
+      into(res, comp(enumerate, take(size)));
+      return res;
+    });
+
 }
 
 } // anonymous namespace
