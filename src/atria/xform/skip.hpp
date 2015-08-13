@@ -21,13 +21,6 @@ namespace xform {
  * @a CalledT types.
  *
  * @see skip
- *
- * @todo To make the inherit-from technique (in order to achieve the
- *       effect that `newtype` has in Haskell) work with
- *       `egg::variants` we needed to specialize the detail
- *       meta-function `eggs::variants::detail::is_variant`. We should
- *       consider making a patch for `eggs::variant` that would
- *       deprecate this.
  */
 template <typename SkippedT, typename CalledT>
 struct skip_state : eggs::variant<SkippedT, CalledT>
@@ -83,17 +76,14 @@ struct state_traits<skip_state<SkippedT, CalledT> >
     -> ABL_DECLTYPE_RETURN(
       variant::match(
         std::forward<T>(s),
-        variant::otherwise<bool>(
-          detail::state_is_reduced_t{})))
+        detail::state_is_reduced_t{}))
 
   template <typename T>
   static auto complete(T&& s)
     -> ABL_DECLTYPE_RETURN(
-      variant::match(
+        variant::match(
         std::forward<T>(s),
-        variant::otherwise<estd::decay_t<
-            decltype(state_complete(std::declval<CalledT>()))> >(
-          detail::state_complete_t{})))
+        variant::otherwise<SkippedT>(detail::state_complete_t{})))
 
   // In practice, this method does not make sense for this type.  It
   // is unwrapped manually by @a call
@@ -116,9 +106,8 @@ namespace detail
 template <typename ReducingFnT, typename StateT, typename... InputTs>
 struct skip_result_impl
 {
-  using skipped_t = estd::decay_t<StateT>;
-  using called_t  = estd::decay_t<
-    estd::result_of_t<ReducingFnT(StateT, InputTs...)> >;
+  using skipped_t = StateT;
+  using called_t  = estd::result_of_t<ReducingFnT(StateT, InputTs...)>;
 
   using common_type_t = meta::common_type_t<skipped_t, called_t>;
   using error_t = meta::could_not_find_common_type<skipped_t, called_t>;
@@ -126,7 +115,8 @@ struct skip_result_impl
   using type = estd::conditional_t<
     !std::is_same<common_type_t, error_t>{},
       common_type_t,
-      skip_state<skipped_t, called_t> >;
+      skip_state<estd::decay_t<skipped_t>,
+                 estd::decay_t<called_t> > >;
 };
 
 } // namespace detail
@@ -199,6 +189,31 @@ auto skip(StateT&& state)
   return std::forward<StateT>(state);
 }
 
+namespace detail {
+
+template <typename ReducingFnT, typename... InputTs>
+struct bind_forward_reducing_function
+{
+  ReducingFnT&& fn;
+  std::tuple<InputTs&&...> ins;
+
+  template <std::size_t... Indices, typename StateT>
+  auto impl(estd::index_sequence<Indices...>, StateT&& st)
+    -> ABL_DECLTYPE_RETURN(
+      std::forward<ReducingFnT>(fn)(
+        std::forward<StateT>(st),
+        std::forward<typename std::tuple_element<Indices, decltype(ins)>::type>(
+          std::get<Indices>(ins))...))
+
+  template <typename StateT>
+  auto operator() (StateT&& st)
+    -> ABL_DECLTYPE_RETURN(
+      impl(estd::make_index_sequence<sizeof...(InputTs)>{},
+           std::forward<StateT>(st)))
+};
+
+} // namespace detail
+
 /*!
  * Call the next reducing function in a transducer that could
  * otherwise skip calling the next reducing function.  Returns the
@@ -216,10 +231,10 @@ auto call(ReducingFnT&& step, StateT&& state, InputTs&& ...ins)
 {
   return variant::match(
     std::forward<StateT>(state),
-    variant::otherwise<estd::decay_t<StateT> >(
-      std::bind(std::forward<ReducingFnT>(step),
-                std::placeholders::_1,
-                std::forward<InputTs>(ins)...)));
+    detail::bind_forward_reducing_function<ReducingFnT, InputTs...> {
+      std::forward<ReducingFnT>(step),
+        std::forward_as_tuple<InputTs...>(ins...)
+      });
 }
 
 template <typename ReducingFnT, typename StateT, typename... InputTs>
