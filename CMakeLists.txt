@@ -39,7 +39,8 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL Clang
     -Wno-exit-time-destructors
     -Wno-padded
     -Wno-undefined-reinterpret-cast
-    -Wno-weak-vtables)
+    -Wno-weak-vtables
+    -Wno-undefined-internal)
 elseif(MSVC)
   set(warning_options /WX /W4 /wd4503 /wd4512)
 endif()

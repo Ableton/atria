@@ -8,6 +8,21 @@
 namespace atria {
 namespace xform {
 
+#if ABL_CXX14
+
+auto map = [](auto mapping) mutable
+{
+  return [=](auto step) mutable
+  {
+    return [=](auto&& s, auto&& ...is) mutable
+    {
+      return step(ABL_FORWARD(s), mapping(ABL_FORWARD(is)...));
+    };
+  };
+};
+
+#else // ABL_CXX14
+
 namespace detail {
 
 struct map_rf_gen
@@ -42,6 +57,8 @@ auto map(MappingT&& mapping)
   return map_t<estd::decay_t<MappingT> > {
     std::forward<MappingT>(mapping) };
 }
+
+#endif // ABL_CXX14
 
 } // namespace xform
 } // namespace atria

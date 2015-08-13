@@ -9,6 +9,30 @@
 namespace atria {
 namespace xform {
 
+#if ABL_CXX14
+
+auto enumerate_from = [](auto initial) mutable
+{
+  struct tag {};
+
+  return [=](auto step) mutable
+  {
+    return [=](auto&& s, auto&& ...is) mutable
+    {
+      auto count = state_data(ABL_FORWARD(s), constantly(initial));
+      return wrap_state<tag>(
+        step(state_unwrap(ABL_FORWARD(s)),
+             std::move(count),
+             ABL_FORWARD(is)...),
+        decltype(initial)(std::move(count) + 1));
+    };
+  };
+};
+
+auto enumerate = enumerate_from(std::size_t{});
+
+#else // ABL_CXX14
+
 namespace detail {
 
 struct enumerate_rf_gen
@@ -66,6 +90,8 @@ constexpr auto enumerate_from(IntegralT&& init)
  * @todo Should be `constexpr` in C++14
  */
 extern const enumerate_t<std::size_t> enumerate;
+
+#endif // ABL_CXX14
 
 namespace impure {
 

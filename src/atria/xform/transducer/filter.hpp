@@ -8,6 +8,23 @@
 namespace atria {
 namespace xform {
 
+#if ABL_CXX14
+
+auto filter = [](auto predicate) mutable
+{
+  return [=](auto step) mutable
+  {
+    return [=](auto&& s, auto&& ...is) mutable
+    {
+      return predicate(is...)
+        ? call(step, ABL_FORWARD(s), ABL_FORWARD(is)...)
+        : skip(step, ABL_FORWARD(s), ABL_FORWARD(is)...);
+    };
+  };
+};
+
+#else // ABL_CXX14
+
 namespace detail {
 
 struct filter_rf_gen
@@ -43,6 +60,8 @@ auto filter(PredicateT&& predicate)
   return filter_t<estd::decay_t<PredicateT> > {
     std::forward<PredicateT>(predicate) };
 }
+
+#endif // ABL_CXX14
 
 } // namespace xform
 } // namespace atria

@@ -14,7 +14,11 @@ namespace xform {
  *
  * @todo This should a `constexpr` in C++14
  */
+#if ABL_CXX14
+auto zip = map(tuplify);
+#else
 extern const map_t<tuplify_t> zip;
+#endif
 
 } // namespace xform
 } // namespace atria

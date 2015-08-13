@@ -7,7 +7,9 @@
 namespace atria {
 namespace xform {
 
+#if !ABL_CXX14
 const map_t<tuplify_t> zip = map(tuplify);
+#endif
 
 } // namespace xform
 } // namespace atria
