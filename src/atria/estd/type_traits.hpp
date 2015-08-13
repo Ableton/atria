@@ -42,6 +42,12 @@ using result_of_t = typename std::result_of<T>::type;
 template <bool X, typename T, typename F>
 using conditional_t = typename std::conditional<X, T, F>::type;
 
+/*!
+ * Similar to C++14 std::remove_reference_t
+ */
+template <typename T>
+using remove_reference_t = typename std::remove_reference<T>::type;
+
 //!
 // Similar to C++14 std::enable_if_t
 //
