@@ -1,7 +1,11 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
-//! @note Turn to one to check if our custom accumulate has any
-//! performance cost or not.
+//! Use this to add benchmarks for checking the performance of
+//! `boost::range::type_erased`
+//!
+//! @note Setting this to 1 makes the program crash on GCC 5.2, for
+//!       unknown reasons.
+#define ABL_BENCHMARK_XFORM_USE_BOOST_RANGE_ERASED 0
 
 #include <atria/xform/into.hpp>
 #include <atria/xform/transducer/filter.hpp>
@@ -15,8 +19,10 @@
 
 #include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
-#include <boost/range/adaptors.hpp>
+#if ABL_BENCHMARK_XFORM_USE_BOOST_RANGE_ERASED
 #include <boost/range/adaptor/type_erased.hpp>
+#endif
+#include <boost/range/adaptors.hpp>
 #include <boost/range/numeric.hpp>
 #include <boost/range/algorithm.hpp>
 #include <boost/range/algorithm_ext/iota.hpp>
@@ -55,6 +61,7 @@ void benchmarks(testing::benchmark_runner runner)
       return result;
     })
 
+#if ABL_BENCHMARK_XFORM_USE_BOOST_RANGE_ERASED
     ("boost::range, erased", [] (std::vector<unsigned> const& data)
     {
       using namespace boost::adaptors;
@@ -67,6 +74,7 @@ void benchmarks(testing::benchmark_runner runner)
         std::back_inserter(result));
       return result;
     })
+#endif
 
     ("stl", [] (std::vector<unsigned> const& data)
     {
@@ -125,6 +133,7 @@ void benchmarks(testing::benchmark_runner runner)
         std::plus<unsigned>{});
     })
 
+#if ABL_BENCHMARK_XFORM_USE_BOOST_RANGE_ERASED
     ("boost::range, erased", [] (std::vector<unsigned> const& data)
     {
       using namespace boost::adaptors;
@@ -136,6 +145,7 @@ void benchmarks(testing::benchmark_runner runner)
         0u,
         std::plus<unsigned>{});
     })
+#endif
 
     ("stl", [] (std::vector<unsigned> data)
     {
