@@ -85,10 +85,19 @@ struct common_type2<
 // where the return type is to be discarded.  This erroneous type was
 // chosen instead of `void` to make debugging easier.
 //
+template <typename... Ts>
+struct common_type;
+
 template <typename T, typename ...Ts>
-struct common_type
+struct common_type<T, Ts...>
   : mpl::fold<pack<Ts...>, T, detail::common_type2<mpl::_1, mpl::_2> >
 {};
+
+template <>
+struct common_type<>
+{
+  using type = could_not_find_common_type<>;
+};
 
 //!
 // C++14 style alias
