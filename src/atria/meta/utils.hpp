@@ -62,5 +62,15 @@ constexpr int can_be_void = 42;
 #define ABL_DECLTYPE_RETURN(body_expr)  \
   decltype(body_expr) { return (body_expr); }
 
+
+#if ABL_CXX14
+/*!
+ * Macro forward universal-reference arguments.  This is only defined
+ * in C++14, since outside of generic lambdas the macro-less syntax
+ * should be preferred.
+ */
+#define ABL_FORWARD(x) std::forward<decltype(x)>(x)
+#endif // ABL_CXX14
+
 } // namespace meta
 } // namespace atria
