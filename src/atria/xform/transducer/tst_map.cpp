@@ -15,7 +15,7 @@ TEST(map, concept)
                               int)>();
 }
 
-TEST(transduce, mapping)
+TEST(map, mapping)
 {
   auto v = std::vector<int> { 1, 2, 3, 6 };
   auto times2 = [] (int x) { return x * 2; };

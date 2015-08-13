@@ -2,14 +2,12 @@
 
 #pragma once
 
-#include <atria/xform/reduce.hpp>
+#include <atria/xform/impure/reduce.hpp>
 
 namespace atria {
 namespace xform {
+namespace impure {
 
-/*!
- * Similar to clojure.core/transduce
- */
 template <typename XformT,
           typename ReducingFnT,
           typename StateT,
@@ -18,11 +16,13 @@ auto transduce(XformT&& xform, ReducingFnT&& step,
                StateT&& state, InputRangeTs&& ...ranges)
   -> estd::decay_t<StateT>
 {
-  return reduce(
-    xform(std::forward<ReducingFnT>(step)),
-    std::forward<StateT>(state),
+  auto xformed = xform(std::forward<ReducingFnT>(step));
+  return impure::reduce(
+    xformed,
+    state,
     std::forward<InputRangeTs>(ranges)...);
 }
 
+} // namespace impure
 } // namespace xform
 } // namespace atria

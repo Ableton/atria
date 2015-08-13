@@ -17,7 +17,7 @@ TEST(cat, concept)
   meta::check<Transducer_spec(cat_t, std::list<std::string>, std::string)>();
 }
 
-TEST(into, cat)
+TEST(cat, cat)
 {
   auto v = std::vector<std::vector<int>> { { 1, 2 }, { 3 }, { 4, 5, 6 } };
 

@@ -1,16 +1,13 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
-#include <atria/xform/abort_reduce.hpp>
+#include <atria/xform/impure/transducer/enumerate.hpp>
 
 namespace atria {
 namespace xform {
 namespace impure {
 
-const char* reduce_aborted_error_base::what() const noexcept
-{
-  return "Reduction aborted";
-}
+const enumerate_t<std::size_t> enumerate = enumerate_from(std::size_t{});
 
-} // namespace impure
+} // namspace impure
 } // namespace xform
 } // namespace atria

@@ -54,30 +54,6 @@ TEST(transducer, type_erasure)
   }
 }
 
-TEST(impure_transducer, type_erasure)
-{
-  auto v = std::vector<int> { 1, 2, 3, 4 };
-  auto xform = impure::transducer<int>{};
-
-  {
-    xform = map([] (int x) { return x + 2; });
-    auto res = impure::into(std::vector<int>{}, xform, v);
-    EXPECT_EQ(res, (std::vector<int> { 3, 4, 5, 6 }));
-  }
-
-  {
-    xform = filter([] (int x) { return x % 2; });
-    auto res = impure::into(std::vector<int>{}, xform, v);
-    EXPECT_EQ(res, (std::vector<int> { 1, 3 }));
-  }
-
-  {
-    xform = impure::take(3);
-    auto res = impure::into(std::vector<int>{}, xform, v);
-    EXPECT_EQ(res, (std::vector<int> { 1, 2, 3 }));
-  }
-}
-
 TEST(transducer, variadic_type_erasure)
 {
   auto xform = transducer<meta::pack<int, int>, int>{};

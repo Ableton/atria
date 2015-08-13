@@ -20,7 +20,7 @@ TEST(partition, concept)
                               std::vector<int>)>();
 }
 
-TEST(into, partition)
+TEST(partition, partition)
 {
   auto v = std::vector<int> { 1, 2, 3, 4, 5, 6 };
 
@@ -30,7 +30,7 @@ TEST(into, partition)
       }));
 }
 
-TEST(into, partition_flushing)
+TEST(partition, partition_flushing)
 {
   auto v = std::vector<int> { 1, 2, 3, 4, 5 };
 
@@ -40,7 +40,7 @@ TEST(into, partition_flushing)
       }));
 }
 
-TEST(into, partition_does_not_copy_step_function)
+TEST(partition, partition_does_not_copy_step_function)
 {
   auto step = testing::copy_spy<first_rf_t>{};
 
@@ -49,14 +49,14 @@ TEST(into, partition_does_not_copy_step_function)
   EXPECT_EQ(step.copied.count(), 2);
 }
 
-TEST(reduce, partition_moves_the_state_through)
+TEST(partition, partition_moves_the_state_through)
 {
   auto v = std::vector<int> { 1, 2, 3, 4, 5 };
   auto spy = reduce(partition(2u)(first_rf), testing::copy_spy<>{}, v);
   EXPECT_EQ(spy.copied.count(), 0);
 }
 
-TEST(reduce, defining_early_termination_with_completion)
+TEST(partition, defining_early_termination_with_completion)
 {
   auto v = std::vector<int> {{1, 2, 3, 4, 5}};
   auto res = into(
@@ -66,7 +66,7 @@ TEST(reduce, defining_early_termination_with_completion)
   EXPECT_EQ(res, (std::vector<std::vector<int> > {{1, 2}, {3}}));
 }
 
-TEST(reduce, reduce_nested_deals_with_empty_sequence_properly)
+TEST(partition, reduce_nested_deals_with_empty_sequence_properly)
 {
   auto v = std::vector<std::vector<int> > {{{}, {1, 2, 3}, {}}};
   auto res = into(

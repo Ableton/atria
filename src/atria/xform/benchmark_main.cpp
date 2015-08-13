@@ -15,6 +15,12 @@
 #include <atria/xform/transducer/zip.hpp>
 #include <atria/xform/transducer/unzip.hpp>
 
+#include <atria/xform/impure/into.hpp>
+#include <atria/xform/impure/transducer/transducer.hpp>
+#include <atria/xform/impure/transducer/take.hpp>
+
+#include <atria/xform/detail/reduce_nested_non_empty_tail_recursive.hpp>
+
 #include <atria/testing/benchmark.hpp>
 
 #include <ableton/build_system/Warnings.hpp>

@@ -3,7 +3,7 @@
 #pragma once
 
 #include <atria/xform/transducer_impl.hpp>
-#include <atria/xform/reduce.hpp>
+#include <atria/xform/reduce_nested.hpp>
 
 namespace atria {
 namespace xform {

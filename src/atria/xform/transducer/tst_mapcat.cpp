@@ -8,7 +8,7 @@
 namespace atria {
 namespace xform {
 
-TEST(into, mapcat)
+TEST(mapcat, mapcat)
 {
   auto v = std::vector<std::vector<int>> { { 1, 2 }, { 3 }, { 4, 5, 6 } };
 

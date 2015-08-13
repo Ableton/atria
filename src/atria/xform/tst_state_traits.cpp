@@ -9,7 +9,7 @@
 namespace atria {
 namespace xform {
 
-TEST(state, concept)
+TEST(state_traits, concept)
 {
   meta::check<State_spec(int)>();
   meta::check<State_spec(state_wrapper<no_tag, int, int>)>();

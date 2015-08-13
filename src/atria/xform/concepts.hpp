@@ -6,8 +6,6 @@
 #include <atria/xform/functional.hpp>
 #include <atria/xform/state_traits.hpp>
 
-#include <boost/any.hpp>
-
 namespace atria {
 namespace xform {
 
@@ -19,7 +17,11 @@ namespace xform {
  */
 ABL_CONCEPT_SPEC(State)
 {
-  using any_t = boost::any;
+  struct any_t
+  {
+    any_t();
+    template <typename T> any_t(T);
+  };
 
   template <typename T>
   auto requires_(T&& t)

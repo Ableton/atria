@@ -93,43 +93,5 @@ extern const enumerate_t<std::size_t> enumerate;
 
 #endif // ABL_CXX14
 
-namespace impure {
-
-namespace detail {
-
-struct enumerate_rf_gen
-{
-  template <typename ReducingFnT, typename CountT>
-  struct apply
-  {
-    ReducingFnT step;
-    CountT count;
-
-    template <typename StateT, typename ...InputTs>
-    auto operator() (StateT&& s, InputTs&& ...is)
-      -> ABL_DECLTYPE_RETURN(
-          step(std::forward<StateT>(s),
-               count++,
-               std::forward<InputTs>(is)...))
-  };
-};
-
-} // namespace detail
-
-template <typename T>
-using enumerate_t = transducer_impl<detail::enumerate_rf_gen, T>;
-
-template <typename IntegralT>
-constexpr auto enumerate_from(IntegralT&& init)
-  -> enumerate_t<estd::decay_t<IntegralT> >
-{
-  return enumerate_t<estd::decay_t<IntegralT> > {
-    std::forward<IntegralT>(init) };
-}
-
-extern const enumerate_t<std::size_t> enumerate;
-
-} // namespace impure
-
 } // namespace xform
 } // namespace atria

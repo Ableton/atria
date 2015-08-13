@@ -3,7 +3,7 @@
 #pragma once
 
 #include <atria/xform/transducer_impl.hpp>
-#include <atria/xform/reduce.hpp>
+#include <atria/xform/state_traits.hpp>
 
 namespace atria {
 namespace xform {
@@ -32,7 +32,6 @@ struct interleave_rf_gen
                std::forward<InputTs>(is)...)
         : std::forward<StateT>(s);
     }
-
 
     template <typename StateT, typename InputT, typename ...InputTs>
     auto operator() (StateT&& s, InputT&& i, InputTs&& ...is)

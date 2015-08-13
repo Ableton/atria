@@ -6,6 +6,7 @@
 #include <atria/xform/transduce.hpp>
 #include <atria/estd/type_traits.hpp>
 
+#include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
 #include <boost/range/irange.hpp>
 #include <boost/range/algorithm/for_each.hpp>
