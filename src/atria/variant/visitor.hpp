@@ -1,15 +1,17 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
 #pragma once
 
+#include <atria/variant/variant_types.hpp>
 #include <atria/meta/common_type.hpp>
 #include <atria/meta/utils.hpp>
 #include <atria/estd/type_traits.hpp>
 
 #include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
-#include <boost/variant/static_visitor.hpp>
+#include <boost/mpl/push_back.hpp>
 ABL_RESTORE_WARNINGS
+
 #include <cassert>
 #include <utility>
 
@@ -57,11 +59,13 @@ struct visitor_impl<Fn> : Fn
 // General visitor based on a set of function objects.
 //
 template <typename ReturnType, typename ...Fns>
-class visitor_t : public boost::static_visitor<ReturnType>
+class visitor_t
 {
   detail::visitor_impl<Fns...> impl_;
 
 public:
+  using result_type = ReturnType;
+
   visitor_t(Fns&& ...fns)
     : impl_(std::forward<Fns>(fns)...)
   {}
@@ -184,20 +188,98 @@ when(Fn&& fn)
   return { std::forward<Fn>(fn) };
 }
 
+namespace detail {
 
-//!
-// Returns a boost variant static_visitor that uses a set of given
-// functions to implement it. The return type is inferred from the
-// first function passed.
-//
-template <typename... Fns>
-visitor_t<
-  meta::common_type_t<
-      typename std::result_of<Fns(detail::bottom)>::type...>,
-  Fns...>
-visitor(Fns&& ...fns)
+template <typename AccT, typename FnT, typename T,
+          typename Enable = void>
+struct add_result_of_aux
 {
-  return { std::forward<Fns>(fns)... };
+  using type = AccT;
+};
+
+template <typename AccT, typename FnT, typename T>
+struct add_result_of_aux<AccT, FnT, T,
+                         estd::void_t<estd::result_of_t<FnT(T)> > >
+  : boost::mpl::push_back<AccT, estd::result_of_t<FnT(T)> >
+{};
+
+template <typename AccT, typename FnT, typename Ts>
+struct add_results_of;
+
+template <typename AccT, typename FnT, typename T, typename... Ts>
+struct add_results_of<AccT, FnT, meta::pack<T, Ts...> >
+  : add_results_of<meta::eval_t<add_result_of_aux<AccT, FnT, T> >,
+                   FnT,
+                   meta::pack<Ts...> >
+{};
+
+template <typename AccT, typename FnT>
+struct add_results_of<AccT, FnT, meta::pack<> >
+{
+  using type = AccT;
+};
+
+} // namespace detail
+
+template <typename FnT, typename... VariantTs>
+struct visitor_result_of
+  : meta::unpack<
+      meta::common_type,
+      typename detail::add_results_of<meta::pack<>,
+                                      FnT,
+                                      meta::pack<VariantTs...> >::type >
+{};
+
+template <typename FnT, typename... VariantTs>
+struct visitor_result_of<FnT, meta::pack<VariantTs...> >
+  : visitor_result_of<FnT, VariantTs...>
+{};
+
+template <typename FnT, typename... VariantTs>
+using visitor_result_of_t = typename visitor_result_of<FnT, VariantTs...>::type;
+
+/*!
+ * Returns a visitor object that can be used to deconstruct various
+ * variant types, created by composing the functions `fns...`.  It
+ * attempts to deduce the return type of the function, but this might
+ * fail when generic functions are passed in.
+ */
+template <typename... FnTs>
+auto visitor(FnTs&& ...fns)
+  -> visitor_t<
+    meta::common_type_t<
+      typename std::result_of<FnTs(detail::bottom)>::type...>,
+    FnTs...>
+{
+  return { std::forward<FnTs>(fns)... };
+}
+
+template <typename FnT>
+auto visitor(FnT&& fn) -> FnT&&
+{
+  return std::forward<FnT>(fn);
+}
+
+/*!
+ * Like @a visitor, but it uses the `variant_types` in `VariantT` to
+ * deduce what the return type of the visitor should be.  This allows
+ * it to deduce it even if generic functions are passed in.
+ */
+template <typename VariantT, typename... FnTs>
+auto visitor_for(FnTs&&... fns)
+  -> visitor_t<
+    visitor_result_of_t<
+      detail::visitor_impl<FnTs...>,
+      variant_types_t<VariantT> >,
+    FnTs...>
+{
+  return { std::forward<FnTs>(fns)... };
+}
+
+template <typename VarianT, typename FnT>
+auto visitor_for(FnT&& fn) -> FnT&&
+{
+  return std::forward<FnT>(fn);
 }
 
 } // namespace variant

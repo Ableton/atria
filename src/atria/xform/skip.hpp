@@ -32,37 +32,17 @@ namespace xform {
 template <typename SkippedT, typename CalledT>
 struct skip_state : eggs::variant<SkippedT, CalledT>
 {
-  using base_t = eggs::variant<SkippedT, CalledT>;
-
   using skipped_t = SkippedT;
   using called_t  = CalledT;
 
+  using variant_types = meta::pack<skipped_t, called_t>;
+
+  using base_t = eggs::variant<SkippedT, CalledT>;
   using base_t::base_t;
 };
 
 } // namespace xform
 } // namespace atria
-
-namespace eggs {
-namespace variants {
-namespace detail {
-
-template <typename ...Ts>
-struct is_variant<atria::xform::skip_state<Ts...>>
-  : std::true_type {};
-template <typename ...Ts>
-struct is_variant<atria::xform::skip_state<Ts...> const>
-  : std::true_type {};
-template <typename ...Ts>
-struct is_variant<atria::xform::skip_state<Ts...> volatile>
-  : std::true_type {};
-template <typename ...Ts>
-struct is_variant<atria::xform::skip_state<Ts...> const volatile>
-  : std::true_type {};
-
-} // namespace detail
-} // namespace variants
-} // namespace eggs
 
 namespace atria {
 namespace xform {

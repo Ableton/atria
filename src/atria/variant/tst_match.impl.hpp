@@ -1,12 +1,18 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
-#include <atria/variant/match.hpp>
+#ifndef ABL_TST_MATCH_VARIANT_TYPE
+#error "Must define ABL_TST_MATCH_VARIANT_TYPE"
+#endif
+
+#ifndef ABL_TST_MATCH_SUITE_NAME
+#error "Must define ABL_TST_MATCH_SUITE_NAME"
+#endif
+
 #include <atria/testing/spies.hpp>
 #include <atria/testing/gtest.hpp>
 
 #include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
-#include <boost/variant.hpp>
 #include <boost/lexical_cast.hpp>
 ABL_RESTORE_WARNINGS
 #include <functional>
@@ -37,19 +43,21 @@ private:
   std::string name_;
 };
 
-using thing = boost::variant<person, std::string, int>;
+using thing = ABL_TST_MATCH_VARIANT_TYPE<person, std::string, int>;
 
 bool operator==(const person& a, const person& b)
 {
   return a.name() == b.name();
 }
 
+#ifdef ABL_TST_MATCH_ENABLE_OUTPUT
 std::ostream& operator<<(std::ostream& os, const person& b)
 {
   return os << "person: " << b.name();
 }
+#endif // ABL_TST_MATCH_ENABLE_OUTPUT
 
-TEST(match, can_be_used_with_lambdas_and_rvalues)
+TEST(ABL_TST_MATCH_SUITE_NAME, can_be_used_with_lambdas_and_rvalues)
 {
   auto f = testing::spy();
 
@@ -68,7 +76,7 @@ TEST(match, can_be_used_with_lambdas_and_rvalues)
   EXPECT_EQ(f.count(), 1);
 }
 
-TEST(match, can_mutate_visited)
+TEST(ABL_TST_MATCH_SUITE_NAME, can_mutate_visited)
 {
   auto sth = thing(42);
 
@@ -83,7 +91,7 @@ TEST(match, can_mutate_visited)
   EXPECT_EQ(sth, thing(21));
 }
 
-TEST(match, can_return_something)
+TEST(ABL_TST_MATCH_SUITE_NAME, can_return_something)
 {
   auto sth = thing(42);
   auto result = match(
@@ -95,11 +103,11 @@ TEST(match, can_return_something)
   EXPECT_EQ(result, "42");
 }
 
-TEST(match, can_use_binded_functions)
+TEST(ABL_TST_MATCH_SUITE_NAME, can_use_binded_functions)
 {
   using namespace std::placeholders;
 
-  using number = boost::variant<int, double>;
+  using number = ABL_TST_MATCH_VARIANT_TYPE<int, double>;
 
   auto result = match(
     number(42.5),
@@ -119,9 +127,9 @@ struct good_person : person{
   std::string do_good_thing() const { return ":)"; }
 };
 
-using people = boost::variant<good_person, bad_person>;
+using people = ABL_TST_MATCH_VARIANT_TYPE<good_person, bad_person>;
 
-TEST(match, can_use_member_functions)
+TEST(ABL_TST_MATCH_SUITE_NAME, can_use_member_functions)
 {
   auto result = match(
      people { good_person { "John" } },
@@ -131,7 +139,7 @@ TEST(match, can_use_member_functions)
   EXPECT_EQ(result, ":)");
 }
 
-TEST(match, polymorphic_example_with_base_class)
+TEST(ABL_TST_MATCH_SUITE_NAME, polymorphic_example_with_base_class)
 {
   auto someone = people { good_person { "John" } };
   auto name = match(
@@ -141,7 +149,7 @@ TEST(match, polymorphic_example_with_base_class)
   EXPECT_EQ(name, "John");
 }
 
-TEST(match, explicit_result_type_for_case_where_deduction_fails)
+TEST(ABL_TST_MATCH_SUITE_NAME, explicit_result_type_for_case_where_deduction_fails)
 {
   auto person = people { good_person { "John" } };
 
@@ -160,7 +168,26 @@ TEST(match, explicit_result_type_for_case_where_deduction_fails)
   EXPECT_EQ(new_name, "resetted");
 }
 
-TEST(match, otherwise_can_be_used_as_catch_all)
+TEST(ABL_TST_MATCH_SUITE_NAME, can_deduce_generic_case)
+{
+  auto person = people { good_person { "John" } };
+
+  auto name = match(
+    person,
+    std::mem_fn(&person::name));
+  EXPECT_EQ(name, "John");
+
+  match(
+    person,
+    std::mem_fn(&person::resetName));
+
+  auto new_name = match(
+    person,
+    std::mem_fn(&person::name));
+  EXPECT_EQ(new_name, "resetted");
+}
+
+TEST(ABL_TST_MATCH_SUITE_NAME, otherwise_can_be_used_as_catch_all)
 {
   auto person = people { good_person { "John" } };
 
@@ -174,7 +201,7 @@ TEST(match, otherwise_can_be_used_as_catch_all)
   EXPECT_EQ(name, "");
 }
 
-TEST(match, totally_incompatible_return_types_can_be_used)
+TEST(ABL_TST_MATCH_SUITE_NAME, totally_incompatible_return_types_can_be_used)
 {
   auto person = people { good_person { "John" } };
 
@@ -184,7 +211,7 @@ TEST(match, totally_incompatible_return_types_can_be_used)
     [] (good_person) { return int(); });
 }
 
-TEST(match, totally_incompatible_return_types_can_be_used_and_one_can_be_void)
+TEST(ABL_TST_MATCH_SUITE_NAME, totally_incompatible_return_types_can_be_used_and_one_can_be_void)
 {
   auto person = people { good_person { "John" } };
 
