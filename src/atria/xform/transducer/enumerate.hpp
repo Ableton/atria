@@ -12,14 +12,12 @@ namespace xform {
 
 auto enumerate_from = [](auto initial) mutable
 {
-  struct tag {};
-
   return [=](auto step) mutable
   {
     return [=](auto&& s, auto&& ...is) mutable
     {
       auto count = state_data(ABL_FORWARD(s), constantly(initial));
-      return wrap_state<tag>(
+      return wrap_state(
         step(state_unwrap(ABL_FORWARD(s)),
              std::move(count),
              ABL_FORWARD(is)...),
@@ -36,8 +34,6 @@ namespace detail {
 
 struct enumerate_rf_gen
 {
-  struct tag {};
-
   template <typename ReducingFnT,
             typename IntegralT>
   struct apply
@@ -47,11 +43,11 @@ struct enumerate_rf_gen
 
     template <typename StateT, typename ...InputTs>
     auto operator() (StateT&& s, InputTs&& ...is)
-      -> decltype(wrap_state<tag>(step(state_unwrap(s), initial, is...), initial))
+      -> decltype(wrap_state(step(state_unwrap(s), initial, is...), initial))
     {
       auto next  = state_data(std::forward<StateT>(s), constantly(initial));
       auto count = next++;
-      return wrap_state<tag>(
+      return wrap_state(
         step(state_unwrap(std::forward<StateT>(s)),
              std::move(count),
              std::forward<InputTs>(is)...),

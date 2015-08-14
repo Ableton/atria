@@ -13,8 +13,6 @@ namespace detail {
 
 struct take_while_rf_gen
 {
-  struct tag {};
-
   template <typename ReducingFnT,
             typename PredicateT>
   struct apply
