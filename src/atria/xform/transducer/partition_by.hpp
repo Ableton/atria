@@ -13,16 +13,16 @@ namespace xform {
 
 namespace detail {
 
-struct partition_rf_gen
+struct partition_by_rf_gen
 {
   struct tag {};
 
   template <typename ReducingFnT,
-            typename IntegralT>
+            typename MappingT>
   struct apply
   {
     ReducingFnT step;
-    IntegralT size;
+    MappingT mapping;
 
     template <typename ...InputTs>
     using container_t = std::vector<
@@ -34,19 +34,20 @@ struct partition_rf_gen
       -> decltype(
         wrap_state<tag>(
           call(step, state_unwrap(s), container_t<InputTs...>{}),
-          make_tuple(container_t<InputTs...>{}, step)))
+          make_tuple(mapping(is...), container_t<InputTs...>{}, step)))
     {
+      auto mapped = mapping(std::forward<InputTs>(is)...);
+
       auto data = state_data(std::forward<StateT>(s), [&] {
           auto v = container_t<InputTs...>{};
-          v.reserve(size);
-          return make_tuple(std::move(v), step);
+          return make_tuple(mapped, std::move(v), step);
         });
 
-      auto& next_vector = std::get<0>(data);
-      auto& next_step   = std::get<1>(data);
+      auto& last_mapped = std::get<0>(data);
+      auto& next_vector = std::get<1>(data);
+      auto& next_step   = std::get<2>(data);
 
-      next_vector.push_back(tuplify(std::forward<InputTs>(is)...));
-      const auto complete_group = next_vector.size() == size;
+      const auto complete_group = mapped != last_mapped;
 
       auto next_state = complete_group
         ? call(step, state_unwrap(std::forward<StateT>(s)), next_vector)
@@ -55,9 +56,12 @@ struct partition_rf_gen
       if (complete_group)
         next_vector.clear();
 
+      next_vector.push_back(tuplify(std::forward<InputTs>(is)...));
+
       return wrap_state<tag> (
         std::move(next_state),
-        make_tuple(std::move(next_vector),
+        make_tuple(std::move(mapped),
+                   std::move(next_vector),
                    std::move(next_step)));
     }
   };
@@ -66,29 +70,28 @@ struct partition_rf_gen
   friend auto state_wrapper_complete(tag, T&& wrapper)
     -> decltype(state_complete(state_unwrap(std::forward<T>(wrapper))))
   {
-    auto next = std::get<0>(state_wrapper_data(std::forward<T>(wrapper)));
-    auto step = std::get<1>(state_wrapper_data(std::forward<T>(wrapper)));
+    auto next = std::get<1>(state_wrapper_data(std::forward<T>(wrapper)));
+    auto step = std::get<2>(state_wrapper_data(std::forward<T>(wrapper)));
     return state_complete(
       next.empty()
       ? state_unwrap(std::forward<T>(wrapper))
-      : step(state_unwrap(std::forward<T>(wrapper)),
-             std::move(next)));
+      : step(state_unwrap(std::forward<T>(wrapper)), std::move(next)));
   }
 };
 
 } // namespace detail
 
 template <typename T>
-using partition_t = transducer_impl<detail::partition_rf_gen, T>;
+using partition_by_t = transducer_impl<detail::partition_by_rf_gen, T>;
 
 /*!
- * Similar to clojure.core/partition-all$1
+ * Similar to clojure.core/partition-by$1
  */
-template <typename IntegralT>
-auto partition(IntegralT&& n)
-  -> partition_t<estd::decay_t<IntegralT> >
+template <typename MappingT>
+auto partition_by(MappingT&& mapping)
+  -> partition_by_t<estd::decay_t<MappingT> >
 {
-  return partition_t<estd::decay_t<IntegralT> > { n };
+  return partition_by_t<estd::decay_t<MappingT> > { mapping };
 }
 
 } // namespace xform
