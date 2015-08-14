@@ -4,6 +4,7 @@
 
 #include <atria/meta/pack.hpp>
 #include <atria/xform/any_state.hpp>
+#include <atria/xform/with_state.hpp>
 #include <atria/xform/state_wrapper.hpp>
 #include <atria/xform/transducer_impl.hpp>
 #include <atria/prelude/comp.hpp>
