@@ -108,7 +108,7 @@ struct transducer_rf_gen
         StateT, ReducingFnT, XformT, OutputTs...>;
       using tag_t = typename wrapped_t::tag;
 
-      return with_state<wrapped_t>(
+      return with_state(
         std::move(st),
         [&](StateT&& sst) {
           auto xformed = comp(xform, from_any_state<tag_t>{})(step);

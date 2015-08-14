@@ -6,6 +6,7 @@
 #include <atria/xform/state_traits.hpp>
 #include <atria/estd/memory.hpp>
 #include <atria/meta/pack.hpp>
+#include <atria/meta/lazy_enable_if.hpp>
 #include <string>
 
 #if ABL_TRACE_ANY_STATE_ALLOC
@@ -271,18 +272,15 @@ struct state_traits<any_state>
 /*!
  * Given a value `st` that represents the state of a reduction, this
  * function generically dispatches to the right function `UnwrappedFn`
- * or `WrappedFn`, depending of whether the value is of type
- * `WrappedStateT` or not.
+ * or `WrappedFn`, depending of whether the value is already wrapped
+ * or not.  This is, during the first iteration of the reduction,
+ * `UnwrappedFn` will be called, from then on, `WrappedFnT` will be
+ * called.
  *
- * - Iff the value the `st` is of type `StateT` or is a `any_state`
- *   containing a `WrappedStateT`, the `WrappedFn` function is called
- *   with the contained state `WrappedStateT` value as a parameter.
+ * The signatures should be of the form:
  *
- * - Otherwise, `UnwrappedFn` is called with the original `StateT`
- *   value an argument
- *
- * Both `WrappedFn` and `UnwrappedFn` are expected to return a
- * `WrappedStateT` value.
+ *   - `UnwrappedFn : A -> B`
+ *   - `WrappedFn   : B -> B`
  *
  * This function can dispatch both statically and dynamically in a
  * transparent way.  It is thus very useful for writing stateful
@@ -291,58 +289,57 @@ struct state_traits<any_state>
  * @see transducer
  * @see take
  */
-template <typename WrappedStateT,
-          typename StateT,
+template <typename StateT,
           typename UnwrappedFn,
           typename WrappedFn>
 auto with_state(StateT&& st, UnwrappedFn&&, WrappedFn&& fn)
-  -> estd::enable_if_t<
-    std::is_same<
+  -> meta::lazy_enable_if_t<
+    !std::is_same<
       estd::decay_t<StateT>,
-      WrappedStateT
+      estd::decay_t<decltype(state_complete(st))>
     >::value,
-    decltype(std::forward<WrappedFn>(fn)(std::forward<StateT>(st)))
+    std::result_of<WrappedFn(StateT)>
   >
 {
   return std::forward<WrappedFn>(fn)(std::forward<StateT>(st));
 };
 
-template <typename WrappedStateT,
-          typename StateT,
+template <typename StateT,
           typename UnwrappedFn,
           typename WrappedFn>
 auto with_state(StateT&& st, UnwrappedFn&& fn, WrappedFn&&)
-  -> estd::enable_if_t<
+  -> meta::lazy_enable_if_t<
     !std::is_same<estd::decay_t<StateT>, any_state>::value
     && std::is_same<
       estd::decay_t<StateT>,
       estd::decay_t<decltype(state_complete(st))>
     >::value,
-    WrappedStateT
+    std::result_of<UnwrappedFn(StateT)>
   >
 {
   return std::forward<UnwrappedFn>(fn)(std::forward<StateT>(st));
 };
 
-template <typename WrappedStateT,
-          typename StateT,
+template <typename StateT,
           typename UnwrappedFn,
           typename WrappedFn>
 auto with_state(StateT&& st, UnwrappedFn&& fn1, WrappedFn&& fn2)
-  -> estd::enable_if_t<
+  -> meta::lazy_enable_if_t<
     std::is_same<
       estd::decay_t<StateT>,
       any_state
     >::value,
-    WrappedStateT
+    std::result_of<UnwrappedFn(StateT)>
   >
 {
-  if (!st.template has<WrappedStateT>()) {
+  using wrapped_state_t = estd::result_of_t<UnwrappedFn(StateT)>;
+
+  if (!st.template has<wrapped_state_t>()) {
     return std::forward<UnwrappedFn>(fn1)(
       std::forward<StateT>(st));
   } else {
     return std::forward<WrappedFn>(fn2)(
-      std::forward<StateT>(st).template as<WrappedStateT>());
+      std::forward<StateT>(st).template as<wrapped_state_t>());
   }
 };
 
