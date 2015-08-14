@@ -34,6 +34,14 @@ While not yet, we plan to release this library as **open source**.
 * `atria::testing` provides testing tools like spies for modern C++
   development.
 
+## Documentation
+
+There is no published documentation.  One may generate documentation
+out of the sources by running:
+```
+   $ doxygen doc/doxygen.config
+```
+
 ## Requires
 
 Ableton repositories:

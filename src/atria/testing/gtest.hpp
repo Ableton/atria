@@ -1,4 +1,7 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS

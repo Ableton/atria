@@ -1,4 +1,7 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -25,10 +28,10 @@ ABL_RESTORE_WARNINGS
 namespace atria {
 namespace meta {
 
-//!
-// MPL-compatible sequence that just holds a vector of types as a
-// paremeter pack.
-//
+/*!
+ * MPL-compatible sequence that just holds a vector of types as a
+ * paremeter pack.
+ */
 template <typename ...Ts>
 struct pack
 {

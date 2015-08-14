@@ -1,4 +1,7 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -25,10 +28,10 @@ ABL_RESTORE_WARNINGS
 namespace atria {
 namespace meta {
 
-//!
-// Sequence tag form std::tuple adaptor for boost::mpl.  This is
-// mostly based on http://stackoverflow.com/a/15865204
-//
+/*!
+ * Sequence tag form std::tuple adaptor for boost::mpl.  This is
+ * mostly based on http://stackoverflow.com/a/15865204
+ */
 struct std_tuple_tag;
 
 template <class ... Args>

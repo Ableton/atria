@@ -1,4 +1,7 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -18,27 +21,27 @@ struct make_void
 
 } // namespace detail
 
-//!
-// Similar to C++17 std::void_t
-//
+/*!
+ * Similar to C++17 std::void_t
+ */
 template<typename... Ts>
 using void_t = typename detail::make_void<Ts...>::type;
 
-//!
-// Similar to C++14 std::decay_t
-//
+/*!
+ * Similar to C++14 std::decay_t
+ */
 template <typename T>
 using decay_t = typename std::decay<T>::type;
 
-//!
-// Similar to C++14 std::result_of_t
-//
+/*!
+ * Similar to C++14 std::result_of_t
+ */
 template <typename T>
 using result_of_t = typename std::result_of<T>::type;
 
-//!
-// Similar to C++14 std::conditional_t
-//
+/*!
+ * Similar to C++14 std::conditional_t
+ */
 template <bool X, typename T, typename F>
 using conditional_t = typename std::conditional<X, T, F>::type;
 
@@ -48,9 +51,9 @@ using conditional_t = typename std::conditional<X, T, F>::type;
 template <typename T>
 using remove_reference_t = typename std::remove_reference<T>::type;
 
-//!
-// Similar to C++14 std::enable_if_t
-//
+/*!
+ * Similar to C++14 std::enable_if_t
+ */
 template <bool X, typename T=void>
 using enable_if_t = typename std::enable_if<X, T>::type;
 
@@ -84,10 +87,10 @@ struct get_value_type<T, estd::enable_if_t<!has_value_type<T>::value &&
 
 } // namespace detail
 
-//!
-// Very stupid implementation of C++14 Value_type, for a better one
-// see the Origin library: https://code.google.com/p/origin/
-//
+/*!
+ * Very stupid implementation of C++14 Value_type, for a better one
+ * see the Origin library: https://code.google.com/p/origin/
+ */
 template <typename T>
 using Value_type = typename
   detail::get_value_type<estd::decay_t<T> >::type;

@@ -1,4 +1,7 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -20,9 +23,6 @@ namespace variant {
 
 namespace detail {
 
-//!
-// General visitor based on a set of function objects.
-//
 template <typename ...Fns>
 struct visitor_impl;
 
@@ -55,9 +55,9 @@ struct visitor_impl<Fn> : Fn
 
 } // namespace detail
 
-//!
-// General visitor based on a set of function objects.
-//
+/*!
+ * General visitor based on a set of function objects.
+ */
 template <typename ReturnType, typename ...Fns>
 class visitor_t
 {
@@ -91,14 +91,13 @@ template<typename T, typename U=ReturnType>
   }
 };
 
-namespace detail
-{
+namespace detail {
 
-//!
-// This is a type that pretends to be convertible to anything. This
-// can be used as a placeholder for any parameter type in `result_of`
-// metacalls.
-//
+/*!
+ * This is a type that pretends to be convertible to anything. This
+ * can be used as a placeholder for any parameter type in `result_of`
+ * metacalls.
+ */
 struct bottom
 {
   template <typename T> operator T&();
@@ -107,10 +106,10 @@ struct bottom
 
 } // namespace detail
 
-//!
-// Wraps a functor such that it has a fixed return value. Can be
-// use to disambiguate cases of a variant visitor.
-//
+/*!
+ * Wraps a functor such that it has a fixed return value. Can be
+ * use to disambiguate cases of a variant visitor.
+ */
 template <typename Fn, typename ReturnType=void>
 struct otherwise_t
 {
@@ -152,10 +151,10 @@ otherwise(Fn&& fn = Fn())
   return { std::forward<Fn>(fn) };
 }
 
-//!
-// Wraps a functor such that it has a fixed argument list.  Can be
-// use to disambiguate cases of a variant visitor.
-//
+/*!
+ * Wraps a functor such that it has a fixed argument list.  Can be
+ * use to disambiguate cases of a variant visitor.
+ */
 template <typename Fn, typename ...Args>
 struct when_t
 {
@@ -174,11 +173,11 @@ private:
   Fn impl_;
 };
 
-//!
-// Factory for when functors.  Returns a wrapper for functor F with
-// signature fixed to `Args`.  Copy arguments are converted to
-// `const&`, which eases use with `std::bind` and `std::mem_fn`.
-//
+/*!
+ * Factory for when functors.  Returns a wrapper for functor F with
+ * signature fixed to `Args`.  Copy arguments are converted to
+ * `const&`, which eases use with `std::bind` and `std::mem_fn`.
+ */
 template <typename ...Args, typename Fn>
 when_t<Fn,
        typename boost::mpl::if_<std::is_reference<Args>,

@@ -1,4 +1,7 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -7,10 +10,10 @@
 namespace atria {
 namespace funken {
 
-//!
-// Raised by the view when it produces no value yet. This can happen
-// when the reducing function that it uses is filtering some values.
-//
+/*!
+ * Raised by the view when it produces no value yet. This can happen
+ * when the reducing function that it uses is filtering some values.
+ */
 struct no_value_error : std::exception
 {
   const char* what() const noexcept override;

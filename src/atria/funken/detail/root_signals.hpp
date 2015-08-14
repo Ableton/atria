@@ -1,4 +1,7 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -10,10 +13,10 @@ namespace funken {
 
 namespace detail {
 
-//!
-// Add signal that will always send the current value returned by a
-// given function.
-//
+/*!
+ * Add signal that will always send the current value returned by a
+ * given function.
+ */
 template <typename SensorFnT>
 class sensor_down_signal
   : public down_signal<estd::decay_t<estd::result_of_t<SensorFnT()> > >
@@ -35,9 +38,9 @@ private:
   SensorFnT sensor_;
 };
 
-//!
-// Make a StateUpDownSignal with deduced types.
-//
+/*!
+ * Make a StateUpDownSignal with deduced types.
+ */
 template <typename SensorFnT>
 auto make_sensor_signal(SensorFnT&& fn)
   -> std::shared_ptr<sensor_down_signal<estd::decay_t<SensorFnT> > >
@@ -46,9 +49,9 @@ auto make_sensor_signal(SensorFnT&& fn)
     std::forward<SensorFnT>(fn));
 }
 
-//!
-// Root signal that serves as state.
-//
+/*!
+ * Root signal that serves as state.
+ */
 template <typename T>
 class state_up_down_signal : public up_down_signal<T>
 {
@@ -68,9 +71,9 @@ public:
   }
 };
 
-//!
-// Make a StateUpDownSignal with deduced types.
-//
+/*!
+ * Make a StateUpDownSignal with deduced types.
+ */
 template <typename T>
 auto make_state_signal(T&& value)
   -> std::shared_ptr<state_up_down_signal<estd::decay_t<T> > >

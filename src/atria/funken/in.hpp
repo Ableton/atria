@@ -1,4 +1,7 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -57,11 +60,11 @@ public:
 
 } // namespace detail
 
-//!
-// Provides access to reading values of type `T`.
-// Model of `Input_value`.
-// @see `Input_value`
-//
+/*!
+ * Provides access to reading values of type `T`.
+ * Model of `Input_value`.
+ * @see `Input_value`
+ */
 template <typename T>
 class input : public detail::input_impl<detail::down_signal<T> >
 {
@@ -71,10 +74,10 @@ public:
   using base_t::operator=;
 };
 
-//!
-// Creates an in from another in value.
-// @see `input<T>`
-//
+/*!
+ * Creates an in from another in value.
+ * @see `input<T>`
+ */
 template <typename InT>
 auto in(InT&& object)
   -> estd::enable_if_t<

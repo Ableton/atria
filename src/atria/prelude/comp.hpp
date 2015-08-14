@@ -1,4 +1,7 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -41,11 +44,13 @@ struct get_composed<F, Fs...> {
 
 } // namespace detail
 
-//!
-// Returns an object *g* that composes all the given functions *f_i*,
-// such that:
-//                 g(x) = f_1(f_2(...f_n(x)))
-//
+/*!
+ * Right-to left function composition. Returns an object *g* that
+ * composes all the given functions @f$ f_i @f$, such that
+ * @f[
+ *                g(x) = f_1(f_2(...f_n(x)))
+ * @f]
+ */
 template <typename F>
 auto comp(F&& f) -> F&&
 {

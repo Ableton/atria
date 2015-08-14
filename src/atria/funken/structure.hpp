@@ -1,4 +1,7 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -21,14 +24,14 @@ namespace funken {
 
 namespace detail {
 
-//! Similar to boost::hash_value
+/*! Similar to boost::hash_value */
 template <typename T>
 std::size_t hash_value(const T& v)
 {
   return std::hash<T>{}(v);
 }
 
-//! Similar to boost::hash_combine
+/*! Similar to boost::hash_combine */
 template <typename T>
 void hash_combine(std::size_t& seed, const T& v)
 {
@@ -57,9 +60,9 @@ struct first_equal_to_second
 
 } // namespace detail
 
-//!
-// @todo doc
-//
+/*!
+ * @todo doc
+ */
 template <typename T>
 struct structure
   : boost::equality_comparable<structure<T> >
@@ -128,10 +131,10 @@ auto operator<<(std::ostream& os, const T& x)
   return os;
 }
 
-//!
-// Call this on an `structure` value to indicate that is has indeed
-// changed, invalidating its cached values.
-//
+/*!
+ * Call this on an `structure` value to indicate that is has indeed
+ * changed, invalidating its cached values.
+ */
 template <typename T>
 auto modified(T&)
   -> estd::enable_if_t<!std::is_convertible<T&, structure<T>& >::value>

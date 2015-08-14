@@ -1,4 +1,7 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+// Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -55,11 +58,11 @@ public:
 
 } // namespace detail
 
-//!
-// Provides access to writing values of type `T`.
-// Model of `Output_value`.
-// @see `Output_value`
-//
+/*!
+ * Provides access to writing values of type `T`.
+ * Model of `Output_value`.
+ * @see `Output_value`
+ */
 template <typename T>
 class output : public detail::output_impl<detail::up_down_signal<T> >
 {
@@ -69,10 +72,10 @@ public:
   using base_t::operator=;
 };
 
-//!
-// Creates an out from another out value.
-// @see `output<T>`
-//
+/*!
+ * Creates an out from another out value.
+ * @see `output<T>`
+ */
 template <typename OutT>
 auto out(OutT&& object)
   -> estd::enable_if_t<

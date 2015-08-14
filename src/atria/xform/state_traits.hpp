@@ -1,4 +1,7 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -19,9 +22,10 @@ namespace xform {
  * about the state it receives, instead, it can only wrap it using
  * `wrap_state` to attach additional data.
  *
- * For an example of a stateful reducing function, @see take
+ * For an example of a stateful reducing function, see `take`.
  *
  * @see wrap_state
+ * @see take
  */
 template <typename StateT>
 struct state_traits

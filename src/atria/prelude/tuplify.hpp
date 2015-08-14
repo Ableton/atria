@@ -1,4 +1,7 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -8,10 +11,10 @@
 namespace atria {
 namespace prelude {
 
-//!
-// Function that forwards its argument if only one element passed,
-// otherwise it makes a tuple.
-//
+/*!
+ * Function that forwards its argument if only one element passed,
+ * otherwise it makes a tuple.
+ */
 constexpr struct tuplify_t
 {
   constexpr auto operator() () const

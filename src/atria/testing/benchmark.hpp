@@ -1,4 +1,7 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -59,21 +62,29 @@ auto timeit(FnT&& fn) ->
  */
 struct benchmark_settings
 {
-  //! How many times the benchmark is run per measurement.  This is
-  //! needed because some operations might be too fast to be
-  //! measurable at all.
+  /*!
+   * How many times the benchmark is run per measurement.  This is
+   * needed because some operations might be too fast to be
+   * measurable at all.
+   */
   unsigned    iterations   = 100;
 
-  //! Number of measurements or attempts to make per benchmark.  The
-  //! minimum time measured be reported.
+  /*!
+   * Number of measurements or attempts to make per benchmark.  The
+   * minimum time measured be reported.
+   */
   unsigned    measurements = 100;
 
-  //! Amount of data to use in the benchmark.  This is to be
-  //! interpreted by the benchmark initialization code.
+  /*!
+   * Amount of data to use in the benchmark.  This is to be
+   * interpreted by the benchmark initialization code.
+   */
   std::size_t size         = 100;
 
-  //! Amount of data to use in the benchmark.  This is to be
-  //! interpreted by the benchmark initialization code.
+  /*!
+   * Amount of data to use in the benchmark.  This is to be
+   * interpreted by the benchmark initialization code.
+   */
   bool verbose             = false;
 };
 

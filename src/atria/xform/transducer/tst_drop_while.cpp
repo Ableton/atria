@@ -1,4 +1,7 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #include <atria/xform/concepts.hpp>
 #include <atria/xform/into_vector.hpp>

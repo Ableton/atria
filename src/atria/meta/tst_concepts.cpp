@@ -6,12 +6,12 @@
 namespace atria {
 namespace meta {
 
-//!
-// This is a example concept kinda compatible with C++1y concepts
-// lite. The problem with this mechanism is that it rises compilation
-// errors when the concept is not met, making it non suitable for
-// SFINAE-friendly concepts.
-//
+/*!
+ * This is a example concept kinda compatible with C++1y concepts
+ * lite. The problem with this mechanism is that it rises compilation
+ * errors when the concept is not met, making it non suitable for
+ * SFINAE-friendly concepts.
+ */
 template <typename T>
 ABL_CONCEPT bool Example_concept()
 {
@@ -30,10 +30,10 @@ ABL_CONCEPT bool Example_concept()
       ))>();
 }
 
-//!
-// Models the concept:
-//   Example_concept
-//
+/*!
+ * Models the concept:
+ *   Example_concept
+ */
 struct example_model
 {
   typedef int value_type;
@@ -41,9 +41,9 @@ struct example_model
   void action() {}
 };
 
-//!
-// Example non-model, missing action
-//
+/*!
+ * Example non-model, missing action
+ */
 struct example_non_model
 {
   typedef int value_type;
@@ -65,12 +65,12 @@ TEST(simple_concept, can_be_used_with_concept_assert)
   //   ABL_ASSERT_CONCEPT(Example_concept, ExampleNonModel);
 }
 
-//!
-// Same concept as `Example_concept`, but modeled in a SFINAE-friendly
-// way, which is preferred.  This syntax has the advantage that
-// `declval` is required less in the specification.  On the other
-// hand, it is a bit more "magical"
-//
+/*!
+ * Same concept as `Example_concept`, but modeled in a SFINAE-friendly
+ * way, which is preferred.  This syntax has the advantage that
+ * `declval` is required less in the specification.  On the other
+ * hand, it is a bit more "magical"
+ */
 ABL_CONCEPT_SPEC(Example_concept_two)
 {
   template <typename T>
@@ -113,10 +113,10 @@ TEST(concept, can_use_check_with_concept_spec)
   //   EXPECT_FALSE(check<Example_concept_two<void>(ExampleNonModel)>());
 }
 
-//!
-// Finally, an example of specifying a SFINAE-friendly concept in two
-// steps, which migth seem clearer to some.
-//
+/*!
+ * Finally, an example of specifying a SFINAE-friendly concept in two
+ * steps, which migth seem clearer to some.
+ */
 struct Example_concept_spec
 {
   template <typename T>

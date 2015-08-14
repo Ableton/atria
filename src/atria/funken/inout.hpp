@@ -1,4 +1,7 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -63,11 +66,11 @@ public:
 
 } // namespace detail
 
-//!
-// Provides access to reading and writing values of type `T`.
-// Model of `inoutput_value`.
-// @see `inoutput_value`
-//
+/*!
+ * Provides access to reading and writing values of type `T`.
+ * Model of `inoutput_value`.
+ * @see `inoutput_value`
+ */
 template <typename T>
 class inoutput : public detail::inoutput_impl<detail::up_down_signal<T> >
 {
@@ -75,10 +78,10 @@ class inoutput : public detail::inoutput_impl<detail::up_down_signal<T> >
   using base_t::base_t;
 };
 
-//!
-// Creates an inout from another inout value.
-// @see `inoutput<T>`
-//
+/*!
+ * Creates an inout from another inout value.
+ * @see `inoutput<T>`
+ */
 template <typename InoutT>
 auto inout(InoutT&& object)
   -> estd::enable_if_t<

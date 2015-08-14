@@ -1,4 +1,7 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -7,9 +10,9 @@
 namespace atria {
 namespace prelude {
 
-//!
-// Similar to clojure.core/identity
-//
+/*!
+ * Similar to clojure.core/identity
+ */
 constexpr struct identity_t
 {
   template <typename ArgT>

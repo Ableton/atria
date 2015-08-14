@@ -1,4 +1,7 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -28,11 +31,11 @@ constexpr struct
 
 } // namespace detail
 
-//!
-// Similar to @a reduce, but does not unwrap `reduced` values.  This is
-// useful when calling reduce recursively inside a transducer.
-// @see take
-//
+/*!
+ * Similar to @a reduce, but does not unwrap `reduced` values.  This is
+ * useful when calling reduce recursively inside a transducer.
+ * @see take
+ */
 template <typename ReducingFnT,
           typename StateT,
           typename ...InputRangeTs>

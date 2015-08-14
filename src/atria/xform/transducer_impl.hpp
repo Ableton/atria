@@ -1,4 +1,7 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -18,7 +21,7 @@ namespace xform {
  *    \ step ->         -- 2. this is a transducer
  *       \ state, input -> -- 3. this is transformed version of 'step'
  *           f(params..., step, state, input)
- * @endocde
+ * @endcode
  *
  * Writing functions that return functions without erasing their type
  * is very cumbersome in C++11 (this is not true with generic lambdas

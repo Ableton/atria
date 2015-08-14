@@ -1,4 +1,7 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -17,9 +20,9 @@ auto declval_() -> typename std::add_rvalue_reference<T>::type
   return *static_cast<estd::decay_t<T>*>(nullptr);
 }
 
-//!
-// Concept for objects that provide values via a getter.
-//
+/*!
+ * Concept for objects that provide values via a getter.
+ */
 ABL_CONCEPT_SPEC(In_value)
 {
   template <typename T,
@@ -30,9 +33,9 @@ ABL_CONCEPT_SPEC(In_value)
       v = static_cast<const T&&>(x).get()));
 };
 
-//!
-// Concept for objects that provide values via a setter.
-//
+/*!
+ * Concept for objects that provide values via a setter.
+ */
 ABL_CONCEPT_SPEC(Out_value)
 {
   template <typename T,
@@ -43,11 +46,11 @@ ABL_CONCEPT_SPEC(Out_value)
       (x.set(static_cast<const V&&>(v)), meta::can_be_void)));
 };
 
-//!
-// Concept for objects that meet boot `In_value` and `Out_value`.
-// @see In_value
-// @see Out_value
-//
+/*!
+ * Concept for objects that meet boot `In_value` and `Out_value`.
+ * @see In_value
+ * @see Out_value
+ */
 ABL_CONCEPT_SPEC(Inout_value)
 {
   template <typename T>
@@ -57,9 +60,9 @@ ABL_CONCEPT_SPEC(Inout_value)
       meta::require<(Out_value<T>())>()));
 };
 
-//!
-// Concept for values that can be commited.
-//
+/*!
+ * Concept for values that can be commited.
+ */
 ABL_CONCEPT_SPEC(Root_value)
 {
   template <typename T>

@@ -1,4 +1,7 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -19,11 +22,11 @@ namespace funken {
 
 namespace detail {
 
-//!
-// Metafunction that returns the value type for a signal based on
-// transducer `XForm` when inputed values from sources
-// `Sources`. `Sources` must have a `Value_type<>`.
-//
+/*!
+ * Metafunction that returns the value type for a signal based on
+ * transducer `XForm` when inputed values from sources
+ * `Sources`. `Sources` must have a `Value_type<>`.
+ */
 template <typename XForm, typename ...Sources>
 struct get_xform_result
 {
@@ -72,9 +75,9 @@ auto default_construct_or_throw()
   throw Err();
 }
 
-//!
-// Implementation of a signal with a transducer.
-//
+/*!
+ * Implementation of a signal with a transducer.
+ */
 template <typename XForm            = identity_t,
           typename ParentsPack      = meta::pack<>,
           template<class>class Base = down_signal>
@@ -145,10 +148,10 @@ private:
 };
 
 
-//!
-// Reducing function that pushes the received values into the signal
-// that is passed as pointer as an accumulator.
-//
+/*!
+ * Reducing function that pushes the received values into the signal
+ * that is passed as pointer as an accumulator.
+ */
 constexpr struct
 {
   template <typename UpSignalPtr, typename ...Inputs>
@@ -160,9 +163,9 @@ constexpr struct
   }
 } send_up_rf {};
 
-//!
-// @see update()
-//
+/*!
+ * @see update()
+ */
 struct update_rf_gen
 {
   template <typename ReducingFnT, typename UpdateT>
@@ -189,17 +192,17 @@ struct update_rf_gen
   };
 };
 
-//!
-// Returns a transducer for updating the parent values via a
-// up-signal. It processes the input with the function `mapping`,
-// passing to it a value or tuple containing the values of the parents
-// of the signal as first parameter, and the input as second.  This
-// mapping can thus return an *updated* version of the values in the
-// parents with the new input.
-//
-// @note This transducer should only be used for the setter of
-// output signals.
-//
+/*!
+ * Returns a transducer for updating the parent values via a
+ * up-signal. It processes the input with the function `mapping`,
+ * passing to it a value or tuple containing the values of the parents
+ * of the signal as first parameter, and the input as second.  This
+ * mapping can thus return an *updated* version of the values in the
+ * parents with the new input.
+ *
+ * @note This transducer should only be used for the setter of
+ * output signals.
+ */
 template <typename UpdateT>
 auto update(UpdateT&& updater)
   -> xform::transducer_impl<update_rf_gen, estd::decay_t<UpdateT> >
@@ -207,9 +210,9 @@ auto update(UpdateT&& updater)
   return std::forward<UpdateT>(updater);
 }
 
-//!
-// Implementation of a signal with a transducer
-//
+/*!
+ * Implementation of a signal with a transducer
+ */
 template <typename XForm            = identity_t,
           typename SetXForm         = identity_t,
           typename ParentsPack      = meta::pack<>,
@@ -288,9 +291,9 @@ private:
 };
 
 
-//!
-// Links a signal to its parents and returns it.
-//
+/*!
+ * Links a signal to its parents and returns it.
+ */
 template <typename SignalT>
 auto link_to_parents(std::shared_ptr<SignalT> signal)
   -> std::shared_ptr<SignalT>
@@ -315,9 +318,9 @@ auto link_to_parents(std::shared_ptr<SignalT> signal,
 }
 
 
-//!
-// Make a xform_down_signal with deduced types.
-//
+/*!
+ * Make a xform_down_signal with deduced types.
+ */
 template <typename XForm, typename ...Parents>
 auto make_xform_down_signal(XForm&& xform,
                             std::shared_ptr<Parents> ...parents)
@@ -333,9 +336,9 @@ auto make_xform_down_signal(XForm&& xform,
                                std::move(parents)...));
 }
 
-//!
-// Make a xform_down_signal with deduced types.
-//
+/*!
+ * Make a xform_down_signal with deduced types.
+ */
 template <typename XForm,
           typename SetXForm,
           typename ...Parents>

@@ -1,4 +1,7 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -9,12 +12,12 @@
 namespace atria {
 namespace xform {
 
-//!
-// Similar to clojure.core/reduce.  Unlike `std::accumulate`, this
-// reduces over a range (doesn't take to distinct iterators) and can
-// reduce over several ranges at the same time.  It also supports
-// early termination for transducers.
-//
+/*!
+ * Similar to clojure.core/reduce.  Unlike `std::accumulate`, this
+ * reduces over a range (doesn't take to distinct iterators) and can
+ * reduce over several ranges at the same time.  It also supports
+ * early termination for transducers.
+ */
 template <typename ReducingFnT,
           typename StateT,
           typename ...InputRangeTs>

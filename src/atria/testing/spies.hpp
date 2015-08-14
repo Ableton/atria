@@ -1,4 +1,7 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #define BOOST_OPTIONAL_CONFIG_ALLOW_BINDING_TO_RVALUES
 

@@ -1,4 +1,7 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -35,12 +38,12 @@ struct xformed_inoutput : private inoutput_impl<SignalT>
 
 } // namespace detail
 
-//!
-// Returns a new in formed by applying a transducer `xform`
-// on the successive values of the in.  If two `xform` parameters
-// are given and the ins are also outs, values can be set back
-// using the second `xform` to go back into the original domain.
-//
+/*!
+ * Returns a new in formed by applying a transducer `xform`
+ * on the successive values of the in.  If two `xform` parameters
+ * are given and the ins are also outs, values can be set back
+ * using the second `xform` to go back into the original domain.
+ */
 template <typename Xform, typename ...InTs>
 auto xformed(Xform&& xform, InTs&& ...ins)
   -> estd::enable_if_t<
@@ -76,10 +79,10 @@ auto xformed(Xform&& xform, Xform2&& xform2, InoutTs&& ...ins)
     detail::access::signal(std::forward<InoutTs>(ins))...);
 }
 
-//!
-// Import the update function.
-// @see detail::update
-//
+/*!
+ * Import the update function.
+ * @see detail::update
+ */
 using detail::update;
 
 namespace detail {
@@ -92,7 +95,7 @@ struct at_rf_gen
     ReducingFnT step;
     KeyT key;
 
-    //! @todo make variadic version
+    /*! @todo make variadic version */
     template <typename StateT, typename InT>
     auto operator()(StateT&& s, InT&& i)
     -> decltype(true
@@ -130,11 +133,11 @@ struct at_updater
 
 } // namespace detail
 
-//!
-// Transducer that projects the key `key` from containers with a
-// standard-style `at()` method.  It filters out ins without the
-// given key.
-//
+/*!
+ * Transducer that projects the key `key` from containers with a
+ * standard-style `at()` method.  It filters out ins without the
+ * given key.
+ */
 template <typename KeyT>
 auto xat(KeyT&& key)
   -> xform::transducer_impl<detail::at_rf_gen, estd::decay_t<KeyT> >
@@ -142,12 +145,12 @@ auto xat(KeyT&& key)
   return std::forward<KeyT>(key);
 }
 
-//!
-// Update function that updates the `key` in a container with a
-// standard-style `at()` method.  Does not update the container if the
-// key was not already present.
-// @see update
-//
+/*!
+ * Update function that updates the `key` in a container with a
+ * standard-style `at()` method.  Does not update the container if the
+ * key was not already present.
+ * @see update
+ */
 template <typename KeyT>
 auto uat(KeyT&& key)
   -> detail::at_updater<estd::decay_t<KeyT> >
@@ -155,12 +158,12 @@ auto uat(KeyT&& key)
   return { std::forward<KeyT>(key) };
 }
 
-//!
-// Returns *xformed* version of the ins using `xat`. If the ins
-// are also outs, it is updated with `uat`.
-// @see xat
-// @see uat
-//
+/*!
+ * Returns *xformed* version of the ins using `xat`. If the ins
+ * are also outs, it is updated with `uat`.
+ * @see xat
+ * @see uat
+ */
 template <typename KeyT, typename ...Ins>
 auto atted(KeyT&& k, Ins&& ...ins)
   -> estd::enable_if_t<
@@ -191,7 +194,7 @@ struct get_attr_fn
 {
   AttrPtr attr;
 
-  //! @todo variadic version
+  /*! @todo variadic version */
   template <typename T>
   auto operator()(T&& x) const
     -> ABL_DECLTYPE_RETURN(x.*attr)
@@ -212,25 +215,25 @@ struct set_attr_fn
 
 } // namespace detail
 
-//!
-// Returns a unary function that dereferences the given pointer to
-// member to the applied objects.
-//
+/*!
+ * Returns a unary function that dereferences the given pointer to
+ * member to the applied objects.
+ */
 template <typename AttrPtrT>
 auto get_attr(AttrPtrT p) -> detail::get_attr_fn<AttrPtrT> { return { p }; }
 
-//!
-// Returns a update function that uses the given pointer to member.
-// @see update
-//
+/*!
+ * Returns a update function that uses the given pointer to member.
+ * @see update
+ */
 template <typename AttrPtrT>
 auto set_attr(AttrPtrT p) -> detail::set_attr_fn<AttrPtrT>{ return { p }; }
 
-//!
-// Given a pointer to member, returns a *xformed* version of the ins
-// accessed through the member.  If the ins are also outs, the xformed
-// version is an inout.
-//
+/*!
+ * Given a pointer to member, returns a *xformed* version of the ins
+ * accessed through the member.  If the ins are also outs, the xformed
+ * version is an inout.
+ */
 template <typename AttrPtrT, typename ...Ins>
 auto attred(AttrPtrT attr, Ins&& ...ins)
   -> estd::enable_if_t<

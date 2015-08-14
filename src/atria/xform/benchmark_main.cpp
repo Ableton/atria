@@ -1,10 +1,12 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
 
-//! Use this to add benchmarks for checking the performance of
-//! `boost::range::type_erased`
-//!
-//! @note Setting this to 1 makes the program crash on GCC 5.2, for
-//!       unknown reasons.
+/*!
+ * Use this to add benchmarks for checking the performance of
+ * `boost::range::type_erased`
+ *
+ * @note Setting this to 1 makes the program crash on GCC 5.2, for
+ *       unknown reasons.
+ */
 #define ABL_BENCHMARK_XFORM_USE_BOOST_RANGE_ERASED 0
 
 #include <atria/xform/into.hpp>

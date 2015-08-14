@@ -1,4 +1,7 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -9,9 +12,9 @@
 namespace atria {
 namespace prelude {
 
-//!
-// @see constantly
-//
+/*!
+ * @see constantly
+ */
 template <typename T>
 struct constantly_t
 {
@@ -25,9 +28,9 @@ struct constantly_t
   auto operator() (ArgTs&&...) && -> T&& { return std::move(value); }
 };
 
-//!
-// Similar to clojure.core/constantly
-//
+/*!
+ * Similar to clojure.core/constantly
+ */
 template <typename T>
 auto constantly(T&& value)
   -> constantly_t<estd::decay_t<T> >

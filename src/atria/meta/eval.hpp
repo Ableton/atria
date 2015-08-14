@@ -1,4 +1,7 @@
 // Copyright: 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 

@@ -1,4 +1,7 @@
 // Copyright: 2014, 2015, Ableton AG, Berlin. All rights reserved.
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -9,9 +12,9 @@
 namespace atria {
 namespace xform {
 
-//!
-// Similar to clojure.core/mapcat$1
-//
+/*!
+ * Similar to clojure.core/mapcat$1
+ */
 template <typename MappingT>
 auto mapcat(MappingT&& mapping)
   -> ABL_DECLTYPE_RETURN(
