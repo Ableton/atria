@@ -43,5 +43,32 @@ TEST(comp, various_types)
   EXPECT_EQ(fn(42), 43.0);
 }
 
+namespace
+{
+
+struct thingy
+{
+  int value;
+
+  thingy& times2() { value *= 2; return *this; }
+  thingy& plus2()  { value += 2; return *this; }
+  int extract()    { return value; }
+};
+
+int free_func(int x, int y) { return x - y; }
+
+} // anon
+
+TEST(comp, uses_invoke)
+{
+  auto res = comp(
+    &thingy::extract,
+    &thingy::times2,
+    &thingy::plus2,
+    [](int x) { return thingy{x}; },
+    free_func);
+  EXPECT_EQ(res(10, 5), 14);
+}
+
 } // namespace prelude
 } // namespace atria

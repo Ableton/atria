@@ -6,6 +6,7 @@
 #pragma once
 
 #include <atria/estd/type_traits.hpp>
+#include <atria/estd/functional.hpp>
 #include <atria/meta/utils.hpp>
 #include <utility>
 
@@ -20,10 +21,10 @@ struct composed
   F f;
   G g;
 
-  template <class X, class ...Y >
-  auto operator() (X&& x, Y&& ...ys)
+  template <class ...T>
+  auto operator() (T&& ...xs)
     -> ABL_DECLTYPE_RETURN(
-      f(g(std::forward<X>(x)), std::forward<Y>(ys)...))
+      estd::invoke(f, estd::invoke(g, std::forward<T>(xs)...)))
 };
 
 template <typename ...Fns>
@@ -50,6 +51,9 @@ struct get_composed<F, Fs...> {
  * @f[
  *                g(x) = f_1(f_2(...f_n(x)))
  * @f]
+ *
+ * Functions are invoked via standard *INVOKE*, allowing to compose
+ * function pointers, member functions, etc.
  */
 template <typename F>
 auto comp(F&& f) -> F&&

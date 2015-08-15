@@ -25,7 +25,7 @@ TEST(remove, simple)
 
   auto res = transduce(
     comp(remove(odd), map(times2)), std::plus<int>{}, 1, v);
-  EXPECT_EQ(res, 17);
+  EXPECT_EQ(res, 9);
 }
 
 } // namespace xform

@@ -7,6 +7,8 @@
 
 #include <utility>
 #include <atria/meta/utils.hpp>
+#include <atria/estd/type_traits.hpp>
+#include <atria/estd/functional.hpp>
 
 namespace atria {
 namespace prelude {
@@ -19,11 +21,14 @@ struct complement_t
   template <typename... ArgTs>
   auto operator() (ArgTs&& ...args)
     -> ABL_DECLTYPE_RETURN(
-      fn(std::forward<ArgTs>(args)...))
+      !estd::invoke(fn, std::forward<ArgTs>(args)...))
 };
 
 /*!
  * Similar to clojure.core/complement$1
+ *
+ * `fn` is invoked via standard *INVOKE*, allowing to negate function
+ * pointers, member functions, etc.
  */
 template <typename FnT>
 auto complement(FnT&& fn)
