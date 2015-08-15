@@ -7,6 +7,7 @@
 
 #include <atria/xform/transducer_impl.hpp>
 #include <atria/xform/state_wrapper.hpp>
+#include <atria/xform/detail/empty_transducer_error.hpp>
 #include <atria/prelude/constantly.hpp>
 
 namespace atria {
@@ -25,6 +26,17 @@ struct take_rf_gen
     ReducingFnT step;
     IntegralT total;
 
+    struct initial
+    {
+      apply* this_;
+      IntegralT operator() ()
+      {
+        if (this_->total == 0)
+          throw empty_transducer_error{};
+        return this_->total;
+      }
+    };
+
     template <typename StateT, typename ...InputTs>
     auto operator() (StateT&& s, InputTs&& ...is)
       -> ABL_DECLTYPE_RETURN(
@@ -32,7 +44,7 @@ struct take_rf_gen
           step(state_unwrap(std::forward<StateT>(s)),
                std::forward<InputTs>(is)...),
           state_data(std::forward<StateT>(s),
-                     constantly(total)) - 1))
+                     initial{this}) - 1))
   };
 
   template <typename T>

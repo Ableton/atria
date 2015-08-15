@@ -97,8 +97,8 @@ TEST(take, take_zero_not_supported)
 {
   auto v = std::vector<int> { 1, 2, 3, 4, 5 };
 
-  auto res = into(std::vector<int> {}, take(0), v);
-  EXPECT_NE(res, (std::vector<int> {}));
+  EXPECT_THROW(into(std::vector<int> {}, take(0), v),
+               detail::empty_transducer_error);
 }
 
 } // namespace xform
