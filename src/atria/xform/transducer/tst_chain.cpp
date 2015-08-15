@@ -10,6 +10,13 @@
 namespace atria {
 namespace xform {
 
+#define ABL_MAKE_GCC_CRASH 0
+
+#if ABL_MAKE_GCC_CRASH \
+  || !defined(__GNUC__) \
+  || defined(__clang__ ) \
+  || defined(__llvm__)
+
 TEST(chain, append)
 {
   auto v1 = std::vector<int> { 1, 2 };
@@ -61,6 +68,8 @@ TEST(chainl, no_chaining_if_no_input)
   auto res = into_vector(chainl(v2), v1);
   EXPECT_EQ(res, (std::vector<int> {}));
 }
+
+#endif // ABL_MAKE_GCC_CRASH
 
 } // namespace xform
 } // namespace atria

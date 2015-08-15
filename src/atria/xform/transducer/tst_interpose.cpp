@@ -14,6 +14,13 @@
 namespace atria {
 namespace xform {
 
+#define ABL_MAKE_GCC_CRASH 0
+
+#if ABL_MAKE_GCC_CRASH \
+  || !defined(__GNUC__) \
+  || defined(__clang__ ) \
+  || defined(__llvm__)
+
 TEST(interpose, into)
 {
   auto v = std::vector<int> { 1, 2, 3, 4, 5 };
@@ -43,6 +50,8 @@ TEST(interpose, variadic)
         tup(3, 'c')
       }));
 }
+
+#endif // ABL_MAKE_GCC_CRASH
 
 } // namespace xform
 } // namespace atria
