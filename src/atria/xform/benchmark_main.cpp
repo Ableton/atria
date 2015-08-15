@@ -17,6 +17,7 @@
 #include <atria/xform/transducer/zip.hpp>
 #include <atria/xform/transducer/unzip.hpp>
 #include <atria/xform/transducer/enumerate.hpp>
+#include <atria/xform/transducer/iter.hpp>
 #include <atria/xform/impure/into.hpp>
 #include <atria/xform/impure/transducer/transducer.hpp>
 #include <atria/xform/impure/transducer/take.hpp>
@@ -207,6 +208,16 @@ void benchmarks(testing::benchmark_runner runner)
         std::plus<unsigned>{},
         0u,
         data);
+    })
+
+    ("atria::xform, iter", [] (std::vector<unsigned> const& data)
+    {
+      return transduce(
+        comp(iter(data),
+             filter([](unsigned x) { return x % 2 == 0; }),
+             map([](unsigned x) { return x * 2u; })),
+        std::plus<unsigned>{},
+        0u);
     })
 
     ("atria::xform, recursive", [] (std::vector<unsigned> const& data)
@@ -428,6 +439,14 @@ void benchmarks(testing::benchmark_runner runner)
         0u,
         data,
         data);
+    })
+
+    ("atria::xform, iter", [] (std::vector<unsigned> const& data)
+    {
+      return transduce(
+        iter(data, data),
+        [] (unsigned x, unsigned y, unsigned z) { return x + y + z; },
+        0u);
     })
 
     ("atria::xform, zip unzip", [] (std::vector<unsigned> const& data)
