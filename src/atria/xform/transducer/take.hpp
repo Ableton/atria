@@ -31,7 +31,7 @@ struct take_rf_gen
       apply* this_;
       IntegralT operator() ()
       {
-        if (this_->total == 0)
+        if (this_->total <= 0)
           throw empty_transducer_error{};
         return this_->total;
       }
@@ -50,7 +50,7 @@ struct take_rf_gen
   template <typename T>
   friend bool state_wrapper_data_is_reduced(tag, T&& n)
   {
-    return std::forward<T>(n) == 0;
+    return std::forward<T>(n) <= 0;
   }
 };
 
