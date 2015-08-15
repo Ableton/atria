@@ -79,8 +79,8 @@ struct is_state_wrapper<_, state_wrapper<T, S, D> >
  *
  * @see state_wrapper
  */
-template <typename TagT=no_tag, typename StateT, typename DataT>
-auto wrap_state(StateT&& next, DataT&& data)
+template <typename TagT=no_tag, typename StateT, typename DataT=TagT>
+auto wrap_state(StateT&& next, DataT&& data=DataT{})
   -> state_wrapper<TagT,
                    estd::decay_t<StateT>,
                    estd::decay_t<DataT> >
