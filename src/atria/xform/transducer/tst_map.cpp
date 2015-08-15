@@ -22,5 +22,15 @@ TEST(map, mapping)
   EXPECT_EQ(transduce(map(times2), std::plus<int>{}, 1, v), 25);
 }
 
+namespace {
+int free_times2(int x) { return x * 2; }
+} // anonymous namespace
+
+TEST(map, mapping_invoke)
+{
+  auto v = std::vector<int> { 1, 2, 3, 6 };
+  EXPECT_EQ(transduce(map(free_times2), std::plus<int>{}, 1, v), 25);
+}
+
 } // namespace xform
 } // namespace atria

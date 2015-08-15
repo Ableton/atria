@@ -23,6 +23,20 @@ TEST(partition_by, partition_by)
       }));
 }
 
+namespace {
+int free_mod2(int x) { return x % 2; }
+} // anonymous
+
+TEST(partition_by, invoke)
+{
+  auto v = std::vector<int> { 1, 1, 2, 4, 2, 3 };
+
+  auto res = into_vector(partition_by(free_mod2), v);
+  EXPECT_EQ(res, (decltype(res) {
+        {1, 1}, {2, 4, 2}, {3}
+      }));
+}
+
 TEST(partition_by, partition_by_does_not_copy_step_function)
 {
   auto step = testing::copy_spy<first_rf_t>{};

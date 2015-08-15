@@ -8,6 +8,7 @@
 #include <atria/xform/transducer_impl.hpp>
 #include <atria/xform/maybe_reduced.hpp>
 #include <atria/xform/skip.hpp>
+#include <atria/estd/functional.hpp>
 
 namespace atria {
 namespace xform {
@@ -29,7 +30,7 @@ struct take_while_rf_gen
       call(step, state_unwrap(std::forward<StateT>(s)),
            std::forward<InputTs>(is)...))> >
     {
-        return predicate(is...)
+      return estd::invoke(predicate, is...)
           ? not_reduced(call(step, state_unwrap(std::forward<StateT>(s)),
                              std::forward<InputTs>(is)...))
           : reduced(skip(step, state_unwrap(std::forward<StateT>(s)),

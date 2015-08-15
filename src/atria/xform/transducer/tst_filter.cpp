@@ -23,6 +23,18 @@ TEST(filter, concept)
                               meta::pack<int, int>)>();
 }
 
+namespace {
+bool free_odd(int x) { return x % 2 == 0; }
+} // anonymous
+
+TEST(filter, invoke)
+{
+  auto v = std::vector<int> { 1, 2, 3, 6 };
+  auto res = transduce(
+    filter(free_odd), std::plus<int>{}, 1, v);
+  EXPECT_EQ(res, 9);
+}
+
 TEST(filter, composition)
 {
   auto v = std::vector<int> { 1, 2, 3, 6 };

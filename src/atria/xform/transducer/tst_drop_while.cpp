@@ -45,6 +45,17 @@ TEST(drop_while, into)
   }
 }
 
+namespace {
+bool free_lt4(int x) { return x < 4; }
+} // anonymous
+
+TEST(drop_while, invoke)
+{
+  auto v = std::vector<int> { 1, 2, 3, 4, 3 };
+  auto res = into_vector(drop_while(free_lt4), v);
+  EXPECT_EQ(res, (decltype(res) { 4, 3 }));
+}
+
 TEST(drop_while, compose)
 {
   using namespace std::placeholders;

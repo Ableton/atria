@@ -30,6 +30,17 @@ TEST(take_while, into)
   EXPECT_EQ(res, (decltype(res) { 1, 2, 3 }));
 }
 
+namespace {
+bool free_lt4(int x) { return x < 4; }
+} // anonymous
+
+TEST(take_while, invoke)
+{
+  auto v = std::vector<int> { 1, 2, 3, 4, 3 };
+  auto res = into_vector(take_while(free_lt4), v);
+  EXPECT_EQ(res, (decltype(res) { 1, 2, 3 }));
+}
+
 TEST(take_while, generate_with_map)
 {
   auto count = int{};

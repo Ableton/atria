@@ -7,6 +7,7 @@
 
 #include <atria/xform/transducer_impl.hpp>
 #include <atria/xform/skip.hpp>
+#include <atria/estd/functional.hpp>
 
 namespace atria {
 namespace xform {
@@ -19,7 +20,7 @@ auto filter = [](auto predicate) mutable
   {
     return [=](auto&& s, auto&& ...is) mutable
     {
-      return predicate(is...)
+      return estd::invoke(predicate, is...)
         ? call(step, ABL_FORWARD(s), ABL_FORWARD(is)...)
         : skip(step, ABL_FORWARD(s), ABL_FORWARD(is)...);
     };
@@ -42,7 +43,7 @@ struct filter_rf_gen
     template <typename State, typename ...Inputs>
     auto operator() (State&& s, Inputs&& ...is)
       -> ABL_DECLTYPE_RETURN(
-        predicate(is...)
+        estd::invoke(predicate, is...)
           ? call(step, std::forward<State>(s), std::forward<Inputs>(is)...)
           : skip(step, std::forward<State>(s), std::forward<Inputs>(is)...))
   };

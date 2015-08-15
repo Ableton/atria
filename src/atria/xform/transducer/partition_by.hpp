@@ -9,6 +9,7 @@
 #include <atria/xform/state_wrapper.hpp>
 #include <atria/xform/transducer_impl.hpp>
 #include <atria/xform/skip.hpp>
+#include <atria/estd/functional.hpp>
 #include <vector>
 
 namespace atria {
@@ -39,7 +40,7 @@ struct partition_by_rf_gen
           call(step, state_unwrap(s), container_t<InputTs...>{}),
           make_tuple(mapping(is...), container_t<InputTs...>{}, step)))
     {
-      auto mapped = mapping(std::forward<InputTs>(is)...);
+      auto mapped = estd::invoke(mapping, std::forward<InputTs>(is)...);
 
       auto data = state_data(std::forward<StateT>(s), [&] {
           auto v = container_t<InputTs...>{};

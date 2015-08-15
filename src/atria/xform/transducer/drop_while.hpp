@@ -9,6 +9,7 @@
 #include <atria/xform/state_wrapper.hpp>
 #include <atria/xform/skip.hpp>
 #include <atria/prelude/constantly.hpp>
+#include <atria/estd/functional.hpp>
 
 namespace atria {
 namespace xform {
@@ -33,7 +34,7 @@ struct drop_while_rf_gen
     {
       auto taking =
            state_data(std::forward<StateT>(s), constantly(false))
-        || !predicate(is...);
+        || !estd::invoke(predicate, is...);
 
       return wrap_state(
           taking

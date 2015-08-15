@@ -7,6 +7,7 @@
 
 #include <atria/xform/transducer_impl.hpp>
 #include <atria/meta/utils.hpp>
+#include <atria/estd/functional.hpp>
 
 namespace atria {
 namespace xform {
@@ -19,7 +20,7 @@ auto map = [](auto mapping) mutable
   {
     return [=](auto&& s, auto&& ...is) mutable
     {
-      return step(ABL_FORWARD(s), mapping(ABL_FORWARD(is)...));
+      return step(ABL_FORWARD(s), estd::invoke(mapping, ABL_FORWARD(is)...));
     };
   };
 };
@@ -41,7 +42,7 @@ struct map_rf_gen
     auto operator() (State&& s, Inputs&& ...is)
       -> ABL_DECLTYPE_RETURN(
         step(std::forward<State>(s),
-             mapping(std::forward<Inputs>(is)...)))
+             estd::invoke(mapping, std::forward<Inputs>(is)...)))
   };
 };
 
