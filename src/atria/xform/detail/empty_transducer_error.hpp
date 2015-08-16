@@ -32,6 +32,20 @@ struct empty_transducer_error : std::runtime_error
   empty_transducer_error() : base_t("empty transducer") {}
 };
 
+/*!
+ * Utility to check whether a range is empty and return it.
+ */
+template <typename RangeT>
+auto check_non_empty(RangeT&& x) -> RangeT&&
+{
+  using std::begin;
+  using std::end;
+  if (begin(x) == end(x))
+    throw empty_transducer_error{};
+  return std::forward<RangeT>(x);
+}
+
+
 } // namespace detail
 } // namespace xform
 } // namespace atria

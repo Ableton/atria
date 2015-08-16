@@ -37,11 +37,7 @@ struct iter_rf_gen
       using std::end;
 
       auto data = state_data(std::forward<StateT>(s), [&] {
-          auto first = begin(range);
-          auto last  = end(range);
-          if (first == last)
-            throw detail::empty_transducer_error{};
-          return std::make_tuple(first, last);
+          return std::make_tuple(begin(range), end(range));
         });
 
       return wrap_state<tag>(
@@ -74,7 +70,7 @@ constexpr auto iter(InputRangeT&& r)
   -> iter_t<estd::decay_t<InputRangeT> >
 {
   return iter_t<estd::decay_t<InputRangeT> > {
-    std::forward<InputRangeT>(r) };
+    detail::check_non_empty(std::forward<InputRangeT>(r)) };
 }
 
 template <typename InputRangeT, typename ...InputRangeTs>
