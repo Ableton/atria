@@ -10,6 +10,10 @@
 #include <atria/prelude/complement.hpp>
 #include <random>
 
+#ifndef ABL_XFORM_DEFAULT_RANDOM_ENGINE
+#define ABL_XFORM_DEFAULT_RANDOM_ENGINE ::std::default_random_engine
+#endif
+
 namespace atria {
 namespace xform {
 
@@ -17,8 +21,11 @@ namespace detail {
 
 struct default_generator
 {
-  std::default_random_engine engine = std::default_random_engine{};
-  std::uniform_real_distribution<> distribution = std::uniform_real_distribution<>{};
+  using engine_t = ABL_XFORM_DEFAULT_RANDOM_ENGINE;
+  using distribution_t =  std::uniform_real_distribution<>;
+
+  engine_t engine = engine_t{};
+  distribution_t distribution = distribution_t{};
 
   auto operator() ()
     -> ABL_DECLTYPE_RETURN(distribution(engine))

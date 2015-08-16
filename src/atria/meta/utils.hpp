@@ -9,6 +9,18 @@ namespace atria {
 namespace meta {
 
 /*!
+ * This is a type that pretends to be convertible to anything.  This
+ * can be used as a placeholder for any parameter type in `result_of`
+ * metacalls.
+ *
+ * @note Conversion is not defined. Only use in non-evaluated contexes.
+ */
+struct bottom
+{
+  template <typename T> operator T();
+};
+
+/*!
  * Type to enable making a type convertible from `void`.  The problem
  * is that `void` can not be used as a parameter, so it is imposible
  * to define a convertion between `void` and some types, in the

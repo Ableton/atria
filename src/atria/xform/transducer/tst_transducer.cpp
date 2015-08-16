@@ -168,7 +168,7 @@ TEST(transducer, generator)
   auto res = transduce(
     xform,
     std::plus<std::size_t>{},
-    0u);
+    std::size_t{});
   EXPECT_EQ(res, 10);
 }
 

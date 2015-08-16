@@ -6,6 +6,7 @@
 #pragma once
 
 #include <exception>
+#include <atria/meta/utils.hpp>
 
 namespace atria {
 namespace funken {
@@ -21,10 +22,13 @@ struct no_value_error : std::exception
 
 namespace detail {
 
-struct no_value
+struct no_value : meta::bottom
 {
-  template <typename T> operator T&() { throw no_value_error{}; }
-  template <typename T> operator const T&() { throw no_value_error{}; }
+  template <typename T>
+  operator T()
+  {
+    throw no_value_error{};
+  }
 };
 
 } // namespace detail

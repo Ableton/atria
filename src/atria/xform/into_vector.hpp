@@ -18,16 +18,10 @@ namespace detail {
 template <typename XformT, typename... InputRangeTs>
 struct into_vector_result
 {
-  struct anything_t
-  {
-    template <typename T> operator T&();
-    template <typename T> operator const T&();
-  };
-
   using xformed_t = decltype(
     state_complete(
       std::declval<XformT>()(last_rf)(
-        std::declval<anything_t>(),
+        std::declval<meta::bottom>(),
         std::declval<estd::Value_type<InputRangeTs> >()...)));
 
   using type = std::vector<estd::decay_t<xformed_t> >;

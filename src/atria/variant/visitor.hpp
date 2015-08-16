@@ -91,21 +91,6 @@ template<typename T, typename U=ReturnType>
   }
 };
 
-namespace detail {
-
-/*!
- * This is a type that pretends to be convertible to anything. This
- * can be used as a placeholder for any parameter type in `result_of`
- * metacalls.
- */
-struct bottom
-{
-  template <typename T> operator T&();
-  template <typename T> operator const T&();
-};
-
-} // namespace detail
-
 /*!
  * Wraps a functor such that it has a fixed return value. Can be
  * use to disambiguate cases of a variant visitor.
@@ -247,7 +232,7 @@ template <typename... FnTs>
 auto visitor(FnTs&& ...fns)
   -> visitor_t<
     meta::common_type_t<
-      typename std::result_of<FnTs(detail::bottom)>::type...>,
+      typename std::result_of<FnTs(meta::bottom)>::type...>,
     FnTs...>
 {
   return { std::forward<FnTs>(fns)... };

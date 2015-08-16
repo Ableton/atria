@@ -2,6 +2,7 @@
 
 #include <atria/xform/into_vector.hpp>
 #include <atria/xform/transducer/map.hpp>
+#include <atria/xform/transducer/transducer.hpp>
 #include <atria/xform/transducer/filter.hpp>
 #include <atria/prelude/comp.hpp>
 #include <atria/prelude/identity.hpp>
@@ -61,6 +62,19 @@ TEST(into_vector, zipping)
 
   auto res = into_vector(identity, v1, v2);
   EXPECT_EQ(res, (std::vector<tup> { tup(1, "a"), tup(2, "b") }));
+}
+
+TEST(into_vector, type_erasure)
+{
+  auto v = std::vector<int> { 1, 2, 3, 4 };
+
+  auto xform = transducer<int, std::string> {
+    comp(
+      filter([] (int x) { return x % 2 == 0; }),
+      map([] (int x) { return std::to_string(x); }))
+  };
+  auto res = into_vector(xform, v);
+  EXPECT_EQ(res, (std::vector<std::string> { "2", "4" }));
 }
 
 } // namespace xform

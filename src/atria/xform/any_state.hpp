@@ -59,6 +59,8 @@ public:
   any_state(ValueType&& value,
             estd::enable_if_t<
               !std::is_base_of<any_state,
+                               estd::decay_t<ValueType> >::value &&
+              !std::is_base_of<meta::bottom,
                                estd::decay_t<ValueType> >::value
             >* = 0)
     : data_(new char[sizeof(holder<estd::decay_t<ValueType> >)])

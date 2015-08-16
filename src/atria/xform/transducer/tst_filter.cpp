@@ -3,6 +3,7 @@
 #include <atria/xform/concepts.hpp>
 #include <atria/xform/reducing/last_rf.hpp>
 #include <atria/xform/transduce.hpp>
+#include <atria/xform/into_vector.hpp>
 #include <atria/xform/transducer/filter.hpp>
 #include <atria/xform/transducer/map.hpp>
 #include <atria/xform/transducer/take.hpp>
@@ -142,11 +143,18 @@ TEST(filter, type_erasure_triple_mortal_back_flip)
            transducer<int>{map(times2)},
            filter(even)))};
 
-  auto res = transduce(
-    xform,
-    std::plus<int>{},
-    1, v);
-  EXPECT_EQ(res, 25);
+  {
+    auto res = transduce(
+      xform,
+      std::plus<int>{},
+      1, v);
+    EXPECT_EQ(res, 25);
+  }
+
+  {
+    auto res = into_vector(xform, v);
+    EXPECT_EQ(res, (decltype(res) { 8, 16 }));
+  }
 }
 
 } // namespace xform

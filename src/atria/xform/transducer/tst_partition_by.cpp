@@ -57,7 +57,7 @@ TEST(partition_by, reduce_nested_deals_with_empty_sequence_properly)
 {
   auto v = std::vector<std::vector<int> > {{{}, {1, 1, 2}, {}}};
   auto part = transducer<int, std::vector<int> > { partition_by(identity) };
-  auto res = into(std::vector<std::vector<int> > {}, comp(cat, part), v);
+  auto res = into_vector(comp(cat, part), v);
   EXPECT_EQ(res, (std::vector<std::vector<int> > {{1, 1}, {2}}));
 }
 

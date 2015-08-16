@@ -51,7 +51,7 @@ TEST(take_nth, compose)
 {
   using namespace std::placeholders;
   auto v = std::vector<int> { 1, 2, 3, 4, 5 };
-  auto res = into(std::vector<int>{}, comp(take_nth(2), take(2)), v);
+  auto res = into_vector(comp(take_nth(2), take(2)), v);
   EXPECT_EQ(res, (decltype(res) { 1, 3 }));
 }
 

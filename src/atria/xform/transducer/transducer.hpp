@@ -40,11 +40,13 @@ struct transducer_state
   template <typename WrappedT>
   struct make_state_wrapper
   {
-    using xformed_t = typename XformT::result_type;
-    using tag_t     = transducer_tag<
-      estd::decay_t<StateT>,
-      estd::decay_t<estd::result_of_t<ReducingFnT(StateT, OutputTs...)> > >;
-    using type      = state_wrapper<tag_t, WrappedT, xformed_t>;
+    using xformed_t  = typename XformT::result_type;
+    using reduce_t   = estd::decay_t<
+      estd::result_of_t<ReducingFnT(StateT, OutputTs...)> >;
+    using complete_t = estd::decay_t<
+      decltype(state_complete(std::declval<reduce_t>()))>;
+    using tag_t      = transducer_tag<complete_t, reduce_t >;
+    using type       = state_wrapper<tag_t, WrappedT, xformed_t>;
   };
 
   using type = typename boost::mpl::eval_if<
