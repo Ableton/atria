@@ -39,7 +39,7 @@ While not yet, we plan to release this library as **open source**.
 There is no published documentation.  One may generate documentation
 out of the sources by running:
 ```
-   $ doxygen doc/doxygen.config
+   $ doxygen doxy/doxygen.config
 ```
 
 ## Requires
