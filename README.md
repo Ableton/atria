@@ -42,7 +42,7 @@ feedback is very wellcome.
 * `atria::xform` provides an efficient C++ implementation of
   transducers, a concept introduced in
   [Clojure](http://blog.cognitect.com/blog/2014/8/6/transducers-are-coming)
-  by Rich Hickie.
+  by Rich Hickey.
 
 * `atria::funken` provides a *experimental* library for writing epochal
   and functional data-models.
