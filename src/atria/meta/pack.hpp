@@ -1,4 +1,28 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+//
+// Copyright (C) 2014, 2015 Ableton AG, Berlin. All rights reserved.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation
+// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+// DEALINGS IN THE SOFTWARE.
+//
+
+/*!
+ * @file
+ */
 
 #pragma once
 
@@ -25,12 +49,41 @@ ABL_RESTORE_WARNINGS
 namespace atria {
 namespace meta {
 
-//!
-// MPL-compatible sequence that just holds a vector of types as a
-// paremeter pack.
-//
+/*!
+ * MPL-compatible sequence that just holds a vector of types as a
+ * paremeter pack.
+ */
 template <typename ...Ts>
-struct pack {};
+struct pack
+{
+};
+
+namespace detail {
+
+template <template<typename...> class MF, typename ArgT>
+struct unpack
+{
+  using type = MF<ArgT>;
+};
+
+template <template<typename...> class MF, typename... ArgTs>
+struct unpack<MF, meta::pack<ArgTs...> >
+{
+  using type = MF<ArgTs...>;
+};
+
+} // namespace detail
+
+/*!
+ * Metafunction that given a variadic template `MF` and a type `ArgT`,
+ * returns `MF<ArgT>`, or if ArgT is of the form `pack<Args...>` then
+ * returns `MF<Args...>`.
+ */
+template <template<typename...> class MF, typename T>
+using unpack = typename detail::unpack<MF, T>::type;
+
+template <template<typename...> class MF, typename T>
+using unpack_t = typename unpack<MF, T>::type;
 
 struct pack_tag;
 

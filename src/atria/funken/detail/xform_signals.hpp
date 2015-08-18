@@ -1,10 +1,40 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+//
+// Copyright (C) 2014, 2015 Ableton AG, Berlin. All rights reserved.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation
+// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+// DEALINGS IN THE SOFTWARE.
+//
+
+/*!
+ * @file
+ */
 
 #pragma once
 
 #include <atria/funken/detail/signals.hpp>
 #include <atria/funken/detail/no_value.hpp>
-#include <atria/xform/transducers.hpp>
+
+#include <atria/meta/pack.hpp>
+#include <atria/prelude/identity.hpp>
+#include <atria/prelude/tuplify.hpp>
+#include <atria/xform/reducing/last_rf.hpp>
+#include <atria/xform/transducer_impl.hpp>
+
 #include <atria/estd/utility.hpp>
 #include <atria/estd/type_traits.hpp>
 
@@ -13,17 +43,17 @@ namespace funken {
 
 namespace detail {
 
-//!
-// Metafunction that returns the value type for a signal based on
-// transducer `XForm` when inputed values from sources
-// `Sources`. `Sources` must have a `Value_type<>`.
-//
+/*!
+ * Metafunction that returns the value type for a signal based on
+ * transducer `XForm` when inputed values from sources
+ * `Sources`. `Sources` must have a `Value_type<>`.
+ */
 template <typename XForm, typename ...Sources>
 struct get_xform_result
 {
   using type = estd::decay_t<
     decltype(
-      std::declval<XForm>()(xform::last_r)(
+      std::declval<XForm>()(xform::last_rf)(
         std::declval<detail::no_value>(),
         std::declval<estd::Value_type<Sources> >()...))
     >;
@@ -39,7 +69,7 @@ constexpr struct
   auto operator () (DownSignalPtr s, Inputs&& ...is) const
     -> DownSignalPtr
   {
-    s->push_down(xform::tuplify(std::forward<Inputs>(is)...));
+    s->push_down(tuplify(std::forward<Inputs>(is)...));
     return s;
   }
 
@@ -66,10 +96,10 @@ auto default_construct_or_throw()
   throw Err();
 }
 
-//!
-// Implementation of a signal with a transducer.
-//
-template <typename XForm            = decltype(xform::identity),
+/*!
+ * Implementation of a signal with a transducer.
+ */
+template <typename XForm            = identity_t,
           typename ParentsPack      = meta::pack<>,
           template<class>class Base = down_signal>
 class xform_down_signal;
@@ -81,7 +111,7 @@ class xform_down_signal<XForm, meta::pack<Parents...>, Base>
   : public Base<get_xform_result_t<XForm, Parents...> >
 {
   using base_t = Base<get_xform_result_t<XForm, Parents...> >;
-  using down_reducer_t = decltype(std::declval<XForm>()(send_down_r));
+  using down_rf_t = decltype(std::declval<XForm>()(send_down_r));
 
   std::tuple<std::shared_ptr<Parents>...> parents_;
 
@@ -97,14 +127,14 @@ public:
   xform_down_signal(XForm2&& xform, std::shared_ptr<Parents> ...parents)
     : base_t([&]() -> value_type {
         try {
-          return xform(xform::last_r)(detail::no_value{}, parents->current()...);
+          return xform(xform::last_rf)(detail::no_value{}, parents->current()...);
         }
         catch (const no_value_error&) {
           return default_construct_or_throw<value_type, no_value_error>();
         }
       }())
     , parents_(std::move(parents)...)
-    , down_reducer_(xform(send_down_r))
+    , down_step_(xform(send_down_r))
   {
   }
 
@@ -123,7 +153,7 @@ private:
   template <std::size_t ...Indices>
   void recompute(estd::index_sequence<Indices...>)
   {
-    down_reducer_(this, std::get<Indices>(parents_)->current()...);
+    down_step_(this, std::get<Indices>(parents_)->current()...);
   }
 
   template <std::size_t ...Indices>
@@ -135,34 +165,34 @@ private:
     recompute();
   }
 
-  down_reducer_t down_reducer_;
+  down_rf_t down_step_;
 };
 
 
-//!
-// Reducer that pushes the received values into the signal that is
-// passed as pointer as an accumulator.
-//
+/*!
+ * Reducing function that pushes the received values into the signal
+ * that is passed as pointer as an accumulator.
+ */
 constexpr struct
 {
   template <typename UpSignalPtr, typename ...Inputs>
   auto operator () (UpSignalPtr s, Inputs&& ...is) const
     -> UpSignalPtr
   {
-    s->push_up(xform::tuplify(std::forward<Inputs>(is)...));
+    s->push_up(tuplify(std::forward<Inputs>(is)...));
     return s;
   }
-} send_up_r {};
+} send_up_rf {};
 
-//!
-// @see update()
-//
-struct update_reducer
+/*!
+ * @see update()
+ */
+struct update_rf_gen
 {
-  template <typename ReducerT, typename UpdateT>
+  template <typename ReducingFnT, typename UpdateT>
   struct apply
   {
-    ReducerT reducer;
+    ReducingFnT step;
     UpdateT updater;
 
     template <typename XformUpSignalPtr, typename ...Inputs>
@@ -171,43 +201,41 @@ struct update_reducer
     {
       auto indices = estd::make_index_sequence<
         std::tuple_size<estd::decay_t<decltype(s->parents())> >::value > {};
-      return reducer(s, updater(peek_parents(s, indices),
-                                std::forward<Inputs>(is)...));
+      return step(s, updater(peek_parents(s, indices),
+                             std::forward<Inputs>(is)...));
     }
 
     template <typename XformUpSignalPtr, std::size_t ...Indices>
     auto peek_parents(XformUpSignalPtr s, estd::index_sequence<Indices...>) const
-      -> decltype(xform::tuplify(std::get<Indices>(s->parents())->current()...))
-    {
-      s->recompute_deep();
-      return xform::tuplify(std::get<Indices>(s->parents())->current()...);
-    }
+      -> ABL_DECLTYPE_RETURN((
+        s->recompute_deep(),
+        tuplify(std::get<Indices>(s->parents())->current()...)))
   };
 };
 
-//!
-// Returns a transducer for updating the parent values via a
-// up-signal. It processes the input with the function `mapping`,
-// passing to it a value or tuple containing the values of the parents
-// of the signal as first parameter, and the input as second.  This
-// mapping can thus return an *updated* version of the values in the
-// parents with the new input.
-//
-// @note This transducer should only be used for the setter of
-// output signals.
-//
+/*!
+ * Returns a transducer for updating the parent values via a
+ * up-signal. It processes the input with the function `mapping`,
+ * passing to it a value or tuple containing the values of the parents
+ * of the signal as first parameter, and the input as second.  This
+ * mapping can thus return an *updated* version of the values in the
+ * parents with the new input.
+ *
+ * @note This transducer should only be used for the setter of
+ * output signals.
+ */
 template <typename UpdateT>
 auto update(UpdateT&& updater)
-  -> xform::detail::transducer<update_reducer, estd::decay_t<UpdateT> >
+  -> xform::transducer_impl<update_rf_gen, estd::decay_t<UpdateT> >
 {
   return std::forward<UpdateT>(updater);
 }
 
-//!
-// Implementation of a signal with a transducer.
-//
-template <typename XForm            = decltype(xform::identity),
-          typename SetXForm         = decltype(xform::identity),
+/*!
+ * Implementation of a signal with a transducer
+ */
+template <typename XForm            = identity_t,
+          typename SetXForm         = identity_t,
           typename ParentsPack      = meta::pack<>,
           template<class>class Base = up_down_signal>
 class xform_up_down_signal;
@@ -220,7 +248,7 @@ class xform_up_down_signal<XForm, SetXForm, meta::pack<Parents...>, Base>
   : public xform_down_signal<XForm, meta::pack<Parents...>, Base>
 {
   using base_t = xform_down_signal<XForm, meta::pack<Parents...>, Base>;
-  using up_reducer_t = decltype(std::declval<SetXForm>()(send_up_r));
+  using up_rf_t = decltype(std::declval<SetXForm>()(send_up_rf));
 
 public:
   using value_type = typename base_t::value_type;
@@ -235,7 +263,7 @@ public:
                        SetXForm2&& set_xform,
                        std::shared_ptr<Parents> ...parents)
     : base_t(std::forward<XForm2>(xform), std::move(parents)...)
-    , up_reducer_(set_xform(send_up_r))
+    , up_step_(set_xform(send_up_rf))
   {}
 
   void send_up(const value_type& value) final
@@ -261,7 +289,7 @@ private:
   template <typename T, std::size_t... Indices>
   void send_up(T&& x, estd::index_sequence<Indices...>)
   {
-    up_reducer_(this, std::forward<T>(x));
+    up_step_(this, std::forward<T>(x));
   }
 
   template <typename T, std::size_t ...Indices>
@@ -280,13 +308,13 @@ private:
     std::get<0>(this->parents())->send_up(std::forward<T>(value));
   }
 
-  up_reducer_t up_reducer_;
+  up_rf_t up_step_;
 };
 
 
-//!
-// Links a signal to its parents and returns it.
-//
+/*!
+ * Links a signal to its parents and returns it.
+ */
 template <typename SignalT>
 auto link_to_parents(std::shared_ptr<SignalT> signal)
   -> std::shared_ptr<SignalT>
@@ -311,9 +339,9 @@ auto link_to_parents(std::shared_ptr<SignalT> signal,
 }
 
 
-//!
-// Make a xform_down_signal with deduced types.
-//
+/*!
+ * Make a xform_down_signal with deduced types.
+ */
 template <typename XForm, typename ...Parents>
 auto make_xform_down_signal(XForm&& xform,
                             std::shared_ptr<Parents> ...parents)
@@ -329,9 +357,9 @@ auto make_xform_down_signal(XForm&& xform,
                                std::move(parents)...));
 }
 
-//!
-// Make a xform_down_signal with deduced types.
-//
+/*!
+ * Make a xform_down_signal with deduced types.
+ */
 template <typename XForm,
           typename SetXForm,
           typename ...Parents>

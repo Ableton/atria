@@ -1,4 +1,24 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+//
+// Copyright (C) 2014, 2015 Ableton AG, Berlin. All rights reserved.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation
+// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+// DEALINGS IN THE SOFTWARE.
+//
 
 #include <atria/meta/concept.hpp>
 #include <atria/testing/gtest.hpp>
@@ -6,14 +26,14 @@
 namespace atria {
 namespace meta {
 
-//!
-// This is a example concept kinda compatible with C++1y concepts
-// lite. The problem with this mechanism is that it rises compilation
-// errors when the concept is not met, making it non suitable for
-// SFINAE-friendly concepts.
-//
+/*!
+ * This is a example concept kinda compatible with C++1y concepts
+ * lite. The problem with this mechanism is that it rises compilation
+ * errors when the concept is not met, making it non suitable for
+ * SFINAE-friendly concepts.
+ */
 template <typename T>
-constexpr bool Example_concept()
+ABL_CONCEPT bool Example_concept()
 {
   using namespace std;
 
@@ -30,10 +50,10 @@ constexpr bool Example_concept()
       ))>();
 }
 
-//!
-// Models the concept:
-//   Example_concept
-//
+/*!
+ * Models the concept:
+ *   Example_concept
+ */
 struct example_model
 {
   typedef int value_type;
@@ -41,9 +61,9 @@ struct example_model
   void action() {}
 };
 
-//!
-// Example non-model, missing action
-//
+/*!
+ * Example non-model, missing action
+ */
 struct example_non_model
 {
   typedef int value_type;
@@ -65,17 +85,16 @@ TEST(simple_concept, can_be_used_with_concept_assert)
   //   ABL_ASSERT_CONCEPT(Example_concept, ExampleNonModel);
 }
 
-//!
-// Same concept as `Example_concept`, but modeled in a SFINAE-friendly
-// way, which is preferred.  This syntax has the advantage that
-// `declval` is required less in the specification.  On the other
-// hand, it is a bit more "magical"
-//
-template <typename _>
-struct Example_concept_two : concept<Example_concept_two<_>>
+/*!
+ * Same concept as `Example_concept`, but modeled in a SFINAE-friendly
+ * way, which is preferred.  This syntax has the advantage that
+ * `declval` is required less in the specification.  On the other
+ * hand, it is a bit more "magical"
+ */
+ABL_CONCEPT_SPEC(Example_concept_two)
 {
   template <typename T>
-  auto requires(T&& x) -> decltype(
+  auto requires_(T&& x) -> decltype(
     expressions(
       // Dereferenceable
       *x,
@@ -100,28 +119,28 @@ TEST(concept, can_be_used_with_concept_assert)
   ABL_ASSERT_NOT_CONCEPT(Example_concept_two, example_non_model);
 }
 
-TEST(concept, can_use_satisfies_with_concept_spec)
+TEST(concept, can_use_models_with_concept_spec)
 {
-  EXPECT_TRUE(satisfies<Example_concept_two<void>(example_model)>());
-  EXPECT_FALSE(satisfies<Example_concept_two<void>(example_non_model)>());
+  EXPECT_TRUE(models<Example_concept_two_spec(example_model)>());
+  EXPECT_FALSE(models<Example_concept_two_spec(example_non_model)>());
 }
 
 TEST(concept, can_use_check_with_concept_spec)
 {
-  EXPECT_TRUE(check<Example_concept_two<void>(example_model)>());
+  EXPECT_TRUE(check<Example_concept_two_spec(example_model)>());
   // This should fail to compiler, rising an error in the line of
   // the specification that is not met.
   //   EXPECT_FALSE(check<Example_concept_two<void>(ExampleNonModel)>());
 }
 
-//!
-// Finally, an example of specifying a SFINAE-friendly concept in two
-// steps, which migth seem clearer to some.
-//
+/*!
+ * Finally, an example of specifying a SFINAE-friendly concept in two
+ * steps, which migth seem clearer to some.
+ */
 struct Example_concept_spec
 {
   template <typename T>
-  auto requires(T&& x) -> decltype(
+  auto requires_(T&& x) -> decltype(
     expressions(
       // Dereferenceable
       *x,
@@ -135,7 +154,10 @@ struct Example_concept_spec
 };
 
 template <typename T>
-using Example_concept_three = concept<Example_concept_spec(T)>;
+ABL_CONCEPT bool Example_concept_three()
+{
+  return models<Example_concept_spec(T)>();
+}
 
 TEST(concept, can_be_defined_in_two_steps)
 {
@@ -143,14 +165,17 @@ TEST(concept, can_be_defined_in_two_steps)
   EXPECT_FALSE(Example_concept_three<example_non_model>());
 }
 
-template <typename Arg1, typename Arg2=Arg1>
-struct adl_swapable : concept<adl_swapable<Arg1, Arg2>>
+ABL_CONCEPT_SPEC(adl_swapable)
 {
   template <typename T, typename U>
-  auto requires(T&& x, U&& y) -> decltype(
+  auto requires_(T&& x, U&& y) -> decltype(
     expressions(
       (swap(x, y), can_be_void),
       (swap(y, x), can_be_void)));
+
+  template <typename T>
+  auto requires_(T&& x) -> decltype(
+    requires_(x, x));
 };
 
 void swap(example_model&, example_model&);

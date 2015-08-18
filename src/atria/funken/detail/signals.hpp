@@ -1,4 +1,50 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+//
+// Copyright (C) 2014, 2015 Ableton AG, Berlin. All rights reserved.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation
+// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+// DEALINGS IN THE SOFTWARE.
+//
+
+/*!
+ * @file
+ *
+ * This module implements the signal flow in funken.  Signals can be
+ * connected forming two superinposed directed acyclical graphs, where
+ * signals flow *down* or *up*.  Signals are derived from eachother
+ * using transducers.
+ *
+ * The APIs for flowing up and down are asymmetric because of the way
+ * the graph is constructed and the semantics of information flow.
+ *
+ *   - An up-down-signal can be constructed from a up-down-signal.
+ *   - A down-signal can be constructed from a up-down-signa or
+ *     a down-signal.
+ *   - A signal can be appended children, but can not be appended
+ *     parents.
+ *   - Information propagates upwardes immediately, but propagates
+ *     upwards in two fases.
+ *
+ * In general, sucessors know a lot about their predecessors, but
+ * sucessors need to know very little or nothing from their sucessors.
+ *
+ * @todo We could eventually flatten signals when the sucessors knows
+ * the transducer of its predecessor, this could be done heuristically.
+ */
 
 #pragma once
 
@@ -10,40 +56,14 @@ ABL_RESTORE_WARNINGS
 #include <vector>
 #include <functional>
 
-//!
-// @file
-//
-// This module implements the signal flow in funken.  Signals can be
-// connected forming two superinposed directed acyclical graphs, where
-// signals flow *down* or *up*.  Signals are derived from eachother
-// using transducers.
-//
-// The APIs for flowing up and down are asymmetric because of the way
-// the graph is constructed and the semantics of information flow.
-//
-//   - An up-down-signal can be constructed from a up-down-signal.
-//   - A down-signal can be constructed from a up-down-signa or
-//     a down-signal.
-//   - A signal can be appended children, but can not be appended
-//     parents.
-//   - Information propagates upwardes immediately, but propagates
-//     upwards in two fases.
-//
-// In general, sucessors know a lot about their predecessors, but
-// sucessors need to know very little or nothing from their sucessors.
-//
-// @todo We could eventually flatten signals when the sucessors knows
-// the transducer of its predecessor, this could be done heuristically.
-//
-
 namespace atria {
 namespace funken {
 
 namespace detail {
 
-//!
-// Allows comparing shared and weak pointers based on their owner.
-//
+/*!
+ * Allows comparing shared and weak pointers based on their owner.
+ */
 constexpr struct
 {
   template <typename T1, typename T2>
@@ -55,22 +75,22 @@ constexpr struct
   }
 } owner_equals {};
 
-//!
-// Interface for children of a signal and is used to propagate
-// notifications.  The notifications are propagated in two steps,
-// `send_down()` and `notify()`, not ensure that the outside world sees a
-// consistent state when it receives notifications.
-//
+/*!
+ * Interface for children of a signal and is used to propagate
+ * notifications.  The notifications are propagated in two steps,
+ * `send_down()` and `notify()`, not ensure that the outside world sees a
+ * consistent state when it receives notifications.
+ */
 struct down_signal_base
 {
-  virtual ~down_signal_base() {}
+  virtual ~down_signal_base();
   virtual void send_down() = 0;
   virtual void notify() = 0;
 };
 
-//!
-// Interface for signals that can send values back to their parents.
-//
+/*!
+ * Interface for signals that can send values back to their parents.
+ */
 template <typename T>
 struct up_signal_base
 {
@@ -79,10 +99,10 @@ struct up_signal_base
   virtual void send_up(T&&) = 0;
 };
 
-//!
-// Base class for the various signal types.  Provides basic
-// functionality for setting values and propagating them to children.
-//
+/*!
+ * Base class for the various signal types.  Provides basic
+ * functionality for setting values and propagating them to children.
+ */
 template <typename T>
 class down_signal
   : public std::enable_shared_from_this<down_signal<T> >
@@ -213,9 +233,9 @@ private:
                                const value_type&)> observers_;
 };
 
-//!
-// Base class for signals that can send values up the signal chain.
-//
+/*!
+ * Base class for signals that can send values up the signal chain.
+ */
 template <typename T>
 class up_down_signal
   : public down_signal<T>

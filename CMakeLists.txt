@@ -1,4 +1,4 @@
-# Copyright (c) 2014 Ableton AG, Berlin
+# Copyright (c) 2014, 2015 Ableton AG, Berlin
 
 cmake_minimum_required(VERSION 2.8.12)
 
@@ -7,19 +7,15 @@ set(Atria_VERSION_MAJOR 0)
 set(Atria_VERSION_MINOR 0)
 
 # Enable C++11
-include(CheckCXXCompilerFlag)
-if(WIN32)
-  # Check if we are using Visual Studio 2013 or later
-  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 12)
-    message(FATAL_ERROR "You are using an unsupported Windows compiler! (Visual C++ 2013 or later required)")
-  endif()
-else()
-  set(cxx11_options -std=c++11)
-  CHECK_CXX_COMPILER_FLAG(${cxx11_options} COMPILER_SUPPORTS_CXX11)
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 11)
+endif()
+set(CMAKE_CXX_STANDARD_REQUIRED on)
 
-  if(NOT COMPILER_SUPPORTS_CXX11)
-    message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has insufficient C++11 support. Please use a different C++ compiler.")
-  endif()
+if(CMAKE_CXX_STANDARD STREQUAL 14)
+  add_definitions(-DABL_CXX14=1)
+else()
+  add_definitions(-DABL_CXX14=0)
 endif()
 
 # Build debug by default
@@ -34,13 +30,17 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL Clang
   set(warning_options
     -Werror
     -Weverything
+    -Wno-disabled-macro-expansion
+    -Wno-string-conversion
+    -Wno-global-constructors
     -Wno-c++98-compat
     -Wno-c++98-compat-pedantic
     -Wno-documentation-unknown-command
     -Wno-exit-time-destructors
     -Wno-padded
     -Wno-undefined-reinterpret-cast
-  )
+    -Wno-weak-vtables
+    -Wno-undefined-internal)
 elseif(MSVC)
   set(warning_options /WX /W4 /wd4503 /wd4512)
 endif()
@@ -70,80 +70,48 @@ include(FeatureSummary)
 add_feature_info(GoogleTest ${GTEST_FOUND} "used for unit testing.")
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
+file(GLOB_RECURSE atria_sources "src/*.hpp" "src/*.cpp")
+file(GLOB_RECURSE atria_test_sources "src/tst_*.cpp")
+file(GLOB_RECURSE atria_main_sources "src/*_main.cpp")
+list(REMOVE_ITEM  atria_sources ${atria_test_sources})
+list(REMOVE_ITEM  atria_sources ${atria_main_sources})
+
 # Defining Atria
-add_library(AtriaLib
-  src/atria/estd/memory.hpp
-  src/atria/estd/type_traits.hpp
-  src/atria/estd/utility.hpp
-  src/atria/funken/commit.hpp
-  src/atria/funken/concepts.hpp
-  src/atria/funken/detail
-  src/atria/funken/detail/access.hpp
-  src/atria/funken/detail/no_value.hpp
-  src/atria/funken/detail/root_signals.hpp
-  src/atria/funken/detail/signals.hpp
-  src/atria/funken/detail/watchable.hpp
-  src/atria/funken/detail/xform_signals.hpp
-  src/atria/funken/in.hpp
-  src/atria/funken/inout.hpp
-  src/atria/funken/out.hpp
-  src/atria/funken/sensor.hpp
-  src/atria/funken/state.hpp
-  src/atria/funken/structure.hpp
-  src/atria/funken/watch.hpp
-  src/atria/funken/xformed.hpp
-  src/atria/meta/common_type.hpp
-  src/atria/meta/pack.hpp
-  src/atria/meta/std_tuple.hpp
-  src/atria/meta/utils.hpp
-  src/atria/testing/benchmark.hpp
-  src/atria/testing/spies.hpp
-  src/atria/variant/match.hpp
-  src/atria/variant/visitor.hpp
-  src/atria/xform/functional.hpp
-  src/atria/xform/reduce.hpp
-  src/atria/xform/transducers.hpp
-  )
-set_target_properties(AtriaLib PROPERTIES LINKER_LANGUAGE CXX)
-target_include_directories(AtriaLib PUBLIC
+add_library(atria ${atria_sources})
+set_target_properties(atria PROPERTIES LINKER_LANGUAGE CXX)
+target_include_directories(atria PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/compat>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third-party/eggs-variant/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third-party/cxxopts/src>
   ${Boost_INCLUDE_DIRS})
-target_compile_options(AtriaLib
-  PUBLIC ${cxx11_options} ${warning_options})
-target_link_libraries(AtriaLib)
+target_compile_options(atria
+  PUBLIC
+  ${warning_options})
+target_link_libraries(atria
+  ${Boost_LIBRARIES})
 
 # Definining tests
 if(GTEST_FOUND)
   add_library(gtest_internal STATIC
     ${GTEST_SOURCE}/src/gtest-all.cc
-    ${GTEST_SOURCE}/src/gtest_main.cc
-    )
+    ${GTEST_SOURCE}/src/gtest_main.cc)
   target_include_directories(gtest_internal PUBLIC
     ${GTEST_SOURCE} ${GTEST_SOURCE}/include)
   target_compile_options(gtest_internal PUBLIC
     ${cxx11_options} -Wno-global-constructors)
 
-  add_executable(AtriaTest
-    src/atria/funken/tst_in_and_out.cpp
-    src/atria/funken/tst_sensor.cpp
-    src/atria/funken/tst_state.cpp
-    src/atria/funken/tst_structure.cpp
-    src/atria/funken/tst_xformed.cpp
-    src/atria/meta/tst_concepts.cpp
-    src/atria/meta/tst_pack.cpp
-    src/atria/meta/tst_std_tuple.cpp
-    src/atria/testing/tst_benchmark.cpp
-    src/atria/testing/tst_spies.cpp
-    src/atria/variant/tst_match.cpp
-    src/atria/xform/tst_transducers.cpp
-    src/atria/xform/tst_transducers_benchmark.cpp
-    )
-
-  target_link_libraries(AtriaTest
-    AtriaLib
+  add_executable(atria-test-all
+    ${atria_test_sources})
+  target_link_libraries(atria-test-all
+    atria
     gtest_internal
     ${CMAKE_THREAD_LIBS_INIT})
+  add_test(atria-test-all atria-test-all)
 
-  add_test(AtriaTestCase AtriaTest)
+  add_executable(atria-benchmark-xform
+    src/atria/xform/benchmark_main.cpp)
+  target_link_libraries(atria-benchmark-xform
+    atria)
+  add_test(atria-benchmark-xform atria-benchmark-xform)
 endif()

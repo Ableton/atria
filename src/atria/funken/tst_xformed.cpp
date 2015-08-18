@@ -1,10 +1,33 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+//
+// Copyright (C) 2014, 2015 Ableton AG, Berlin. All rights reserved.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation
+// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+// DEALINGS IN THE SOFTWARE.
+//
 
 #include <atria/funken/commit.hpp>
 #include <atria/funken/state.hpp>
 #include <atria/funken/structure.hpp>
 #include <atria/funken/watch.hpp>
 #include <atria/funken/xformed.hpp>
+
+#include <atria/xform/transducer/filter.hpp>
+
 #include <atria/testing/gtest.hpp>
 #include <array>
 #include <map>
@@ -16,10 +39,10 @@ using namespace xform;
 
 TEST(xformed, concepts)
 {
-  EXPECT_TRUE(meta::check<In_value<
-              decltype(xformed(identity, make_state(0)))>>());
-  EXPECT_TRUE(meta::check<Inout_value<
-              decltype(xformed(identity, identity, make_state(0)))>>());
+  EXPECT_TRUE(meta::check<In_value_spec(
+                decltype(xformed(identity, make_state(0))))>());
+  EXPECT_TRUE(meta::check<Inout_value_spec(
+                decltype(xformed(identity, identity, make_state(0))))>());
   EXPECT_FALSE(Out_value<decltype(xformed(identity, make_state(0)))>());
 }
 

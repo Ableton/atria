@@ -14,3 +14,6 @@ CMakeCache.txt
 Makefile
 Testing/
 *.a
+GPATH
+GRTAGS
+GTAGS

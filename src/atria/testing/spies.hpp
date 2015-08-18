@@ -1,4 +1,32 @@
-// Copyright: 2014, Ableton AG, Berlin. All rights reserved.
+//
+// Copyright (C) 2014, 2015 Ableton AG, Berlin. All rights reserved.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation
+// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+// DEALINGS IN THE SOFTWARE.
+//
+
+/*!
+ * @file
+ */
+
+#define BOOST_OPTIONAL_CONFIG_ALLOW_BINDING_TO_RVALUES
+
+#include <atria/meta/utils.hpp>
 
 #include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
@@ -14,13 +42,13 @@ ABL_RESTORE_WARNINGS
 namespace atria {
 namespace testing {
 
-//!
-// Class for spying on functions that take a variant as a parameter.
-// It will visit the variant that is passed on each call, and count
-// the number of ocurrences for every type.
-//
-// @todo Add support for checking the actual values that were passed.
-//
+/*!
+ * Class for spying on functions that take a variant as a parameter.
+ * It will visit the variant that is passed on each call, and count
+ * the number of ocurrences for every type.
+ *
+ * @todo Add support for checking the actual values that were passed.
+ */
 class variant_spy : public boost::static_visitor<>
 {
 public:
@@ -41,18 +69,12 @@ public:
 
   template<typename VariantT>
   auto visitor()
-    -> decltype(std::bind(
-                  static_cast<void (*) (variant_spy&, const VariantT&)>(
-                    &boost::apply_visitor<variant_spy, const VariantT>),
-                  std::ref(*this),
-                  std::placeholders::_1))
-  {
-    return std::bind(
-      static_cast<void (*) (variant_spy&, const VariantT&)>(
-        &boost::apply_visitor<variant_spy, const VariantT>),
-      std::ref(*this),
-      std::placeholders::_1);
-  }
+    -> ABL_DECLTYPE_RETURN(
+      std::bind(
+        static_cast<void (*) (variant_spy&, const VariantT&)>(
+          &boost::apply_visitor<variant_spy, const VariantT>),
+        std::ref(*this),
+        std::placeholders::_1))
 
 private:
   std::unordered_multiset<std::type_index> calls_;
@@ -109,12 +131,13 @@ private:
 
 } // namespace detail
 
-//!
-// Functor that counts the number of times it was called.
-//
-// @todo Support comparing the actual arguments.  Keep generic
-// interface using boost::any
-//
+
+/*!
+ * Functor that counts the number of times it was called.
+ *
+ * @todo Support comparing the actual arguments.  Keep generic
+ * interface using boost::any
+ */
 template<typename MockT = mocks::defaulting<void> >
 class spy_fn : public detail::spy_base
 {
@@ -136,26 +159,26 @@ public:
 
   template <typename... Args>
   auto operator() (Args&& ...args)
-    -> decltype(this->mock_(std::forward<Args>(args)...))
-  {
-    called();
-    return this->mock_(std::forward<Args>(args)...);
-  }
+    -> ABL_DECLTYPE_RETURN(
+      (called(),
+       this->mock_(std::forward<Args>(args)...)))
 };
 
-//!
-// Returns a spy object that uses fn as mock implementation.
-//
+/*!
+ * Returns a spy object that uses fn as mock implementation.
+ */
 template <typename Fn>
-inline spy_fn<Fn> spy(const Fn& fn)
+inline auto spy(const Fn& fn)
+  -> spy_fn<Fn>
 {
   return spy_fn<Fn>(fn);
 }
 
-//!
-// Returns a spy object with a no-op mock implementation.
-//
-inline spy_fn<> spy()
+/*!
+ * Returns a spy object with a no-op mock implementation.
+ */
+inline auto spy()
+  -> spy_fn<>
 {
   return spy_fn<>();
 }
@@ -163,21 +186,21 @@ inline spy_fn<> spy()
 namespace detail {
 
 template <typename MockT>
-class ScopedIntruder
+class scoped_intruder
 {
   boost::optional<MockT&> mock_;
   MockT original_;
 
 public:
-  ScopedIntruder& operator=(const ScopedIntruder&) = delete;
-  ScopedIntruder(const ScopedIntruder&) = delete;
+  scoped_intruder& operator=(const scoped_intruder&) = delete;
+  scoped_intruder(const scoped_intruder&) = delete;
 
-  ScopedIntruder(ScopedIntruder&& other)
+  scoped_intruder(scoped_intruder&& other)
   {
     swap(*this, other);
   }
 
-  ScopedIntruder& operator=(ScopedIntruder&& other)
+  scoped_intruder& operator=(scoped_intruder&& other)
   {
     if (this != &other)
     {
@@ -185,14 +208,14 @@ public:
     }
   }
 
-  ScopedIntruder(MockT& mock, MockT replacement)
+  scoped_intruder(MockT& mock, MockT replacement)
     : mock_(mock)
     , original_(mock)
   {
     *mock_ = replacement;
   }
 
-  ~ScopedIntruder()
+  ~scoped_intruder()
   {
     if (mock_)
     {
@@ -208,8 +231,9 @@ public:
     return (*mock_)(std::forward<Args>(args)...);
   }
 
-  friend void swap(ScopedIntruder& a, ScopedIntruder& b)
+  friend void swap(scoped_intruder& a, scoped_intruder& b)
   {
+    using std::swap;
     swap(a.mock_, b.mock_);
     swap(a.original_, b.original_);
   }
@@ -217,30 +241,65 @@ public:
 
 } // namespace detail
 
-//!
-// Given a functor object `mock` of a general functor with type erasure
-// (e.g. std::function or boost::function) installs a spy that counts
-// the calls and returns such a spy.
-//
+/*!
+ * Given a functor object `mock` of a general functor with type erasure
+ * (e.g. std::function or boost::function) installs a spy that counts
+ * the calls and returns such a spy.
+ */
 template <typename MockT>
-inline spy_fn<detail::ScopedIntruder<MockT>> spy_on(MockT& mock)
+inline auto spy_on(MockT& mock)
+  -> spy_fn<detail::scoped_intruder<MockT> >
 {
   auto s = spy(mock);
-  return { detail::ScopedIntruder<MockT>(mock, s), s };
+  return { detail::scoped_intruder<MockT>(mock, s), s };
 }
 
-//!
-// Like @a spy_on(), but it installs the `replacement` function instead
-// of keeping the original one.  The spy is uninstalled on
-// destruction, and it is not copyable.
-//
+/*!
+ * Like @a spy_on(), but it installs the `replacement` function instead
+ * of keeping the original one.  The spy is uninstalled on
+ * destruction, and it is not copyable.
+ */
 template <typename MockT, typename FnT>
-inline spy_fn<detail::ScopedIntruder<MockT>>
-spy_on(MockT& mock, const FnT& replacement)
+inline auto spy_on(MockT& mock, const FnT& replacement)
+  -> spy_fn<detail::scoped_intruder<MockT> >
 {
   auto s = spy(replacement);
-  return { detail::ScopedIntruder<MockT>(mock, s), s };
+  return { detail::scoped_intruder<MockT>(mock, s), s };
 }
+
+namespace detail {
+struct default_copy_spy_base_t {};
+} // namespace detail
+
+/*!
+ * Utility for testing how many times an object is copied.
+ */
+template <typename BaseT = detail::default_copy_spy_base_t>
+struct copy_spy : BaseT
+{
+  using base_t = BaseT;
+
+  testing::spy_fn<> copied;
+
+  copy_spy() = default;
+  copy_spy(copy_spy&&) = default;
+  copy_spy& operator=(copy_spy&&) = default;
+
+  copy_spy(const copy_spy& x)
+    : base_t(x)
+    , copied(x.copied)
+  {
+    copied();
+  }
+
+  copy_spy& operator=(const copy_spy& x)
+  {
+    base_t::operator=(x);
+    copied = x.copied;
+    copied();
+    return *this;
+  }
+};
 
 } // namespace testing
 } // namespace atria
