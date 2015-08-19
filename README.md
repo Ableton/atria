@@ -68,7 +68,7 @@ http://cppcon2015.sched.org/event/ff8f576d5d0fe02bcc05fccfa56359a3)
   - [googletest](https://chromium.googlesource.com/external/googletest) (for testing only)
 
 Other dependencies are vendored via submodules.  Make sure to run `git
-submodules update --init --recursive` before building.
+submodule update --init --recursive` before building.
 
 ## Maintainers
 
