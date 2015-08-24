@@ -67,15 +67,15 @@ struct transducer_impl : std::tuple<ParamTs...>
   //
   //    using base_t::base_t;
 
-  transducer_impl() = default;
-  transducer_impl(const transducer_impl&) = default;
-  transducer_impl(transducer_impl&&) = default;
+  constexpr transducer_impl() = default;
+  constexpr transducer_impl(const transducer_impl&) = default;
+  constexpr transducer_impl(transducer_impl&&) = default;
   transducer_impl& operator=(const transducer_impl&) = default;
   transducer_impl& operator=(transducer_impl&&) = default;
 
-  template <typename ...Ts>
-  transducer_impl(Ts ...ts)
-    : base_t(std::move(ts)...)
+  template <typename T, typename ...Ts>
+  constexpr transducer_impl(T t, Ts ...ts) noexcept
+    : base_t(std::move(t), std::move(ts)...)
   {}
 
   template<typename ReducingFnT>

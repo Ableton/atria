@@ -29,27 +29,27 @@ namespace meta {
 TEST(get_index_sequence, tuple)
 {
   static_assert(std::is_same<get_index_sequence<std::tuple<> >,
-                             estd::make_index_sequence<0> >{}, "");
+                             estd::make_index_sequence<0> >::value, "");
   static_assert(std::is_same<get_index_sequence<std::tuple<int> >,
-                             estd::make_index_sequence<1> >{}, "");
+                             estd::make_index_sequence<1> >::value, "");
   static_assert(std::is_same<get_index_sequence<std::tuple<int, double> >,
-                             estd::make_index_sequence<2> >{}, "");
+                             estd::make_index_sequence<2> >::value, "");
 }
 
 TEST(get_index_sequence, pair)
 {
   static_assert(std::is_same<get_index_sequence<std::pair<int, char> >,
-                             estd::make_index_sequence<2> >{}, "");
+                             estd::make_index_sequence<2> >::value, "");
 }
 
 TEST(get_index_sequence, array)
 {
   static_assert(std::is_same<get_index_sequence<std::array<int, 0> >,
-                             estd::make_index_sequence<0> >{}, "");
+                             estd::make_index_sequence<0> >::value, "");
   static_assert(std::is_same<get_index_sequence<std::array<int, 1> >,
-                             estd::make_index_sequence<1> >{}, "");
+                             estd::make_index_sequence<1> >::value, "");
   static_assert(std::is_same<get_index_sequence<std::array<int, 10> >,
-                             estd::make_index_sequence<10> >{}, "");
+                             estd::make_index_sequence<10> >::value, "");
 }
 
 namespace {
@@ -65,7 +65,7 @@ auto get(const custom& c)
 TEST(get_index_sequence, custom)
 {
   static_assert(std::is_same<get_index_sequence<custom>,
-                             estd::make_index_sequence<3> >{}, "");
+                             estd::make_index_sequence<3> >::value, "");
 }
 
 namespace {
@@ -77,9 +77,9 @@ struct errorish {};
 TEST(get_index_sequence, error)
 {
   static_assert(std::is_same<get_index_sequence<errorish>,
-                             could_not_get_index_sequence>{}, "");
+                             could_not_get_index_sequence>::value, "");
   static_assert(std::is_same<get_index_sequence<int>,
-                             could_not_get_index_sequence>{}, "");
+                             could_not_get_index_sequence>::value, "");
 }
 
 } // namespace meta

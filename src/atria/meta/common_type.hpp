@@ -85,8 +85,7 @@ struct common_type2
 template <typename T, typename U>
 struct common_type2<
   T, U,
-  estd::void_t<decltype(
-    true ? std::declval<T>() : std::declval<U>())>>
+  estd::enable_if_t<std::is_convertible<T, U>::value || std::is_convertible<U, T>::value>>
 {
   using type = typename undeclval<
     decltype(true ? std::declval<T>() : std::declval<U>()),

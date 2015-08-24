@@ -84,6 +84,18 @@ class visitor_t
 {
   detail::visitor_impl<Fns...> impl_;
 
+  template<typename T>
+  auto call_impl(T&& x, std::false_type/*massage_void*/) -> ReturnType
+  {
+    return impl_(std::forward<T>(x));
+  }
+
+  template<typename T>
+  auto call_impl(T&& x, std::true_type/*massage_void*/) -> ReturnType
+  {
+    return impl_(std::forward<T>(x)), meta::from_void{};
+  }
+
 public:
   using result_type = ReturnType;
 
@@ -91,24 +103,14 @@ public:
     : impl_(std::forward<Fns>(fns)...)
   {}
 
-template<typename T, typename U=ReturnType>
-  auto operator() (T&& x)
-    -> estd::enable_if_t<
-        !std::is_void<decltype(impl_(std::forward<T>(x)))>{} ||
-         std::is_void<U>{},
-      ReturnType>
-  {
-    return impl_(std::forward<T>(x));
-  }
-
   template<typename T, typename U=ReturnType>
-  auto operator() (T&& x)
-    -> estd::enable_if_t<
-         std::is_void<decltype(impl_(std::forward<T>(x)))>{} &&
-        !std::is_void<U>{},
-      ReturnType>
+  auto operator() (T&& x) -> ReturnType
   {
-    return impl_(std::forward<T>(x)), meta::from_void{};
+    return call_impl(
+      std::forward<T>(x),
+      std::integral_constant<bool,
+                             std::is_void<decltype(impl_(std::forward<T>(x)))>::value &&
+                               !std::is_void<U>::value>{});
   }
 };
 
@@ -164,7 +166,7 @@ otherwise(Fn&& fn = Fn())
 template <typename Fn, typename ...Args>
 struct when_t
 {
-  using result_type = typename std::result_of<Fn(Args...)>::type;
+  using result_type = estd::result_of_t<Fn(Args...)>;
 
   when_t(Fn&& fn)
     : impl_(std::forward<Fn>(fn))
@@ -253,7 +255,7 @@ template <typename... FnTs>
 auto visitor(FnTs&& ...fns)
   -> visitor_t<
     meta::common_type_t<
-      typename std::result_of<FnTs(meta::bottom)>::type...>,
+      estd::result_of_t<FnTs(meta::bottom)>...>,
     FnTs...>
 {
   return { std::forward<FnTs>(fns)... };

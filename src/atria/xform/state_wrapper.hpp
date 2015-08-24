@@ -71,13 +71,13 @@ struct state_wrapper : std::tuple<StateT, DataT>
   using tag = TagT;
   using base_t = std::tuple<StateT, DataT>;
 
-  state_wrapper(const state_wrapper&) = default;
-  state_wrapper(state_wrapper&&) = default;
+  constexpr state_wrapper(const state_wrapper&) = default;
+  constexpr state_wrapper(state_wrapper&&) = default;
   state_wrapper& operator=(const state_wrapper&) = default;
   state_wrapper& operator=(state_wrapper&&) = default;
 
   template <typename T, typename U>
-  state_wrapper(T&& st, U&& data)
+  constexpr state_wrapper(T&& st, U&& data) noexcept
     : base_t(std::forward<T>(st), std::forward<U>(data))
   {}
 };

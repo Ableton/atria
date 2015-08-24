@@ -42,16 +42,7 @@ namespace xform {
  * @see skip
  */
 template <typename SkippedT, typename CalledT>
-struct skip_state : eggs::variant<SkippedT, CalledT>
-{
-  using skipped_t = SkippedT;
-  using called_t  = CalledT;
-
-  using variant_types = meta::pack<skipped_t, called_t>;
-
-  using base_t = eggs::variant<SkippedT, CalledT>;
-  using base_t::base_t;
-};
+using skip_state = eggs::variant<SkippedT, CalledT>;
 
 } // namespace xform
 } // namespace atria
@@ -132,7 +123,7 @@ struct skip_result_impl
   using error_t = meta::could_not_find_common_type<skipped_t, called_t>;
 
   using type = estd::conditional_t<
-    !std::is_same<common_type_t, error_t>{},
+    !std::is_same<common_type_t, error_t>::value,
       common_type_t,
       skip_state<estd::decay_t<skipped_t>,
                  estd::decay_t<called_t> > >;
@@ -231,6 +222,27 @@ struct bind_forward_reducing_function
            std::forward<StateT>(st)))
 };
 
+template <typename ReducingFnT, typename StateT, typename... InputTs>
+auto call_impl(std::true_type /*is_skip_state*/, ReducingFnT&& step, StateT&& state, InputTs&& ...ins)
+  -> estd::decay_t<StateT>
+{
+  return variant::match(
+    std::forward<StateT>(state),
+    detail::bind_forward_reducing_function<ReducingFnT, InputTs...> {
+      std::forward<ReducingFnT>(step),
+        std::forward_as_tuple<InputTs...>(ins...)
+      });
+}
+
+template <typename ReducingFnT, typename StateT, typename... InputTs>
+auto call_impl(std::false_type /*is_skip_state*/, ReducingFnT&& step, StateT&& state, InputTs&& ...ins)
+  -> skip_result_t<ReducingFnT, StateT, InputTs...>
+{
+  return std::forward<ReducingFnT>(step)(
+    std::forward<StateT>(state),
+    std::forward<InputTs>(ins)...);
+}
+
 } // namespace detail
 
 /*!
@@ -244,28 +256,11 @@ struct bind_forward_reducing_function
  */
 template <typename ReducingFnT, typename StateT, typename... InputTs>
 auto call(ReducingFnT&& step, StateT&& state, InputTs&& ...ins)
-  -> estd::enable_if_t<
-    is_skip_state<estd::decay_t<StateT> >{},
-    estd::decay_t<StateT> >
-{
-  return variant::match(
-    std::forward<StateT>(state),
-    detail::bind_forward_reducing_function<ReducingFnT, InputTs...> {
-      std::forward<ReducingFnT>(step),
-        std::forward_as_tuple<InputTs...>(ins...)
-      });
-}
-
-template <typename ReducingFnT, typename StateT, typename... InputTs>
-auto call(ReducingFnT&& step, StateT&& state, InputTs&& ...ins)
-  -> estd::enable_if_t<
-    !is_skip_state<estd::decay_t<StateT> >{},
-    skip_result_t<ReducingFnT, StateT, InputTs...> >
-{
-  return std::forward<ReducingFnT>(step)(
-    std::forward<StateT>(state),
-    std::forward<InputTs>(ins)...);
-}
+  -> ABL_DECLTYPE_RETURN(
+    detail::call_impl(is_skip_state<estd::decay_t<StateT> >{},
+                      std::forward<ReducingFnT>(step),
+                      std::forward<StateT>(state),
+                      std::forward<InputTs>(ins)...))
 
 } // namespace xform
 } // namespace atria

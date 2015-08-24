@@ -65,7 +65,7 @@ struct is_eggs_variant : std::is_base_of<
 template <typename VariantT, typename ...FnTs>
 auto match(VariantT&& variant, FnTs&& ...fns)
   -> estd::enable_if_t<
-  detail::is_eggs_variant<estd::decay_t<VariantT> >{},
+  detail::is_eggs_variant<estd::decay_t<VariantT> >::value,
     visitor_result_of_t<
       detail::visitor_impl<FnTs...>,
       variant_types_t<VariantT&&> > >

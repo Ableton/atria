@@ -79,8 +79,8 @@ template <typename MappingT>
 auto map(MappingT&& mapping)
   -> map_t<estd::decay_t<MappingT> >
 {
-  return map_t<estd::decay_t<MappingT> > {
-    std::forward<MappingT>(mapping) };
+  return map_t<estd::decay_t<MappingT> > (
+    std::forward<MappingT>(mapping) );
 }
 
 #endif // ABL_CXX14
