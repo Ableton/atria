@@ -74,7 +74,7 @@ struct transducer_impl : std::tuple<ParamTs...>
   transducer_impl& operator=(transducer_impl&&) = default;
 
   template <typename T, typename ...Ts>
-  constexpr transducer_impl(T t, Ts ...ts) noexcept
+  explicit constexpr transducer_impl(T t, Ts ...ts) noexcept
     : base_t(std::move(t), std::move(ts)...)
   {}
 

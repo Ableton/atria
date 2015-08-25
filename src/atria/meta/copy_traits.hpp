@@ -43,9 +43,10 @@ template <template<typename> class TraitCheckMF,
           typename OrigT,
           typename DestT>
 struct copy_trait
-  : std::conditional<TraitCheckMF<OrigT>::value,
-                     typename TraitAddMf<DestT>::type,
-                     DestT>
+  : std::conditional<
+      TraitCheckMF<OrigT>::value,
+      typename TraitAddMf<DestT>::type,
+      DestT>
 {};
 
 #define ABL_DEFINE_COPY_STD_TRAIT(name__)       \

@@ -85,13 +85,13 @@ class visitor_t
   detail::visitor_impl<Fns...> impl_;
 
   template<typename T>
-  auto call_impl(T&& x, std::false_type/*massage_void*/) -> ReturnType
+  auto call_impl(std::false_type /*massage_void*/, T&& x) -> ReturnType
   {
     return impl_(std::forward<T>(x));
   }
 
   template<typename T>
-  auto call_impl(T&& x, std::true_type/*massage_void*/) -> ReturnType
+  auto call_impl(std::true_type  /*massage_void*/, T&& x) -> ReturnType
   {
     return impl_(std::forward<T>(x)), meta::from_void{};
   }
@@ -107,10 +107,11 @@ public:
   auto operator() (T&& x) -> ReturnType
   {
     return call_impl(
-      std::forward<T>(x),
-      std::integral_constant<bool,
-                             std::is_void<decltype(impl_(std::forward<T>(x)))>::value &&
-                               !std::is_void<U>::value>{});
+      std::integral_constant<
+        bool,
+        std::is_void<decltype(impl_(std::forward<T>(x)))>::value &&
+       !std::is_void<U>::value>{},
+      std::forward<T>(x));
   }
 };
 
@@ -145,7 +146,7 @@ struct default_construct
   template <typename ...Args>
   ReturnT operator() (Args&& ...)
   {
-    return ReturnT();
+    return ReturnT{};
   }
 };
 

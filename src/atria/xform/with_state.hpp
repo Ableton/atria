@@ -52,13 +52,14 @@ template <typename StateT,
           typename WrappedFn>
 auto with_state_check_any_state(std::false_type /*is_any_state*/, StateT&& st, UnwrappedFn&& fn1, WrappedFn&& fn2)
   -> ABL_DECLTYPE_RETURN(
-    with_state_check_state_complete(std::is_same<
-                                        estd::decay_t<StateT>,
-                                        estd::decay_t<decltype(state_complete(std::forward<StateT>(st)))>
-                                    >{},
-                                    std::forward<StateT>(st),
-                                    std::forward<UnwrappedFn>(fn1),
-                                    std::forward<WrappedFn>(fn2)))
+    with_state_check_state_complete(
+      std::is_same<
+        estd::decay_t<StateT>,
+        estd::decay_t<decltype(state_complete(std::forward<StateT>(st)))>
+      >{},
+      std::forward<StateT>(st),
+      std::forward<UnwrappedFn>(fn1),
+      std::forward<WrappedFn>(fn2)))
 
 template <typename StateT,
           typename UnwrappedFn,
@@ -100,14 +101,15 @@ auto with_state_check_any_state(std::true_type /*is_any_state*/, StateT&& st, Un
  * @see take
  */
 template <typename StateT,
-    typename UnwrappedFn,
-    typename WrappedFn>
+          typename UnwrappedFn,
+          typename WrappedFn>
 auto with_state(StateT&& st, UnwrappedFn&& fn1, WrappedFn&& fn2)
   -> ABL_DECLTYPE_RETURN(
-    detail::with_state_check_any_state(std::is_same<estd::decay_t<StateT>, any_state>{},
-                                       std::forward<StateT>(st),
-                                       std::forward<UnwrappedFn>(fn1),
-                                       std::forward<WrappedFn>(fn2)))
+    detail::with_state_check_any_state(
+      std::is_same<estd::decay_t<StateT>, any_state>{},
+      std::forward<StateT>(st),
+      std::forward<UnwrappedFn>(fn1),
+      std::forward<WrappedFn>(fn2)))
 
 } // namespace xform
 } // namespace atria
