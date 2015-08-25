@@ -37,15 +37,19 @@ template <typename StateT,
           typename UnwrappedFn,
           typename WrappedFn>
 auto with_state_check_state_complete(std::false_type /*is_state_complete*/, StateT&& st, UnwrappedFn&&, WrappedFn&& fn)
-  -> ABL_DECLTYPE_RETURN(
-    std::forward<WrappedFn>(fn)(std::forward<StateT>(st)))
+  -> estd::result_of_t<WrappedFn(StateT)>
+{
+  return std::forward<WrappedFn>(fn)(std::forward<StateT>(st)));
+}
 
 template <typename StateT,
           typename UnwrappedFn,
           typename WrappedFn>
 auto with_state_check_state_complete(std::true_type /*is_state_complete*/, StateT&& st, UnwrappedFn&& fn, WrappedFn&&)
-  -> ABL_DECLTYPE_RETURN(
-    std::forward<UnwrappedFn>(fn)(std::forward<StateT>(st)))
+  -> estd::result_of_t<UnwrappedFn(StateT)>
+{
+  return std::forward<UnwrappedFn>(fn)(std::forward<StateT>(st)));
+}
 
 template <typename StateT,
           typename UnwrappedFn,
@@ -65,7 +69,7 @@ template <typename StateT,
           typename UnwrappedFn,
           typename WrappedFn>
 auto with_state_check_any_state(std::true_type /*is_any_state*/, StateT&& st, UnwrappedFn&& fn1, WrappedFn&& fn2)
-  -> decltype(std::forward<UnwrappedFn>(fn1)(std::forward<StateT>(st)))
+  -> estd::result_of_t<UnwrappedFn(StateT)>
 {
   using wrapped_state_t = estd::result_of_t<UnwrappedFn(StateT)>;
 
