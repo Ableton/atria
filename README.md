@@ -5,22 +5,22 @@ Atria
 
 It provides core components that extend the standard library
 capabilities.  It provide (mostly) header-only libraries of general
-interest, in the spirit of the STL, Boost, Adobe Source Libraries or
+interest, in the spirit of the STL, Boost, Adobe Source Libraries, or
 Facebook's Folly and Fatal.
 
-This is an **open source** project.  You are encouraged you to use it,
-modify it and redistribute it.
+This is an **open source** project.  You're encouraged you to use it,
+modify it, and redistribute it.
 
 Status
 ------
 
-Atria is written in **standard C++11** and compile with recent
+Atria is written in **standard C++11** and compiles with recent
 versions of GCC and Clang.
 
-This project is under active development and it's API is not stable
+This project is under active development and its API is not stable
 yet.  Thus it is not suitable for most production systems.  However it
 is thoroughly tested, and **we encourage you to try it**.  Your
-feedback is very wellcome.
+feedback is very welcome.
 
 ## Modules
 
