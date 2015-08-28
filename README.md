@@ -33,7 +33,7 @@ feedback is very wellcome.
   customizable to other sum type implementatios.
 
 * `atria::meta` provides several metaprogramming tools, including some
-  [Booost.MPL](http://www.boost.org/doc/libs/1_59_0/libs/mpl/doc/index.html)
+  [Boost.MPL](http://www.boost.org/doc/libs/1_59_0/libs/mpl/doc/index.html)
   adaptors for several variadic types and concept checking facilities.
 
 * `atria::estd` provides C++11 compatible implementations of some
