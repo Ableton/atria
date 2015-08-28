@@ -4,11 +4,11 @@ Atria
 *Atria is a toolkit for modern C++ development*.
 
 It provides core components that extend the standard library
-capabilities.  It provide (mostly) header-only libraries of general
+capabilities.  It provides (mostly) header-only libraries of general
 interest, in the spirit of the STL, Boost, Adobe Source Libraries, or
 Facebook's Folly and Fatal.
 
-This is an **open source** project.  You're encouraged you to use it,
+This is an **open source** project.  You're encouraged to use it,
 modify it, and redistribute it.
 
 Status
@@ -30,7 +30,7 @@ feedback is very welcome.
 * `atria::variant` provides tools for better usability of
   [Boost.Variant](http://www.boost.org/doc/libs/1_58_0/doc/html/variant.html)
   and [Eggs.Variant](http://eggs-cpp.github.io/variant/) and is
-  customizable to other sum type implementatios.
+  customizable to other sum type implementations.
 
 * `atria::meta` provides several metaprogramming tools, including some
   [Boost.MPL](http://www.boost.org/doc/libs/1_59_0/libs/mpl/doc/index.html)
