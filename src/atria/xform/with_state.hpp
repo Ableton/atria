@@ -39,7 +39,7 @@ template <typename StateT,
 auto with_state_check_state_complete(std::false_type /*is_state_complete*/, StateT&& st, UnwrappedFn&&, WrappedFn&& fn)
   -> estd::result_of_t<WrappedFn(StateT)>
 {
-  return std::forward<WrappedFn>(fn)(std::forward<StateT>(st)));
+  return std::forward<WrappedFn>(fn)(std::forward<StateT>(st));
 }
 
 template <typename StateT,
@@ -48,7 +48,7 @@ template <typename StateT,
 auto with_state_check_state_complete(std::true_type /*is_state_complete*/, StateT&& st, UnwrappedFn&& fn, WrappedFn&&)
   -> estd::result_of_t<UnwrappedFn(StateT)>
 {
-  return std::forward<UnwrappedFn>(fn)(std::forward<StateT>(st)));
+  return std::forward<UnwrappedFn>(fn)(std::forward<StateT>(st));
 }
 
 template <typename StateT,
