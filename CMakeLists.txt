@@ -1,6 +1,6 @@
 # Copyright (c) 2014, 2015 Ableton AG, Berlin
 
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.2.2)
 
 project(Atria C CXX)
 set(Atria_VERSION_MAJOR 0)
