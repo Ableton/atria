@@ -57,7 +57,7 @@ struct partition_rf_gen
     auto operator() (StateT&& s, InputTs&& ...is)
       -> decltype(
         wrap_state<tag>(
-          call(step, state_unwrap(s), container_t<InputTs...>{}),
+          skip(step, state_unwrap(s), container_t<InputTs...>{}),
           make_tuple(container_t<InputTs...>{}, step)))
     {
       auto data = state_data(std::forward<StateT>(s), [&] {
