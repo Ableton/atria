@@ -1,0 +1,75 @@
+language: c++
+os: linux
+
+matrix:
+  include:
+    - env: COMPILER=clang++-3.6 STDLIB=libc++ CONFIGURATION=Debug
+      addons: &clang36
+        apt:
+          sources:
+            - llvm-toolchain-precise-3.6
+            - ubuntu-toolchain-r-test
+          packages: clang-3.6
+
+    - env: COMPILER=g++-5 CONFIGURATION=Debug
+      addons: &gcc5
+        apt:
+          sources: ubuntu-toolchain-r-test
+          packages: g++-5
+
+    - env: COMPILER=clang++-3.6 STDLIB=libc++ CONFIGURATION=Release
+      addons: *clang36
+
+env: COMPILER=g++-5
+addons: *gcc5
+
+install:
+  # All the dependencies are installed in ${TRAVIS_BUILD_DIR}/deps/
+  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
+  - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
+
+  # Install google test sources
+  - git clone https://chromium.googlesource.com/external/googletest.git googletest
+  - export GTEST_PATH=${DEPS_DIR}/googletest
+
+  # Install a recent CMake
+  - CMAKE_URL="http://www.cmake.org/files/v3.1/cmake-3.1.0-Linux-x86_64.tar.gz"
+  - mkdir cmake && travis_retry wget --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
+  - export PATH=${DEPS_DIR}/cmake/bin:${PATH}
+
+  # Install boost
+  - BOOST_URL="http://sourceforge.net/projects/boost/files/boost/1.58.0/boost_1_58_0.tar.gz"
+  - mkdir boost && travis_retry wget --quiet -O - ${BOOST_URL} | tar --strip-components=1 -xz -C boost
+  - export BOOST_PATH=${DEPS_DIR}/boost
+
+  # Install libc++ and libc++abi
+  - |
+    if [[ "${STDLIB}" == "libc++" ]]; then
+      VERSION=3.6.2
+      LLVM_URL="http://llvm.org/releases/${VERSION}/llvm-${VERSION}.src.tar.xz"
+      LIBCXX_URL="http://llvm.org/releases/${VERSION}/libcxx-${VERSION}.src.tar.xz"
+      LIBCXXABI_URL="http://llvm.org/releases/${VERSION}/libcxxabi-${VERSION}.src.tar.xz"
+      mkdir -p llvm llvm/build llvm/projects/libcxx llvm/projects/libcxxabi
+      travis_retry wget --quiet -O - ${LLVM_URL} | tar --strip-components=1 -xJ -C llvm
+      travis_retry wget --quiet -O - ${LIBCXX_URL} | tar --strip-components=1 -xJ -C llvm/projects/libcxx
+      travis_retry wget --quiet -O - ${LIBCXXABI_URL} | tar --strip-components=1 -xJ -C llvm/projects/libcxxabi
+      (cd llvm/build && cmake .. -DCMAKE_CXX_COMPILER=clang++ &&
+        make cxxabi cxx -j2 &&
+        sudo cp -r lib/* /usr/lib &&
+        sudo cp -r include/* /usr/include)
+      export CXXFLAGS="-stdlib=libc++"
+      export LDFLAGS="-l c++ -l c++abi"
+    fi
+
+before_script:
+  - cd ${TRAVIS_BUILD_DIR}
+  - mkdir build && cd build
+  - |
+    cmake .. -DCMAKE_CXX_COMPILER=${COMPILER} \
+             -DCMAKE_BUILD_TYPE=${CONFIGURATION} \
+             -DGTEST_SOURCE=${GTEST_PATH} \
+             -DBOOST_ROOT=${BOOST_PATH}
+
+script:
+  - cmake --build .
+  - ctest -V
