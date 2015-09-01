@@ -30,17 +30,19 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL Clang
   set(warning_options
     -Werror
     -Weverything
-    -Wno-disabled-macro-expansion
-    -Wno-string-conversion
-    -Wno-global-constructors
     -Wno-c++98-compat
     -Wno-c++98-compat-pedantic
     -Wno-documentation-unknown-command
     -Wno-exit-time-destructors
+    -Wno-global-constructors
     -Wno-padded
+    -Wno-string-conversion
+    -Wno-undefined-internal
     -Wno-undefined-reinterpret-cast
+    -Wno-unknown-pragmas
     -Wno-weak-vtables
-    -Wno-undefined-internal)
+    -Wno-disabled-macro-expansion
+    )
 elseif(MSVC)
   set(warning_options /WX /W4 /wd4503 /wd4512)
 endif()
