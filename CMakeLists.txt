@@ -66,8 +66,20 @@ if(EXISTS "${GTEST_SOURCE}" AND IS_DIRECTORY "${GTEST_SOURCE}")
   find_package(Threads REQUIRED)
 endif()
 
+set(COVERAGE 0 CACHE BOOL "Generate a coverage report (gcc only)")
+set(USE_COVERAGE FALSE)
+set(coverage_options "")
+if (COVERAGE AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  set(USE_COVERAGE TRUE)
+  set(coverage_options "-fprofile-arcs -ftest-coverage")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${coverage_options}")
+endif()
+
 include(FeatureSummary)
-add_feature_info(GoogleTest ${GTEST_FOUND} "used for unit testing.")
+add_feature_info(Tests ${GTEST_FOUND}
+  "requires Google Test sources (GTEST_SOURCE)")
+add_feature_info(Coverage ${USE_COVERAGE}
+  "code coverage with tests, requires GCC and COVERAGE=1.")
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 file(GLOB_RECURSE atria_sources "src/*.hpp" "src/*.cpp")
@@ -89,7 +101,8 @@ target_compile_options(atria
   PUBLIC
   ${warning_options})
 target_link_libraries(atria
-  ${Boost_LIBRARIES})
+  ${Boost_LIBRARIES}
+  ${coverage_options})
 
 # Definining tests
 if(GTEST_FOUND)
@@ -106,12 +119,14 @@ if(GTEST_FOUND)
   target_link_libraries(atria-test-all
     atria
     gtest_internal
-    ${CMAKE_THREAD_LIBS_INIT})
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${coverage_options})
   add_test(atria-test-all atria-test-all)
 
   add_executable(atria-benchmark-xform
     src/atria/xform/benchmark_main.cpp)
   target_link_libraries(atria-benchmark-xform
-    atria)
+    atria
+    ${coverage_options})
   add_test(atria-benchmark-xform atria-benchmark-xform)
 endif()

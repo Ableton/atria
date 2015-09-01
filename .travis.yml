@@ -24,8 +24,12 @@ matrix:
     - env: COMPILER=clang++-3.6 STDLIB=libc++ CONFIGURATION=Release
       addons: *clang36
 
-env: COMPILER=g++-5 CONFIGURATION=Release
+    - env: COMPILER=g++-5 CONFIGURATION=Release
+      addons: *gcc5
+
+env: COMPILER=g++-5 CONFIGURATION=Release COVERAGE=1
 addons: *gcc5
+
 
 install:
   # All the dependencies are installed in ${TRAVIS_BUILD_DIR}/deps/
