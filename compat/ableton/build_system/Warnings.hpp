@@ -1,4 +1,4 @@
-// Copyright (c) 2014 Ableton AG, Berlin
+// Copyright (c) 2014, 2015 Ableton AG, Berlin
 
 #pragma once
 
@@ -31,7 +31,11 @@
     _Pragma("clang diagnostic ignored \"-Wunreachable-code\"") \
     _Pragma("clang diagnostic ignored \"-Wunused-parameter\"") \
     _Pragma("clang diagnostic ignored \"-Wused-but-marked-unused\"") \
-    _Pragma("clang diagnostic ignored \"-Wweak-vtables\"")
+    _Pragma("clang diagnostic ignored \"-Wweak-vtables\"") \
+    _Pragma("clang diagnostic ignored \"-Wunused-local-typedef\"") \
+    _Pragma("clang diagnostic ignored \"-Wreserved-id-macro\"") \
+    _Pragma("clang diagnostic ignored \"-Wkeyword-macro\"")
+
 
   #define ABL_RESTORE_WARNINGS \
     _Pragma("clang diagnostic pop")
@@ -61,7 +65,11 @@
 
 #else
 
-  #define ABL_DISABLE_WARNINGS
-  #define ABL_RESTORE_WARNINGS
+  #define ABL_DISABLE_WARNINGS \
+    _Pragma("GCC diagnostic push") \
+    _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
+
+  #define ABL_RESTORE_WARNINGS \
+    _Pragma("GCC diagnostic pop")
 
 #endif
