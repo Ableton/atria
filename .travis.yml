@@ -3,7 +3,7 @@ os: linux
 
 matrix:
   include:
-    - env: COMPILER=clang++-3.6 STDLIB=libc++ CONFIGURATION=Debug
+    - env: COMPILER=clang++-3.6 STD=11 STDLIB=libc++ CONFIGURATION=Debug
       addons: &clang36
         apt:
           sources:
@@ -11,14 +11,27 @@ matrix:
             - ubuntu-toolchain-r-test
           packages: clang-3.6
 
-    - env: COMPILER=g++-5 CONFIGURATION=Debug
+    - env: COMPILER=clang++-3.6 STD=11 STDLIB=libc++ CONFIGURATION=Release
+      addons: *clang36
+
+    - env: COMPILER=g++-5 STD=11 CONFIGURATION=Debug
       addons: &gcc5
         apt:
           sources: ubuntu-toolchain-r-test
           packages: g++-5
 
-    - env: COMPILER=clang++-3.6 STDLIB=libc++ CONFIGURATION=Release
+    - env: COMPILER=g++-5 STD=11 CONFIGURATION=Release
+      addons: *gcc5
+
+  exclude:
+    - env: COMPILER=clang++-3.6 STD=14 STDLIB=libc++ CONFIGURATION=Debug
       addons: *clang36
+    - env: COMPILER=clang++-3.6 STD=14 STDLIB=libc++ CONFIGURATION=Release
+      addons: *clang36
+    - env: COMPILER=g++-5 STD=14 CONFIGURATION=Debug
+      addons: *gcc5
+    - env: COMPILER=g++-5 STD=14 CONFIGURATION=Release
+      addons: *gcc5
 
 env: COMPILER=g++-5
 addons: *gcc5
@@ -67,6 +80,7 @@ before_script:
   - |
     cmake .. -DCMAKE_CXX_COMPILER=${COMPILER} \
              -DCMAKE_BUILD_TYPE=${CONFIGURATION} \
+             -DCMAKE_CXX_STANDARD=${STD} \
              -DGTEST_SOURCE=${GTEST_PATH} \
              -DBOOST_ROOT=${BOOST_PATH}
 
