@@ -24,7 +24,10 @@
  * @file
  */
 
+#include <ableton/build_system/Warnings.hpp>
+ABL_DISABLE_WARNINGS
 #include <boost/functional/hash.hpp>
+ABL_RESTORE_WARNINGS
 #include <tuple>
 
 namespace std {
