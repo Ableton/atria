@@ -3,10 +3,13 @@ Atria
 
 *Atria is a toolkit for modern C++ development*.
 
+[![Build Status](https://travis-ci.org/AbletonAG/atria.svg?branch=master)]
+(https://travis-ci.org/AbletonAG/atria)
+
 It provides core components that extend the standard library
-capabilities.  It provides (mostly) header-only libraries of general
-interest, in the spirit of the STL, Boost, Adobe Source Libraries, or
-Facebook's Folly and Fatal.
+capabilities.  It provides various libraries of general interest, in
+the spirit of the STL, Boost, Adobe Source Libraries, or Facebook's
+Folly and Fatal.
 
 This is an **open source** project.  You're encouraged to use it,
 modify it, and redistribute it.

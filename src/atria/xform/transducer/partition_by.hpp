@@ -58,7 +58,7 @@ struct partition_by_rf_gen
     auto operator() (StateT&& s, InputTs&& ...is)
       -> decltype(
         wrap_state<tag>(
-          call(step, state_unwrap(s), container_t<InputTs...>{}),
+          skip(step, state_unwrap(s), container_t<InputTs...>{}),
           make_tuple(mapping(is...), container_t<InputTs...>{}, step)))
     {
       auto mapped = estd::invoke(mapping, std::forward<InputTs>(is)...);

@@ -26,8 +26,6 @@
 
 #pragma once
 
-#include <boost/preprocessor/seq/for_each_i.hpp>
-
 namespace atria {
 namespace meta {
 

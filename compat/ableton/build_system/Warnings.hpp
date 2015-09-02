@@ -1,4 +1,4 @@
-// Copyright (c) 2014 Ableton AG, Berlin
+// Copyright (c) 2014, 2015 Ableton AG, Berlin
 
 #pragma once
 
@@ -17,10 +17,12 @@
     _Pragma("clang diagnostic ignored \"-Wfloat-equal\"") \
     _Pragma("clang diagnostic ignored \"-Wglobal-constructors\"") \
     _Pragma("clang diagnostic ignored \"-Wheader-hygiene\"") \
+    _Pragma("clang diagnostic ignored \"-Wkeyword-macro\"") \
     _Pragma("clang diagnostic ignored \"-Wmissing-noreturn\"") \
     _Pragma("clang diagnostic ignored \"-Wmissing-prototypes\"") \
     _Pragma("clang diagnostic ignored \"-Wold-style-cast\"") \
     _Pragma("clang diagnostic ignored \"-Wpadded\"") \
+    _Pragma("clang diagnostic ignored \"-Wreserved-id-macro\"") \
     _Pragma("clang diagnostic ignored \"-Wshadow\"") \
     _Pragma("clang diagnostic ignored \"-Wshift-sign-overflow\"") \
     _Pragma("clang diagnostic ignored \"-Wshorten-64-to-32\"") \
@@ -29,9 +31,12 @@
     _Pragma("clang diagnostic ignored \"-Wswitch-enum\"") \
     _Pragma("clang diagnostic ignored \"-Wundef\"") \
     _Pragma("clang diagnostic ignored \"-Wunreachable-code\"") \
+    _Pragma("clang diagnostic ignored \"-Wunused-local-typedef\"") \
     _Pragma("clang diagnostic ignored \"-Wunused-parameter\"") \
     _Pragma("clang diagnostic ignored \"-Wused-but-marked-unused\"") \
-    _Pragma("clang diagnostic ignored \"-Wweak-vtables\"")
+    _Pragma("clang diagnostic ignored \"-Wweak-vtables\"") \
+    /**/
+
 
   #define ABL_RESTORE_WARNINGS \
     _Pragma("clang diagnostic pop")
@@ -58,6 +63,15 @@
 
   #define ABL_RESTORE_WARNINGS \
     __pragma(warning(pop))
+
+#elif defined(__GNUC__)
+
+  #define ABL_DISABLE_WARNINGS \
+    _Pragma("GCC diagnostic push") \
+    _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
+
+  #define ABL_RESTORE_WARNINGS \
+    _Pragma("GCC diagnostic pop")
 
 #else
 

@@ -31,6 +31,7 @@
 #include <atria/estd/memory.hpp>
 #include <atria/meta/pack.hpp>
 #include <string>
+#include <stdexcept>
 
 #if ABL_TRACE_ANY_STATE_ALLOC
 #include <iostream>
