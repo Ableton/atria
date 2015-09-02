@@ -1,5 +1,6 @@
 language: c++
 os: linux
+sudo: false
 
 matrix:
   include:
@@ -66,12 +67,13 @@ install:
       travis_retry wget --quiet -O - ${LLVM_URL} | tar --strip-components=1 -xJ -C llvm
       travis_retry wget --quiet -O - ${LIBCXX_URL} | tar --strip-components=1 -xJ -C llvm/projects/libcxx
       travis_retry wget --quiet -O - ${LIBCXXABI_URL} | tar --strip-components=1 -xJ -C llvm/projects/libcxxabi
-      (cd llvm/build && cmake .. -DCMAKE_CXX_COMPILER=clang++ &&
-        make cxxabi cxx -j2 &&
-        sudo cp -r lib/* /usr/lib &&
-        sudo cp -r include/* /usr/include)
-      export CXXFLAGS="-stdlib=libc++"
-      export LDFLAGS="-l c++ -l c++abi"
+      (cd llvm/build && cmake .. -DCMAKE_CXX_COMPILER=clang++ && make cxxabi cxx -j2)
+      export CXXFLAGS="-Wno-reserved-id-macro \
+                       -I ${DEPS_DIR}/llvm/build/include \
+                       -I ${DEPS_DIR}/llvm/build/include/c++/v1 \
+                       -stdlib=libc++"
+      export LDFLAGS="-L ${DEPS_DIR}/llvm/build/lib -l c++ -l c++abi"
+      export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${DEPS_DIR}/llvm/build/lib"
     fi
 
 before_script:
