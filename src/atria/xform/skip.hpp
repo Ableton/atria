@@ -252,7 +252,8 @@ auto call(ReducingFnT&& step, StateT&& state, InputTs&& ...ins)
     std::forward<StateT>(state),
     detail::bind_forward_reducing_function<ReducingFnT, InputTs...> {
       std::forward<ReducingFnT>(step),
-        std::forward_as_tuple<InputTs...>(ins...)
+        std::forward_as_tuple<InputTs...>(
+          std::forward<InputTs>(ins)...)
       });
 }
 
