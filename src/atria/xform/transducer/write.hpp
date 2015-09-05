@@ -26,10 +26,11 @@
 
 #pragma once
 
-#include <atria/xform/maybe_reduced.hpp>
-#include <atria/xform/skip.hpp>
+#include <atria/xform/state_wrapper.hpp>
+#include <atria/xform/with_state.hpp>
 #include <atria/xform/transducer_impl.hpp>
 #include <atria/prelude/comp.hpp>
+#include <atria/meta/copy_traits.hpp>
 #include <functional>
 #include <ostream>
 
@@ -50,14 +51,14 @@ struct write_rf_gen
 {
   template <typename ReducingFnT,
             typename OutputStreamRefT,
-            typename TerminatorT,
-            typename SeparatorT>
+            typename InSeparatorT,
+            typename ArgSeparatorT>
   struct apply
   {
     ReducingFnT step;
     OutputStreamRefT stream_ref;
-    TerminatorT terminator;
-    SeparatorT separator;
+    InSeparatorT in_separator;
+    ArgSeparatorT arg_separator;
 
     template <typename OutputStreamT>
     void impl(OutputStreamT&) {}
@@ -72,52 +73,72 @@ struct write_rf_gen
     void impl(OutputStreamT& stream, InputT&& in, InputTs... ins)
     {
       stream << std::forward<InputT>(in)
-             << separator;
+             << arg_separator;
       impl(stream, std::forward<InputTs>(ins)...);
     }
 
     template <typename StateT, typename ...InputTs>
     auto operator() (StateT&& s, InputTs&& ...is)
-      -> decltype(step(std::forward<StateT>(s),
-                       std::forward<InputTs>(is)...))
+      -> decltype(wrap_state(step(state_unwrap(s), is...)))
     {
+      using std::begin;
+      using std::end;
+
+      using result_t   = decltype(wrap_state(step(state_unwrap(s), is...)));
+      using complete_t = decltype(state_complete(s));
+
+      using wrapped_t   = meta::copy_decay_t<StateT, estd::decay_t<result_t>>;
+      using unwrapped_t = meta::copy_decay_t<StateT, estd::decay_t<complete_t>>;
+
       auto& stream = stream_ref.get();
-      impl(stream, is...);
-      stream << terminator;
-      return step(std::forward<StateT>(s), std::forward<InputTs>(is)...);
+      return with_state(
+        std::forward<StateT>(s),
+        [&] (unwrapped_t&& st) {
+          impl(stream, is...);
+          return wrap_state(
+            step(std::forward<unwrapped_t>(st),
+                 std::forward<InputTs>(is)...));
+        },
+        [&] (wrapped_t&& st) {
+          stream << in_separator;
+          impl(stream, is...);
+          return wrap_state(
+            step(state_unwrap(std::forward<wrapped_t>(st)),
+                 std::forward<InputTs>(is)...));
+        });
     }
   };
 };
 
 } // namespace detail
 
-template <typename OutputStreamRefT, typename TerminatorT, typename SeparatorT>
+template <typename OutputStreamRefT, typename InSeparatorT, typename ArgSeparatorT>
 using write_t = transducer_impl<detail::write_rf_gen,
                                 OutputStreamRefT,
-                                TerminatorT,
-                                SeparatorT>;
+                                InSeparatorT,
+                                ArgSeparatorT>;
 
 /*!
  * Transducer that writes the into a given @a `stream` using the
  * `operator <<`.  It also forwards the values for further processing.
  */
-template <typename OutputStreamT, typename TerminatorT = detail::empty_output>
-auto write(OutputStreamT& stream, TerminatorT term = TerminatorT{})
+template <typename OutputStreamT, typename InSeparatorT = detail::empty_output>
+auto write(OutputStreamT& stream, InSeparatorT in_sep = InSeparatorT{})
   -> write_t<std::reference_wrapper<OutputStreamT>,
-             TerminatorT,
-             TerminatorT>
+             InSeparatorT,
+             InSeparatorT>
 {
-  auto sep = term;
-  return { std::ref(stream), std::move(term), std::move(sep) };
+  auto arg_sep = in_sep;
+  return { std::ref(stream), std::move(in_sep), std::move(arg_sep) };
 }
 
-template <typename OutputStreamT, typename TerminatorT, typename SeparatorT>
-auto write(OutputStreamT& stream, TerminatorT term, SeparatorT sep)
+template <typename OutputStreamT, typename InSeparatorT, typename ArgSeparatorT>
+auto write(OutputStreamT& stream, InSeparatorT in_sep, ArgSeparatorT arg_sep)
   -> write_t<std::reference_wrapper<OutputStreamT>,
-             TerminatorT,
-             SeparatorT>
+             InSeparatorT,
+             ArgSeparatorT>
 {
-  return { std::ref(stream), std::move(term), std::move(sep) };
+  return { std::ref(stream), std::move(in_sep), std::move(arg_sep) };
 }
 
 } // namespace xform

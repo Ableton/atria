@@ -40,7 +40,7 @@ TEST(run, nullary)
   auto output = std::stringstream{};
 
   run(comp(read<int>(input), write(output, ';')));
-  EXPECT_EQ(output.str(), "1;2;3;4;5;");
+  EXPECT_EQ(output.str(), "1;2;3;4;5");
 }
 
 TEST(run, unary)
@@ -49,7 +49,7 @@ TEST(run, unary)
   auto output = std::stringstream{};
 
   run(write(output, ';'), v);
-  EXPECT_EQ(output.str(), "1;2;3;4;5;");
+  EXPECT_EQ(output.str(), "1;2;3;4;5");
 }
 
 TEST(run, variadic)
@@ -59,7 +59,7 @@ TEST(run, variadic)
   auto output = std::stringstream{};
 
   run(write(output, ';', ' '), v1, v2);
-  EXPECT_EQ(output.str(), "1 h;2 e;3 l;4 l;5 o;");
+  EXPECT_EQ(output.str(), "1 h;2 e;3 l;4 l;5 o");
 }
 
 #endif // ABL_MAKE_GCC_CRASH
