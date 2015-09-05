@@ -26,10 +26,12 @@
 
 #pragma once
 
-#include <iterator>
-#include <tuple>
 #include <atria/xform/state_traits.hpp>
 #include <atria/estd/utility.hpp>
+#include <atria/meta/copy_traits.hpp>
+#include <atria/meta/pack.hpp>
+#include <iterator>
+#include <tuple>
 
 namespace atria {
 namespace xform {
@@ -77,8 +79,10 @@ bool tuple_all_neq(Tuple1T&& t1, Tuple2T&& t2)
 template <typename ReducingFnT,
           typename StateT,
           std::size_t ...Indices,
+          typename ...InputTs,
           typename ...InputRangeTs>
 auto reduce_nested_non_empty_variadic_impl(estd::index_sequence<Indices...>,
+                                           meta::pack<InputTs...>,
                                            ReducingFnT&& step,
                                            StateT&& initial,
                                            InputRangeTs&& ...ranges)
@@ -87,11 +91,12 @@ auto reduce_nested_non_empty_variadic_impl(estd::index_sequence<Indices...>,
   auto firsts = std::make_tuple(std::begin(ranges)...);
   auto lasts  = std::make_tuple(std::end(ranges)...);
   auto state  = step(std::forward<StateT>(initial),
-                     *std::get<Indices>(firsts)...);
+                     std::forward<InputTs>(*std::get<Indices>(firsts))...);
 
   meta::noop(++std::get<Indices>(firsts)...);
   while (!state_is_reduced(state) && detail::tuple_all_neq(firsts, lasts)) {
-    auto new_state = step(std::move(state), *std::get<Indices>(firsts)...);
+    auto new_state = step(std::move(state),
+                          std::forward<InputTs>(*std::get<Indices>(firsts))...);
     state = std::move(new_state);
     meta::noop(++std::get<Indices>(firsts)...);
   }
@@ -106,6 +111,9 @@ auto reduce_nested_non_empty_variadic(ReducingFnT&& step, StateT&& state, InputR
   -> ABL_DECLTYPE_RETURN(
     reduce_nested_non_empty_variadic_impl(
       estd::make_index_sequence<sizeof...(InputRangeTs)> {},
+      meta::pack<meta::copy_decay_t<
+        InputRangeTs,
+        estd::remove_reference_t<decltype(*std::begin(ranges))> >...>{},
       std::forward<ReducingFnT>(step),
       std::forward<StateT>(state),
       std::forward<InputRangeTs>(ranges)...))
