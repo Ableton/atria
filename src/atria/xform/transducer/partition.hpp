@@ -30,6 +30,7 @@
 #include <atria/xform/state_wrapper.hpp>
 #include <atria/xform/transducer_impl.hpp>
 #include <atria/xform/skip.hpp>
+#include <atria/prelude/tuplify.hpp>
 #include <vector>
 
 namespace atria {
