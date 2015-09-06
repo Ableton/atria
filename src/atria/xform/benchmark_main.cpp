@@ -30,8 +30,10 @@
 #define ABL_BENCHMARK_XFORM_USE_BOOST_RANGE_ERASED 0
 
 #include <atria/xform/into.hpp>
+#include <atria/xform/into_vector.hpp>
 #include <atria/xform/run.hpp>
 
+#include <atria/xform/transducer/eager.hpp>
 #include <atria/xform/transducer/enumerate.hpp>
 #include <atria/xform/transducer/filter.hpp>
 #include <atria/xform/transducer/interpose.hpp>
@@ -539,6 +541,60 @@ void benchmarks(testing::benchmark_runner runner)
       return stream.str();
     });
 #endif // ABL_MAKE_GCC_CRASH
+
+  runner.suite("sort", make_benchmark_data)
+
+    ("stl", [] (std::vector<unsigned> const& data)
+    {
+      auto result = data;
+      std::sort(result.begin(), result.end());
+      return result;
+    })
+
+    ("stl, copied", [] (std::vector<unsigned> const& data)
+    {
+      auto result = std::vector<unsigned>{};
+      std::copy(data.begin(), data.end(), std::back_inserter(result));
+      std::sort(result.begin(), result.end());
+      return result;
+    })
+
+    ("atria::xform", [] (std::vector<unsigned> const& data)
+    {
+      return into_vector(sorted, data);
+    });
+
+  runner.suite("reverse", make_benchmark_data)
+
+    ("stl", [] (std::vector<unsigned> const& data)
+    {
+      auto result = data;
+      std::reverse(result.begin(), result.end());
+      return result;
+    })
+
+    ("stl, copied", [] (std::vector<unsigned> const& data)
+    {
+      auto result = std::vector<unsigned>{};
+      std::copy(data.begin(), data.end(), std::back_inserter(result));
+      std::reverse(result.begin(), result.end());
+      return result;
+    })
+
+    ("boost::range", [] (std::vector<unsigned> const& data)
+     {
+       auto result = std::vector<unsigned>{};
+       boost::copy(
+         data | boost::adaptors::reversed,
+         std::back_inserter(result));
+      return result;
+    })
+
+    ("atria::xform", [] (std::vector<unsigned> const& data)
+    {
+      return into_vector(reversed, data);
+    });
+
   struct counter
   {
     std::size_t count = 0;
