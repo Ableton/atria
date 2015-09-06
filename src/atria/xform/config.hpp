@@ -77,3 +77,12 @@
 #ifndef ABL_REDUCE_ALWAYS_VARIADIC
 #define ABL_REDUCE_ALWAYS_VARIADIC 0
 #endif
+
+/*!
+ * There is a pattern in using `with_state` with deduced return types
+ * that is making GCC 5 go nuts.  This can be used to disable that
+ * code so at least we can try some other things with GCC.
+ */
+#ifndef ABL_MAKE_GCC_CRASH
+#define ABL_MAKE_GCC_CRASH !defined(__GNUC__) || defined(__clang__ ) || defined(__llvm__)
+#endif

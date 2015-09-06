@@ -25,6 +25,7 @@
  */
 
 #include <atria/meta/concept.hpp>
+#include <atria/xform/config.hpp>
 #include <atria/xform/into_vector.hpp>
 #include <atria/xform/transducer/distinct.hpp>
 #include <atria/xform/transducer/cycle.hpp>
@@ -35,12 +36,7 @@
 namespace atria {
 namespace xform {
 
-#define ABL_MAKE_GCC_CRASH 0
-
-#if ABL_MAKE_GCC_CRASH \
-  || !defined(__GNUC__) \
-  || defined(__clang__ ) \
-  || defined(__llvm__)
+#if ABL_MAKE_GCC_CRASH
 
 TEST(distinct, into)
 {
