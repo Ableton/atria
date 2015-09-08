@@ -34,8 +34,10 @@ namespace atria {
 namespace xform {
 
 /*!
- * Reducing function that emplaces back at the collection that is
- * uses as state.
+ * Reducing function that produces the tuplification of the last
+ * inputs it received.
+ *
+ * @see tuplify
  */
 constexpr struct last_rf_t
 {
@@ -44,13 +46,6 @@ constexpr struct last_rf_t
     -> estd::decay_t<decltype(tuplify(std::forward<InputTs>(ins)...))>
   {
     return tuplify(std::forward<InputTs>(ins)...);
-  }
-
-  template <typename StateT, typename ...InputTs>
-  constexpr auto operator() (StateT&& s) const
-    -> StateT&&
-  {
-    return std::forward<StateT>(s);
   }
 } last_rf {};
 
