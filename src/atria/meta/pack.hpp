@@ -58,6 +58,24 @@ struct pack
 {
 };
 
+/*!
+ * Two packs are equal if they are of the same type.
+ */
+template <typename... Ts1, typename... Ts2>
+constexpr bool operator== (const pack<Ts1...>&, const pack<Ts2...>&)
+{
+  return std::is_same<pack<Ts1...>, pack<Ts2...> >{};
+}
+
+/*!
+ * Two packs are different if they are of different types.
+ */
+template <typename... Ts1, typename... Ts2>
+constexpr bool operator!= (const pack<Ts1...>&, const pack<Ts2...>&)
+{
+  return !std::is_same<pack<Ts1...>, pack<Ts2...> >{};
+}
+
 namespace detail {
 
 template <template<typename...> class MF, typename ArgT>
