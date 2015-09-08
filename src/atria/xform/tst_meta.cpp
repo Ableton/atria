@@ -20,34 +20,55 @@
 // DEALINGS IN THE SOFTWARE.
 //
 
-/*!
- * @file
- */
-
-#pragma once
-
-#include <atria/xform/into.hpp>
-#include <atria/xform/state_traits.hpp>
 #include <atria/xform/meta.hpp>
-#include <atria/xform/reducing/last_rf.hpp>
-#include <atria/meta/value_type.hpp>
-#include <vector>
+#include <atria/prelude/identity.hpp>
+
+#include <atria/testing/gtest.hpp>
 
 namespace atria {
 namespace xform {
 
-/*!
- * Similar to clojure.core/into-array
- */
-template <typename XformT,
-          typename ...InputRangeTs>
-auto into_vector(XformT&& xform, InputRangeTs&& ...ranges)
-  -> std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >
+TEST(output_of, identity)
 {
-  return into(
-    std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >{},
-    std::forward<XformT>(xform),
-    std::forward<InputRangeTs>(ranges)...);
+  using meta::pack;
+
+  static_assert(
+    output_of_t<identity_t>{} == pack<>{}, "");
+  static_assert(
+    output_of_t<identity_t, int>{} == pack<int&&>{}, "");
+  static_assert(
+    output_of_t<identity_t, int, float>{} == pack<int&&, float&&>{}, "");
+
+  static_assert(
+    output_of_t<identity_t, int&>{} == pack<int&>{}, "");
+  static_assert(
+    output_of_t<identity_t, int&, const float&>{} ==
+    pack<int&, const float&>{}, "");
+
+  static_assert(
+    output_of_t<identity_t, int&&>{} == pack<int&&>{}, "");
+  static_assert(
+    output_of_t<identity_t, const int&&, float&&>{} ==
+    pack<const int&&, float&&>{}, "");
+}
+
+TEST(result_of, identity)
+{
+  using meta::pack;
+
+  static_assert(
+    pack<result_of_t<identity_t> >{} == pack<std::tuple<> >{}, "");
+  static_assert(
+    pack<result_of_t<identity_t, int> >{} == pack<int>{}, "");
+  static_assert(
+    pack<result_of_t<identity_t, int, float> >{} ==
+    pack<std::tuple<int, float> >{}, "");
+
+  static_assert(
+    pack<result_of_t<identity_t, int&> >{} == pack<int>{}, "");
+  static_assert(
+    pack<result_of_t<identity_t, int&, float&> >{} ==
+    pack<std::tuple<int, float> >{}, "");
 }
 
 } // namespace xform
