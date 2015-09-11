@@ -42,9 +42,11 @@ namespace prelude {
  */
 template <typename T>
 auto trace(T&& x, const std::string& message)
-  -> ABL_DECLTYPE_RETURN(
-    (std::cerr << message << " " << x << std::endl,
-     std::forward<T>(x)))
+  -> T&&
+{
+  std::cerr << message << " " << x << std::endl;
+  return std::forward<T>(x);
+}
 
 /*!
  * Function object for calling @a trace
