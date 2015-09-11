@@ -119,6 +119,21 @@ TEST(reductor, termination_empty)
   EXPECT_FALSE(r);
 }
 
+TEST(reductor, current)
+{
+  auto r = empty_reductor(take(4)(enumerate(last_rf)), std::size_t{0});
+  EXPECT_TRUE(r());
+  EXPECT_EQ(r.current(), 0);
+  r.current(std::size_t{10});
+  EXPECT_EQ(r.current(), 10);
+  EXPECT_TRUE(r());
+  EXPECT_EQ(r.current(), 1);
+  EXPECT_TRUE(r());
+  EXPECT_EQ(r.current(), 2);
+  EXPECT_FALSE(r());
+  EXPECT_FALSE(r);
+}
+
 TEST(reductor, constant)
 {
   const auto r1 = reductor(enumerate(last_rf), 0);

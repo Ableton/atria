@@ -69,6 +69,20 @@ struct reductor_fn_base
   { return state_complete(std::move(state_)); }
 
   /*!
+   * Peeks at the current visible state of the reduction.  The operation is
+   * move aware.  If an argument is passed, it updates the current state.
+   */
+  complete_type current() const&
+  { return state_unwrap_all(state_); }
+
+  complete_type current() &&
+  { return state_unwrap_all(std::move(state_)); }
+
+  template <typename T>
+  void current(T&& x)
+  { state_ = state_rewrap(std::move(state_), std::forward<T>(x)); }
+
+  /*!
    * Evaluates the next step of the reduction, passing the inputs @a
    * `ins` to the reducing function.
    *
