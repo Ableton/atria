@@ -72,7 +72,7 @@ struct transducer_state
 
   using type = typename boost::mpl::eval_if<
       is_state_wrapper<StateT>,
-      boost::mpl::identity<estd::decay_t<StateT> >,
+      meta::identity<estd::decay_t<StateT> >,
       make_state_wrapper<any_state>
     >::type;
 };

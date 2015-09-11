@@ -163,7 +163,7 @@ template <typename ReducingFnT, typename StateT, typename... InputTs>
 struct skip_result
   : boost::mpl::eval_if<
      is_skip_state<estd::decay_t<StateT> >,
-       boost::mpl::identity<estd::decay_t<StateT> >,
+       meta::identity<estd::decay_t<StateT> >,
        detail::skip_result_impl<ReducingFnT, StateT, InputTs...> >
 {};
 

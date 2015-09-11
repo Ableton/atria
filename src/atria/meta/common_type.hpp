@@ -73,7 +73,7 @@ struct undeclval
   : mpl::eval_if<mpl::and_<std::is_rvalue_reference<ValT>,
                            mpl::not_<std::is_rvalue_reference<OrigTs> >... >,
                  std::remove_reference<ValT>,
-                 mpl::identity<ValT> >
+                 identity<ValT> >
 {};
 
 template <typename T, typename U, typename Enable=void>

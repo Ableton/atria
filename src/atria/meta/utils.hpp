@@ -30,6 +30,15 @@ namespace atria {
 namespace meta {
 
 /*!
+ * Identity metafunction.
+ */
+template <typename T>
+struct identity
+{
+  using type = T;
+};
+
+/*!
  * This is a type that pretends to be convertible to anything.  This
  * can be used as a placeholder for any parameter type in `result_of`
  * metacalls.
