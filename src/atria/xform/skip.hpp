@@ -93,6 +93,17 @@ struct state_unwrap_all_t
       state_unwrap_all(std::forward<T>(s)))
 };
 
+template <typename U>
+struct state_rewrap_t
+{
+  U&& x;
+
+  template <typename T>
+  auto operator() (T&& s)
+    -> ABL_DECLTYPE_RETURN(
+      state_rewrap(std::forward<T>(s), std::forward<U>(x)))
+};
+
 } // namespace detail
 
 template <typename SkippedT, typename CalledT>
@@ -118,6 +129,14 @@ struct state_traits<skip_state<SkippedT, CalledT> >
       variant::match(
         std::forward<T>(s),
         variant::otherwise<SkippedT>(detail::state_unwrap_all_t{})))
+
+  template <typename T, typename U>
+  static auto rewrap(T&& s, U&& x)
+    -> ABL_DECLTYPE_RETURN(
+        variant::match(
+          std::forward<T>(s),
+          variant::otherwise<estd::decay_t<T> >(
+            detail::state_rewrap_t<U>{ std::forward<U>(x) })))
 
   // Marks methods that don't make sense for a `skip_state` Note that
   // these methods still need to be implemented for type erasure to

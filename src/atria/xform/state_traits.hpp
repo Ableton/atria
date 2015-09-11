@@ -89,6 +89,14 @@ struct state_traits
   template <typename T>
   static auto unwrap_all(T&& state)
     -> ABL_DECLTYPE_RETURN(std::forward<T>(state))
+
+  /*!
+   * Copies all layers of state wrappers but replaces the innermost
+   * state with `substate`.
+   */
+  template <typename T, typename U>
+  static auto rewrap(T&&, U&& x)
+    -> ABL_DECLTYPE_RETURN(std::forward<U>(x))
 };
 
 template <typename T>
@@ -135,6 +143,14 @@ template <typename T>
 auto state_unwrap_all(T&& s)
   -> ABL_DECLTYPE_RETURN(
     state_traits_t<T>::unwrap_all(std::forward<T>(s)))
+
+/*!
+ * Convenience function for calling `state_traits::unwrap_all`
+ */
+template <typename T, typename U>
+auto state_rewrap(T&& s, U&& x)
+  -> ABL_DECLTYPE_RETURN(
+    state_traits_t<T>::rewrap(std::forward<T>(s), std::forward<U>(x)))
 
 } // namespace xform
 } // namespace atria

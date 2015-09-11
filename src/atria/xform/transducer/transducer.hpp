@@ -169,6 +169,18 @@ auto state_wrapper_unwrap_all(transducer_tag<C, R>, T&& wrapper) -> C
     .template as<C>();
 }
 
+template <typename C, typename R, typename T, typename U>
+auto state_wrapper_rewrap(transducer_tag<C, R>, T&& s, U&& x)
+  -> estd::decay_t<T>
+{
+  static_assert(std::is_same<estd::decay_t<U>, C>{} ||
+                std::is_same<estd::decay_t<U>, any_state>{},
+                "Yo! you are rewrapping with the wrong thing!");
+  return wrap_state<transducer_tag<C, R> >(
+    state_rewrap(state_unwrap(std::forward<T>(s)), std::forward<U>(x)),
+    state_wrapper_data(std::forward<T>(s)));
+}
+
 template <typename... ArgTs>
 struct reducing_function
 {

@@ -204,6 +204,7 @@ private:
     virtual bool is_reduced() const = 0;
     virtual any_state unwrap() const = 0;
     virtual any_state unwrap_all() const = 0;
+    virtual any_state rewrap(any_state) const = 0;
     virtual any_state data() const = 0;
     virtual std::size_t size() const = 0;
   };
@@ -237,6 +238,9 @@ private:
     any_state unwrap_all() const override
     { return state_unwrap_all(held); }
 
+    any_state rewrap(any_state x) const override
+    { return state_rewrap(held, std::move(x)); }
+
     any_state data() const override
     { return state_data(held, [] { return any_state{}; }); }
 
@@ -257,6 +261,7 @@ private:
     bool is_reduced() const override { return false; }
     any_state unwrap() const override { return {}; }
     any_state unwrap_all() const override { return {}; }
+    any_state rewrap(any_state x) const override { return x; }
     any_state data() const override { return {}; }
     std::size_t size() const override { return 0; }
   };
@@ -291,6 +296,11 @@ struct state_traits<any_state>
   static auto unwrap_all(T&& t)
     -> ABL_DECLTYPE_RETURN(
       std::forward<T>(t).content()->unwrap_all())
+
+  template <typename T, typename U>
+  static auto rewrap(T&& t, U&& x)
+    -> ABL_DECLTYPE_RETURN(
+      std::forward<T>(t).content()->rewrap(std::forward<U>(x)))
 
   template <typename T, typename D>
   static auto data(T&& t, D&& d)

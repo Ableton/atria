@@ -149,6 +149,20 @@ auto state_wrapper_unwrap_all(TagT, T&& s)
     state_unwrap_all(state_unwrap(std::forward<T>(s))))
 
 /*!
+ * Utility function for easy overloading of `state_traits::rewrap`
+ * for state wrappers with a specific tag.
+ *
+ * @see state_wrapper
+ * @see state_traits::rewrap
+ */
+  template <typename TagT, typename T, typename U>
+  auto state_wrapper_rewrap(TagT, T&& s, U&& x)
+  -> ABL_DECLTYPE_RETURN(
+    wrap_state<TagT>(
+      state_rewrap(state_unwrap(std::forward<T>(s)), x),
+      state_wrapper_data(std::forward<T>(s))))
+
+/*!
  * Utility function for easy overloading of `state_traits::data`
  * for state wrappers with a specific tag.
  *
@@ -210,6 +224,7 @@ bool state_wrapper_is_reduced(TagT tag, T&& s)
  * @see state_wrapper_unwrap
  * @see state_wrapper_data
  * @see state_wrapper_unwrap_all
+ * @see state_wrapper_rewrap
  * @see state_wrapper
  */
 template <typename TagT, typename StateT, typename DataT>
@@ -239,6 +254,11 @@ struct state_traits<state_wrapper<TagT, StateT, DataT> >
   static auto unwrap_all(T&& s)
     -> ABL_DECLTYPE_RETURN(
       state_wrapper_unwrap_all(TagT{}, std::forward<T>(s)))
+
+  template <typename T, typename U>
+  static auto rewrap(T&& s, U&& x)
+    -> ABL_DECLTYPE_RETURN(
+      state_wrapper_rewrap(TagT{}, std::forward<T>(s), std::forward<U>(x)))
 };
 
 } // namespace xform

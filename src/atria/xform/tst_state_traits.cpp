@@ -97,5 +97,55 @@ TEST(state_traits, unwrap_all_moar_complex)
   EXPECT_EQ(state_unwrap_all(s), 3);
 }
 
+TEST(state_traits, rewrap_wrap_state)
+{
+  struct t1 : meta::pack<t1> {};
+  struct t2 : meta::pack<t2> {};
+  EXPECT_EQ(state_rewrap(42, 13),
+            13);
+  EXPECT_EQ(state_rewrap(wrap_state<t1>(42, {}), 13),
+            wrap_state<t1>(13, {}));
+  EXPECT_EQ(state_rewrap(wrap_state<t2>(wrap_state<t1>(42, {}), ""), 13),
+            wrap_state<t2>(wrap_state<t1>(13, {}), ""));
+}
+
+TEST(state_traits, rewrap_skip_state)
+{
+  auto odd = [] (int x) { return x % 2; };
+  auto rf = comp(filter(odd), take(3))(last_rf);
+
+  auto s = rf(int{}, 41);
+  s = state_rewrap(s, 13);
+  EXPECT_EQ(state_unwrap_all(s), 13);
+  s = rf(rf(rf(s, 1), 2), 3);
+  EXPECT_EQ(state_unwrap_all(s), 3);
+  EXPECT_TRUE(state_is_reduced(s));
+}
+
+TEST(state_traits, rewrap_type_erased)
+{
+  auto rf = transducer<int>{identity} (last_rf);
+
+  auto s = rf(int{}, 41);
+  s = state_rewrap(s, 13);
+  EXPECT_EQ(state_unwrap_all(s), 13);
+}
+
+TEST(state_traits, rewrap_moar_complex)
+{
+  auto odd = [] (std::size_t x) { return x % 2; };
+  auto rf = transducer<meta::pack<>, std::size_t>{
+    comp(enumerate, filter(odd), take(10))} (last_rf);
+
+  auto s = rf(std::size_t{});
+  s = rf(s);
+  s = state_rewrap(s, std::size_t{13});
+  EXPECT_EQ(state_unwrap_all(s), 13);
+  s = rf(s);
+  EXPECT_EQ(state_unwrap_all(s), 13);
+  s = rf(s);
+  EXPECT_EQ(state_unwrap_all(s), 3);
+}
+
 } // namespace xform
 } // namespace atria
