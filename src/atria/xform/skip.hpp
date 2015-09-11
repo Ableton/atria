@@ -85,6 +85,14 @@ struct state_complete_t
       state_complete(std::forward<T>(s)))
 };
 
+struct state_unwrap_all_t
+{
+  template <typename T>
+  auto operator() (T&& s)
+    -> ABL_DECLTYPE_RETURN(
+      state_unwrap_all(std::forward<T>(s)))
+};
+
 } // namespace detail
 
 template <typename SkippedT, typename CalledT>
@@ -104,19 +112,22 @@ struct state_traits<skip_state<SkippedT, CalledT> >
         std::forward<T>(s),
         variant::otherwise<SkippedT>(detail::state_complete_t{})))
 
-  // In practice, this method does not make sense for this type.  It
-  // is unwrapped manually by @a call
-  template <typename T, typename D>
-  static auto data(T&&, D&& d)
-    -> ABL_DECLTYPE_RETURN(
-      std::forward<D>(d)())
-
-  // In practice, this method does not make sense for this type.  It
-  // is unwrapped manually by @a call
   template <typename T>
-  static auto unwrap(T&& s)
+  static auto unwrap_all(T&& s)
     -> ABL_DECLTYPE_RETURN(
-      std::forward<T>(s))
+      variant::match(
+        std::forward<T>(s),
+        variant::otherwise<SkippedT>(detail::state_unwrap_all_t{})))
+
+  // Marks methods that don't make sense for a `skip_state` Note that
+  // these methods still need to be implemented for type erasure to
+  // work (via `any_state`).
+  struct can_not_do_that {};
+
+  template <typename T, typename D>
+  static can_not_do_that data(T&&, D&&) { return {}; }
+  template <typename T>
+  static can_not_do_that unwrap(T&&) { return {}; }
 };
 
 namespace detail

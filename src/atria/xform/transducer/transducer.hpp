@@ -162,6 +162,13 @@ auto state_wrapper_complete(transducer_tag<C, R>, T&& wrapper) -> C
     .template as<C>();
 }
 
+template <typename C, typename R, typename T>
+auto state_wrapper_unwrap_all(transducer_tag<C, R>, T&& wrapper) -> C
+{
+  return state_unwrap_all(state_unwrap(std::forward<T>(wrapper)))
+    .template as<C>();
+}
+
 template <typename... ArgTs>
 struct reducing_function
 {
