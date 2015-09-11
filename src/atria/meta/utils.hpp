@@ -47,7 +47,9 @@ struct identity
  */
 struct bottom
 {
-  template <typename T> operator T();
+  template <typename T> operator T&&() const;
+  template <typename T> operator T&() const;
+  template <typename T> operator const T&() const;
 };
 
 /*!
