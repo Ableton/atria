@@ -86,41 +86,96 @@ using enable_if_t = typename std::enable_if<X, T>::type;
 
 namespace detail {
 
-template <typename T, typename Enable=void>
-struct has_value_type : std::false_type {};
-template <typename T>
-struct has_value_type<T, void_t<typename T::value_type> >
-  : std::true_type {};
-
-template <typename T, typename Enable=void>
-struct has_dereference : std::false_type {};
-template <typename T>
-struct has_dereference<T, void_t<decltype(*std::declval<T>())> >
-  : std::true_type {};
-
-template <typename T, typename Enable=void>
-struct get_value_type {};
-template <typename T>
-struct get_value_type<T, estd::enable_if_t<has_value_type<T>::value> >
+template <class Default, class AlwaysVoid,
+          template<class...> class Op, class... Args>
+struct detector
 {
-  using type = typename T::value_type;
+  using value_t = std::false_type;
+  using type = Default;
 };
-template <typename T>
-struct get_value_type<T, estd::enable_if_t<!has_value_type<T>::value &&
-                                           has_dereference<T>::value> >
+
+template <class Default, template<class...> class Op, class... Args>
+struct detector<Default, void_t<Op<Args...> >, Op, Args...>
 {
-  using type = estd::decay_t<decltype(*std::declval<T>())>;
+  using value_t = std::true_type;
+  using type = Op<Args...>;
 };
 
 } // namespace detail
 
 /*!
- * Very stupid implementation of C++14 Value_type, for a better one
- * see the Origin library: https://code.google.com/p/origin/
+ * Similar to TS Fundamentals 2 `std::nonesuch`
  */
-template <typename T>
-using Value_type = typename
-  detail::get_value_type<estd::decay_t<T> >::type;
+struct nonesuch
+{
+    nonesuch() = delete;
+    ~nonesuch() = delete;
+    nonesuch(nonesuch const&) = delete;
+    void operator=(nonesuch const&) = delete;
+};
+
+/*!
+ * Similar to TS Fundamentals 2 `std::is_detected`
+ */
+template <template<class...> class Op, class... Args>
+using is_detected =
+  typename detail::detector<nonesuch, void, Op, Args...>::value_t;
+
+/*!
+ * Similar to TS Fundamentals 2 `std::detected_t`
+ */
+template <template<class...> class Op, class... Args>
+using detected_t =
+  typename detail::detector<nonesuch, void, Op, Args...>::type;
+
+/*!
+ * Similar to TS Fundamentals 2 `std::dected_or`
+ */
+template <class Default, template<class...> class Op, class... Args>
+using detected_or = detail::detector<Default, void, Op, Args...>;
+
+/*!
+ * Similar to TS Fundamentals 2 `std::dected_or_t`
+ */
+template <class Default, template<class...> class Op, class... Args>
+using detected_or_t = typename detected_or<Default, Op, Args...>::type;
+
+/*!
+ * Similar to TS Fundamentals 2 `std::is_detected_exact`
+ */
+template <class Expected, template<class...> class Op, class... Args>
+using is_detected_exact = std::is_same<Expected, detected_t<Op, Args...> >;
+
+/*!
+ * Similar to TS Fundamentals 2 `std::is_detected_exact_v`
+ */
+template <class To, template<class...> class Op, class... Args>
+using is_detected_convertible =
+  std::is_convertible<detected_t<Op, Args...>, To>;
+
+#if ABL_CXX14
+
+/*!
+ * Similar to TS Fundamentals 2 `std::dected_or`
+ */
+template <template<class...> class Op, class... Args>
+constexpr bool is_detected_v = is_detected<Op, Args...>::value;
+
+/*!
+ * Similar to TS Fundamentals 2 `std::is_detected_exact_v`
+ */
+template <class Expected, template<class...> class Op, class... Args>
+constexpr bool is_detected_exact_v =
+  is_detected_exact<Expected, Op, Args...>::value;
+
+/*!
+ * Similar to TS Fundamentals 2 `std::is_detected_convertible_v`
+ */
+template <class To, template<class...> class Op, class... Args>
+constexpr bool is_detected_convertible_v =
+  is_detected_convertible<To, Op, Args...>::value;
+
+#endif // ABL_CXX14
 
 } // namespace estd
 } // namespace atria

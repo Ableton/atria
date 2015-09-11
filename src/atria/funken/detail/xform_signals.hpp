@@ -30,6 +30,7 @@
 #include <atria/funken/detail/no_value.hpp>
 
 #include <atria/meta/pack.hpp>
+#include <atria/meta/value_type.hpp>
 #include <atria/prelude/identity.hpp>
 #include <atria/prelude/tuplify.hpp>
 #include <atria/xform/reducing/last_rf.hpp>
@@ -55,7 +56,7 @@ struct get_xform_result
     decltype(
       std::declval<XForm>()(xform::last_rf)(
         std::declval<detail::no_value>(),
-        std::declval<estd::Value_type<Sources> >()...))
+        std::declval<meta::value_t<Sources> >()...))
     >;
 };
 

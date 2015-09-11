@@ -27,6 +27,7 @@
 #pragma once
 
 #include <atria/meta/concept.hpp>
+#include <atria/meta/value_type.hpp>
 #include <atria/estd/type_traits.hpp>
 #include <utility>
 #include <cassert>
@@ -47,7 +48,7 @@ auto declval_() -> typename std::add_rvalue_reference<T>::type
 ABL_CONCEPT_SPEC(In_value)
 {
   template <typename T,
-            typename V = estd::decay_t<estd::Value_type<T> > >
+            typename V = meta::value_t<T> >
   auto requires_(T&& x, V& v = declval_<V&>()) -> decltype(
     meta::expressions(
       v = x.get(),
@@ -60,7 +61,7 @@ ABL_CONCEPT_SPEC(In_value)
 ABL_CONCEPT_SPEC(Out_value)
 {
   template <typename T,
-            typename V = estd::Value_type<T> >
+            typename V = meta::value_t<T> >
   auto requires_(T&& x, V& v = declval_<V&>()) -> decltype(
     meta::expressions(
       (x.set(v), meta::can_be_void),

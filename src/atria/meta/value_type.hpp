@@ -26,47 +26,54 @@
 
 #pragma once
 
-#include <atria/xform/into.hpp>
-#include <atria/xform/state_traits.hpp>
-#include <atria/xform/reducing/last_rf.hpp>
-#include <atria/meta/value_type.hpp>
-#include <vector>
+#include <atria/meta/detected.hpp>
 
 namespace atria {
-namespace xform {
+namespace meta {
 
 namespace detail {
 
-template <typename XformT, typename... InputRangeTs>
-struct into_vector_result
-{
-  using xformed_t = decltype(
-    state_complete(
-      std::declval<XformT>()(last_rf)(
-        std::declval<meta::bottom>(),
-        std::declval<meta::value_t<InputRangeTs> >()...)));
+template <typename T>
+using value_type_t = typename T::value_type;
 
-  using type = std::vector<estd::decay_t<xformed_t> >;
-};
+template <typename T>
+using iterator_value_t = typename std::iterator_traits<T>::value_type;
 
-template <typename XformT, typename... InputRangeTs>
-using into_vector_result_t = typename
-  into_vector_result<XformT, InputRangeTs...>::type;
+template <typename T>
+using dereference_t = estd::decay_t<decltype(*std::declval<T>())>;
+
+template <typename T>
+using getter_t = estd::decay_t<decltype(std::declval<T>().get())>;
 
 } // namespace detail
 
 /*!
- * Similar to clojure.core/into-array
+ * Utility metafunction for accessing an underlying *value type*.
+ * This metafunction tries, in this order:
+ *
+ *   - Nested type: `T::value_type`
+ *   - Iterator traits: `std::iterator_traits<T>::value_type`
+ *   - Decayed dereference: `std::decay_t<decltype(*std::declval<T>())>`
+ *   - Decayed getter: `std::decay_t<decltype(std::declval<T>().get())>`
+ *
+ * The concrete semantics of this underlying value type might
+ * be context dependent.  It can be partially spetialized for
+ * different types.
  */
-template <typename XformT,
-          typename ...InputRangeTs>
-auto into_vector(XformT&& xform, InputRangeTs&& ...ranges)
-  -> detail::into_vector_result_t<XformT, InputRangeTs...>
-{
-  return into(detail::into_vector_result_t<XformT, InputRangeTs...>{},
-              std::forward<XformT>(xform),
-              std::forward<InputRangeTs>(ranges)...);
-}
+template <typename T>
+struct get_value_type
+  : detected_any<T,
+                 detail::value_type_t,
+                 detail::iterator_value_t,
+                 detail::dereference_t,
+                 detail::getter_t>
+{};
 
-} // namespace xform
+/*!
+ * Convenient alias for `get_value_type`
+ */
+template <typename T>
+using value_t = eval_t<get_value_type<estd::decay_t<T> > >;
+
+} // namespace meta
 } // namespace atria
