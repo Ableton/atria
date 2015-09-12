@@ -36,8 +36,15 @@ matrix:
     - env: COMPILER=g++-5 STD=14 CONFIGURATION=Release
       addons: *gcc5
 
-env: COMPILER=g++-5
-addons: *gcc5
+env: COMPILER=clang++-3.7 STDLIB=libc++ VALGRIND=true
+addons:
+  apt:
+    sources:
+      - llvm-toolchain-precise-3.7
+      - ubuntu-toolchain-r-test
+    packages:
+      - clang-3.7
+      - valgrind
 
 install:
   # All the dependencies are installed in ${TRAVIS_BUILD_DIR}/deps/
@@ -91,4 +98,12 @@ before_script:
 
 script:
   - cmake --build .
-  - ctest -V
+  - |
+    if [[ "${VALGRIND}" == "true" ]]; then
+       VALGRIND_CMD="valgrind --leak-check=full --error-exitcode=1"
+       true \
+           && ${VALGRIND_CMD} ./atria-test-all \
+           && ${VALGRIND_CMD} ./atria-benchmark-xform -i 1 -m 1 -s 10
+    else
+      ctest -V
+    fi
