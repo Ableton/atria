@@ -32,6 +32,7 @@
 #include <atria/xform/into.hpp>
 #include <atria/xform/into_vector.hpp>
 #include <atria/xform/run.hpp>
+#include <atria/xform/sequence.hpp>
 
 #include <atria/xform/transducer/eager.hpp>
 #include <atria/xform/transducer/enumerate.hpp>
@@ -167,6 +168,18 @@ void benchmarks(testing::benchmark_runner runner)
         std::vector<unsigned>{},
         xform,
         data);
+    })
+
+    ("atria::xform, sequence", [] (std::vector<unsigned> const& data)
+    {
+      auto result = std::vector<unsigned>{};
+      boost::copy(
+        sequence<unsigned>(
+          comp(filter([](unsigned x) { return x % 2 == 0; }),
+               map([](unsigned x) { return x * 2; })),
+          data),
+        std::back_inserter(result));
+      return result;
     });
 
   runner.suite("filter map sum", make_benchmark_data)
@@ -299,6 +312,17 @@ void benchmarks(testing::benchmark_runner runner)
         std::plus<unsigned>{},
         0u,
       data);
+    })
+
+    ("atria::xform, sequence", [] (std::vector<unsigned> const& data)
+    {
+      return boost::accumulate(
+        sequence<unsigned>(
+          comp(filter([](unsigned x) { return x % 2 == 0; }),
+               map([](unsigned x) { return x * 2; })),
+          data),
+        0u,
+        std::plus<unsigned>{});
     });
 
   runner.suite("take sum", make_benchmark_data)
