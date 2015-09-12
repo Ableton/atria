@@ -45,7 +45,10 @@ TEST(eager, sorted)
   auto times2 = [](int x) { return x * 2; };
   auto div3 = [](int x) { return x % 3 == 0; };
 
-  auto r = into_vector(comp(map(times2), sorted, filter(div3)), v);
+  // Does not use `into_vector` because travis uses an outdated
+  // version of GCC in which that triggers a link-time bug
+  auto r = into(std::vector<int>{},
+                comp(map(times2), sorted, filter(div3)), v);
   EXPECT_EQ(r, (decltype (r) { 6, 12, 24 }));
 }
 
@@ -55,7 +58,8 @@ TEST(eager, reversed)
   auto times2 = [](int x) { return x * 2; };
   auto div3 = [](int x) { return x % 3 == 0; };
 
-  auto r = into_vector(comp(map(times2), reversed, filter(div3)), v);
+  auto r = into(std::vector<int>{},
+                comp(map(times2), reversed, filter(div3)), v);
   EXPECT_EQ(r, (decltype (r) { 24, 12, 6 }));
 }
 

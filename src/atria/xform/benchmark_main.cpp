@@ -30,7 +30,6 @@
 #define ABL_BENCHMARK_XFORM_USE_BOOST_RANGE_ERASED 0
 
 #include <atria/xform/into.hpp>
-#include <atria/xform/into_vector.hpp>
 #include <atria/xform/run.hpp>
 #include <atria/xform/sequence.hpp>
 
@@ -585,7 +584,7 @@ void benchmarks(testing::benchmark_runner runner)
 
     ("atria::xform", [] (std::vector<unsigned> const& data)
     {
-      return into_vector(sorted, data);
+      return into(std::vector<unsigned>{}, sorted, data);
     });
 
   runner.suite("reverse", make_benchmark_data)
@@ -616,7 +615,7 @@ void benchmarks(testing::benchmark_runner runner)
 
     ("atria::xform", [] (std::vector<unsigned> const& data)
     {
-      return into_vector(reversed, data);
+      return into(std::vector<unsigned>{}, reversed, data);
     });
 
   struct counter
