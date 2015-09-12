@@ -61,14 +61,14 @@ public:
 
   any_state(any_state&& other)
     : data_(other.data_)
+    , size_{}
   {
-    auto size = other.size_;
-    other.size_ = 0;
-    size_ = size;
+    using std::swap;
+    swap(size_, other.size_);
   }
 
   any_state(const any_state& other)
-    : data_(new char[other.size_])
+    : data_(other.size_ ? new char[other.size_] : nullptr)
     , size_(other.size_)
   {
 #if ABL_TRACE_ANY_STATE_ALLOC
@@ -97,9 +97,9 @@ public:
 
   any_state& operator=(any_state&& other)
   {
-    data_ = other.data_;
-    size_ = other.size_;
-    other.size_ = 0;
+    using std::swap;
+    swap(data_, other.data_);
+    swap(size_, other.size_);
     return *this;
   }
 
