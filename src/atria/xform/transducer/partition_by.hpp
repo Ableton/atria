@@ -93,7 +93,8 @@ struct partition_by_rf_gen
 
   template <typename T>
   friend auto state_wrapper_complete(tag, T&& wrapper)
-    -> decltype(state_complete(state_unwrap(std::forward<T>(wrapper))))
+    -> estd::decay_t<decltype(
+      state_complete(state_unwrap(std::forward<T>(wrapper))))>
   {
     auto next = std::get<1>(state_wrapper_data(std::forward<T>(wrapper)));
     auto step = std::get<2>(state_wrapper_data(std::forward<T>(wrapper)));
