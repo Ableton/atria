@@ -24,7 +24,6 @@ matrix:
     - env: COMPILER=g++-5 STD=11 CONFIGURATION=Release
       addons: *gcc5
 
-  exclude:
     - env: COMPILER=clang++-3.7 STD=14 STDLIB=libc++ CONFIGURATION=Debug
       addons: *clang37
 
@@ -33,6 +32,7 @@ matrix:
 
     - env: COMPILER=g++-5 STD=14 CONFIGURATION=Debug
       addons: *gcc5
+
     - env: COMPILER=g++-5 STD=14 CONFIGURATION=Release
       addons: *gcc5
 
