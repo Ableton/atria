@@ -32,6 +32,7 @@
 #include <atria/xform/with_state.hpp>
 #include <atria/xform/reduce_nested.hpp>
 #include <atria/prelude/comp.hpp>
+#include <atria/prelude/identity.hpp>
 #include <atria/meta/copy_traits.hpp>
 
 namespace atria {
@@ -65,11 +66,12 @@ struct chainr_rf_gen
   template <typename T>
   friend auto state_wrapper_complete(tag, T&& wrapper)
     -> ABL_DECLTYPE_RETURN(
-      state_complete(
-        reduce_nested(
-          state_wrapper_data(std::forward<T>(wrapper)).step,
-          state_unwrap(std::forward<T>(wrapper)),
-          state_wrapper_data(std::forward<T>(wrapper)).range)))
+      identity_(
+        state_complete(
+          reduce_nested(
+            state_wrapper_data(std::forward<T>(wrapper)).step,
+            state_unwrap(std::forward<T>(wrapper)),
+            state_wrapper_data(std::forward<T>(wrapper)).range))))
 };
 
 } // namespace detail
