@@ -73,6 +73,12 @@ template <typename T>
 using remove_reference_t = typename std::remove_reference<T>::type;
 
 /*!
+ * Similar to C++14 std::remove_const_t
+ */
+template <typename T>
+using remove_const_t = typename std::remove_const<T>::type;
+
+/*!
  * Similar to C++14 std::enable_if_t
  */
 template <bool X, typename T=void>
