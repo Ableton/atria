@@ -26,27 +26,31 @@
 
 #pragma once
 
-#include <atria/xform/into.hpp>
-#include <atria/xform/state_traits.hpp>
-#include <atria/xform/meta.hpp>
-#include <atria/xform/reducing/last_rf.hpp>
-#include <atria/meta/value_type.hpp>
-#include <vector>
+#include <atria/xform/transduce.hpp>
+#include <atria/xform/reducing/first_rf.hpp>
 
 namespace atria {
 namespace xform {
 
+namespace detail {
+
+struct run_state_t {};
+
+} // namespace detail
+
 /*!
- * Similar to clojure.core/into-array
+ * Runs a transducer composed with no significant reduction. It is
+ * useful to execute a transducer for which we are only interested on
+ * its side effects.
  */
 template <typename XformT,
           typename ...InputRangeTs>
-auto into_vector(XformT&& xform, InputRangeTs&& ...ranges)
-  -> std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >
+void run(XformT&& xform, InputRangeTs&& ...ranges)
 {
-  return into(
-    std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >{},
+  transduce(
     std::forward<XformT>(xform),
+    first_rf,
+    detail::run_state_t{},
     std::forward<InputRangeTs>(ranges)...);
 }
 

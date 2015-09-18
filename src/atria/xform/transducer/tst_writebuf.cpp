@@ -20,34 +20,32 @@
 // DEALINGS IN THE SOFTWARE.
 //
 
-/*!
- * @file
- */
-
-#pragma once
-
-#include <atria/xform/into.hpp>
-#include <atria/xform/state_traits.hpp>
-#include <atria/xform/meta.hpp>
-#include <atria/xform/reducing/last_rf.hpp>
-#include <atria/meta/value_type.hpp>
-#include <vector>
+#include <atria/xform/run.hpp>
+#include <atria/xform/transducer/writebuf.hpp>
+#include <atria/xform/transducer/partition.hpp>
+#include <atria/prelude/comp.hpp>
+#include <atria/testing/gtest.hpp>
+#include <atria/estd/string.hpp>
+#include <sstream>
 
 namespace atria {
 namespace xform {
 
-/*!
- * Similar to clojure.core/into-array
- */
-template <typename XformT,
-          typename ...InputRangeTs>
-auto into_vector(XformT&& xform, InputRangeTs&& ...ranges)
-  -> std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >
+TEST(writebuf, writebuf_partitions)
 {
-  return into(
-    std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >{},
-    std::forward<XformT>(xform),
-    std::forward<InputRangeTs>(ranges)...);
+  using namespace atria::estd::literals;
+  auto s = "123456"_s;
+  auto stream = std::stringstream{};
+  run(comp(partition(3u), writebuf(stream)), s);
+  EXPECT_EQ(stream.str(), s);
+}
+
+TEST(writebuf, writebuf_strings)
+{
+  auto v = std::vector<std::string>{"123","4","56"};
+  auto stream = std::stringstream{};
+  run(writebuf(stream), v);
+  EXPECT_EQ(stream.str(), "123456");
 }
 
 } // namespace xform

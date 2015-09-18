@@ -21,54 +21,51 @@
 //
 
 #include <atria/xform/config.hpp>
-#include <atria/xform/concepts.hpp>
-#include <atria/xform/into_vector.hpp>
-#include <atria/xform/transducer/take_nth.hpp>
-#include <atria/xform/transducer/take.hpp>
+#include <atria/xform/transduce.hpp>
+#include <atria/xform/transducer/write.hpp>
+#include <atria/xform/reducing/first_rf.hpp>
 #include <atria/prelude/comp.hpp>
-#include <atria/estd/functional.hpp>
-
-#include <atria/testing/spies.hpp>
 #include <atria/testing/gtest.hpp>
+#include <sstream>
+#include <vector>
 
 namespace atria {
 namespace xform {
 
 #if ABL_MAKE_GCC_CRASH
 
-TEST(take_nth, concept)
+TEST(write, write)
 {
-  using namespace std::placeholders;
-  meta::check<Transparent_transducer_spec(decltype(take_nth(42)))>();
+  auto v = std::vector<int>{ 1, 2, 3, 4 };
+  auto stream = std::stringstream{};
+  transduce(write(stream), first_rf, 0, v);
+  EXPECT_EQ(stream.str(), "1234");
 }
 
-TEST(take_nth, into)
+TEST(write, in_separator)
 {
-  using namespace std::placeholders;
-  auto v = std::vector<int> { 1, 2, 3, 4, 5 };
-
-  {
-    auto res = into(std::vector<int>{}, take_nth(1), v);
-    EXPECT_EQ(res, (decltype(res) { 1, 2, 3, 4, 5 }));
-  }
-
-  {
-    auto res = into(std::vector<int>{}, take_nth(2), v);
-    EXPECT_EQ(res, (decltype(res) { 1, 3, 5 }));
-  }
-
-  {
-    auto res = into(std::vector<int>{}, take_nth(3), v);
-    EXPECT_EQ(res, (decltype(res) { 1, 4 }));
-  }
+  auto v = std::vector<int>{ 1, 2, 3, 4 };
+  auto stream = std::stringstream{};
+  transduce(write(stream, ' '), first_rf, 0, v);
+  EXPECT_EQ(stream.str(), "1 2 3 4");
 }
 
-TEST(take_nth, compose)
+TEST(write, in_separator_variadic_is_arg_separator)
 {
-  using namespace std::placeholders;
-  auto v = std::vector<int> { 1, 2, 3, 4, 5 };
-  auto res = into_vector(comp(take_nth(2), take(2)), v);
-  EXPECT_EQ(res, (decltype(res) { 1, 3 }));
+  auto v1 = std::vector<int>{ 1, 2, 3, 4 };
+  auto v2 = std::vector<char>{ 'y', 'e', 'a', 'h' };
+  auto stream = std::stringstream{};
+  transduce(write(stream, ' '), first_rf, 0, v1, v2);
+  EXPECT_EQ(stream.str(), "1 y 2 e 3 a 4 h");
+}
+
+TEST(write, in_separator_and_arg_separator)
+{
+  auto v1 = std::vector<int>{ 1, 2, 3, 4 };
+  auto v2 = std::vector<char>{ 'y', 'e', 'a', 'h' };
+  auto stream = std::stringstream{};
+  transduce(write(stream, ' ', ','), first_rf, 0, v1, v2);
+  EXPECT_EQ(stream.str(), "1,y 2,e 3,a 4,h");
 }
 
 #endif // ABL_MAKE_GCC_CRASH

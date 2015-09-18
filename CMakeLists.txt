@@ -37,6 +37,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL Clang
     -Wno-global-constructors
     -Wno-padded
     -Wno-string-conversion
+    -Wno-undefined-inline
     -Wno-undefined-internal
     -Wno-undefined-reinterpret-cast
     -Wno-unknown-pragmas

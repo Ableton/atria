@@ -26,8 +26,10 @@
 
 #pragma once
 
-#include <iterator>
 #include <atria/xform/state_traits.hpp>
+#include <atria/meta/copy_traits.hpp>
+#include <iterator>
+#include <utility>
 
 namespace atria {
 namespace xform {
@@ -41,9 +43,14 @@ auto reduce_nested_non_empty_non_variadic(ReducingFnT&& step,
                                           InputRangeT&& range)
   -> estd::decay_t<decltype(step(initial, *std::begin(range)))>
 {
+  using input_t = meta::copy_decay_t<
+    InputRangeT,
+    estd::remove_reference_t<decltype(*std::begin(range))> >;
+
   auto first = std::begin(range);
   auto last  = std::end(range);
-  auto state = step(std::forward<StateT>(initial), *first);
+  auto state = step(std::forward<StateT>(initial),
+                    std::forward<input_t>(*first));
   // This may be expressed more brief with a:
   //    while(++first != last)
   // but the for loop seems to make compilers generate better code.
@@ -51,7 +58,8 @@ auto reduce_nested_non_empty_non_variadic(ReducingFnT&& step,
     // `x = std::move(x)` is undefined behaviour, hence the two
     // steps approach to protect for when `step` just forwards
     // the state back.
-    auto new_state = step(std::move(state), *first);
+    auto new_state = step(std::move(state),
+                          std::forward<input_t>(*first));
     state = std::move(new_state);
   }
   return state;

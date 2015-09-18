@@ -30,21 +30,34 @@
 #define ABL_BENCHMARK_XFORM_USE_BOOST_RANGE_ERASED 0
 
 #include <atria/xform/into.hpp>
+#include <atria/xform/run.hpp>
+#include <atria/xform/sequence.hpp>
+
+#include <atria/xform/transducer/eager.hpp>
+#include <atria/xform/transducer/enumerate.hpp>
 #include <atria/xform/transducer/filter.hpp>
+#include <atria/xform/transducer/interpose.hpp>
+#include <atria/xform/transducer/iter.hpp>
 #include <atria/xform/transducer/map.hpp>
 #include <atria/xform/transducer/take.hpp>
 #include <atria/xform/transducer/transducer.hpp>
-#include <atria/xform/transducer/zip.hpp>
 #include <atria/xform/transducer/unzip.hpp>
-#include <atria/xform/transducer/enumerate.hpp>
-#include <atria/xform/transducer/iter.hpp>
+#include <atria/xform/transducer/write.hpp>
+#include <atria/xform/transducer/writebuf.hpp>
+#include <atria/xform/transducer/zip.hpp>
+
 #include <atria/xform/impure/into.hpp>
-#include <atria/xform/impure/transducer/transducer.hpp>
 #include <atria/xform/impure/transducer/take.hpp>
+#include <atria/xform/impure/transducer/transducer.hpp>
+
 #include <atria/xform/detail/reduce_nested_non_empty_tail_recursive.hpp>
-#include <atria/prelude/identity.hpp>
+
 #include <atria/prelude/comp.hpp>
+#include <atria/prelude/identity.hpp>
+
 #include <atria/testing/benchmark.hpp>
+
+#include <atria/estd/string.hpp>
 
 #include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
@@ -56,6 +69,8 @@ ABL_DISABLE_WARNINGS
 #include <boost/range/algorithm.hpp>
 #include <boost/range/algorithm_ext/iota.hpp>
 ABL_RESTORE_WARNINGS
+
+#include <cstdlib>
 
 namespace atria {
 namespace xform {
@@ -152,6 +167,18 @@ void benchmarks(testing::benchmark_runner runner)
         std::vector<unsigned>{},
         xform,
         data);
+    })
+
+    ("atria::xform, sequence", [] (std::vector<unsigned> const& data)
+    {
+      auto result = std::vector<unsigned>{};
+      boost::copy(
+        sequence<unsigned>(
+          comp(filter([](unsigned x) { return x % 2 == 0; }),
+               map([](unsigned x) { return x * 2; })),
+          data),
+        std::back_inserter(result));
+      return result;
     });
 
   runner.suite("filter map sum", make_benchmark_data)
@@ -284,6 +311,17 @@ void benchmarks(testing::benchmark_runner runner)
         std::plus<unsigned>{},
         0u,
       data);
+    })
+
+    ("atria::xform, sequence", [] (std::vector<unsigned> const& data)
+    {
+      return boost::accumulate(
+        sequence<unsigned>(
+          comp(filter([](unsigned x) { return x % 2 == 0; }),
+               map([](unsigned x) { return x * 2; })),
+          data),
+        0u,
+        std::plus<unsigned>{});
     });
 
   runner.suite("take sum", make_benchmark_data)
@@ -477,6 +515,107 @@ void benchmarks(testing::benchmark_runner runner)
         0u,
         data,
         data);
+    });
+
+#if ABL_MAKE_GCC_CRASH
+  runner.suite("serialize", make_benchmark_data)
+
+    ("stl, loop", [] (std::vector<unsigned> const& data)
+    {
+      auto stream = std::stringstream{};
+      auto total = data.size();
+      if (total > 0) {
+        auto i = std::size_t{};
+        stream << data[i];
+        while (++i < data.size())
+          stream << ", " << data[i];
+      }
+      return stream.str();
+    })
+
+    ("stl, copy", [] (std::vector<unsigned> const& data)
+    {
+      auto stream = std::stringstream{};
+      std::copy(data.begin(), data.end(),
+                std::ostream_iterator<unsigned>(stream, ", "));
+      return stream.str();
+    })
+
+    ("atria::xform, write", [] (std::vector<unsigned> const& data)
+    {
+      auto stream = std::stringstream{};
+      run(write(stream, ", "), data);
+      return stream.str();
+    })
+
+    ("atria::xform, writebuf", [] (std::vector<unsigned> const& data)
+    {
+      using namespace atria::estd::literals;
+      auto stream = std::stringstream{};
+      char buf[33];
+      run(comp(
+            map([&](unsigned x) {
+                return boost::make_iterator_range(
+                  buf, buf + std::sprintf(buf, "%u", x));
+              }),
+            interpose(", "_s),
+            writebuf(stream)),
+          data);
+      return stream.str();
+    });
+#endif // ABL_MAKE_GCC_CRASH
+
+  runner.suite("sort", make_benchmark_data)
+
+    ("stl", [] (std::vector<unsigned> const& data)
+    {
+      auto result = data;
+      std::sort(result.begin(), result.end());
+      return result;
+    })
+
+    ("stl, copied", [] (std::vector<unsigned> const& data)
+    {
+      auto result = std::vector<unsigned>{};
+      std::copy(data.begin(), data.end(), std::back_inserter(result));
+      std::sort(result.begin(), result.end());
+      return result;
+    })
+
+    ("atria::xform", [] (std::vector<unsigned> const& data)
+    {
+      return into(std::vector<unsigned>{}, sorted, data);
+    });
+
+  runner.suite("reverse", make_benchmark_data)
+
+    ("stl", [] (std::vector<unsigned> const& data)
+    {
+      auto result = data;
+      std::reverse(result.begin(), result.end());
+      return result;
+    })
+
+    ("stl, copied", [] (std::vector<unsigned> const& data)
+    {
+      auto result = std::vector<unsigned>{};
+      std::copy(data.begin(), data.end(), std::back_inserter(result));
+      std::reverse(result.begin(), result.end());
+      return result;
+    })
+
+    ("boost::range", [] (std::vector<unsigned> const& data)
+     {
+       auto result = std::vector<unsigned>{};
+       boost::copy(
+         data | boost::adaptors::reversed,
+         std::back_inserter(result));
+      return result;
+    })
+
+    ("atria::xform", [] (std::vector<unsigned> const& data)
+    {
+      return into(std::vector<unsigned>{}, reversed, data);
     });
 
   struct counter

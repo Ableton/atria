@@ -20,34 +20,39 @@
 // DEALINGS IN THE SOFTWARE.
 //
 
-/*!
- * @file
- */
-
-#pragma once
-
-#include <atria/xform/into.hpp>
-#include <atria/xform/state_traits.hpp>
-#include <atria/xform/meta.hpp>
-#include <atria/xform/reducing/last_rf.hpp>
-#include <atria/meta/value_type.hpp>
-#include <vector>
+#include <atria/xform/into_vector.hpp>
+#include <atria/xform/transducer/read.hpp>
+#include <atria/prelude/comp.hpp>
+#include <atria/testing/gtest.hpp>
+#include <sstream>
 
 namespace atria {
 namespace xform {
 
-/*!
- * Similar to clojure.core/into-array
- */
-template <typename XformT,
-          typename ...InputRangeTs>
-auto into_vector(XformT&& xform, InputRangeTs&& ...ranges)
-  -> std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >
+TEST(read, into)
 {
-  return into(
-    std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >{},
-    std::forward<XformT>(xform),
-    std::forward<InputRangeTs>(ranges)...);
+  auto stream = std::stringstream{"1 2 3 4 5 6"};
+  auto res = into_vector(read<int>(stream));
+  EXPECT_EQ(res, (decltype(res) {
+        1, 2, 3, 4, 5, 6 }));
+}
+
+TEST(read, into_variadic)
+{
+  using tup = std::tuple<int, std::string>;
+
+  auto stream = std::stringstream{"1 hello 2 my 3 friend 4 !!"};
+  auto res = into_vector(read<int, std::string>(stream));
+  EXPECT_EQ(res, (decltype(res) {
+        tup(1, "hello"), tup(2, "my"), tup(3, "friend"), tup(4, "!!") }));
+}
+
+TEST(read, into_ends_on_bad_input)
+{
+  auto stream = std::stringstream{"1 2 3 fuck 4 5 6"};
+  auto res = into_vector(read<int>(stream));
+  EXPECT_EQ(res, (decltype(res) {
+        1, 2, 3 }));
 }
 
 } // namespace xform

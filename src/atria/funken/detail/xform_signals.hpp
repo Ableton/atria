@@ -30,8 +30,10 @@
 #include <atria/funken/detail/no_value.hpp>
 
 #include <atria/meta/pack.hpp>
+#include <atria/meta/value_type.hpp>
 #include <atria/prelude/identity.hpp>
 #include <atria/prelude/tuplify.hpp>
+#include <atria/xform/meta.hpp>
 #include <atria/xform/reducing/last_rf.hpp>
 #include <atria/xform/transducer_impl.hpp>
 
@@ -42,26 +44,6 @@ namespace atria {
 namespace funken {
 
 namespace detail {
-
-/*!
- * Metafunction that returns the value type for a signal based on
- * transducer `XForm` when inputed values from sources
- * `Sources`. `Sources` must have a `Value_type<>`.
- */
-template <typename XForm, typename ...Sources>
-struct get_xform_result
-{
-  using type = estd::decay_t<
-    decltype(
-      std::declval<XForm>()(xform::last_rf)(
-        std::declval<detail::no_value>(),
-        std::declval<estd::Value_type<Sources> >()...))
-    >;
-};
-
-template <typename XForm, typename ...Parents>
-using get_xform_result_t =
-  typename get_xform_result<XForm, Parents...>::type;
 
 constexpr struct
 {
@@ -108,9 +90,9 @@ template <typename XForm,
           typename ...Parents,
           template<class>class Base>
 class xform_down_signal<XForm, meta::pack<Parents...>, Base>
-  : public Base<get_xform_result_t<XForm, Parents...> >
+  : public Base<xform::result_of_t<XForm, meta::value_t<Parents>...> >
 {
-  using base_t = Base<get_xform_result_t<XForm, Parents...> >;
+  using base_t = Base<xform::result_of_t<XForm, meta::value_t<Parents>...> >;
   using down_rf_t = decltype(std::declval<XForm>()(send_down_r));
 
   std::tuple<std::shared_ptr<Parents>...> parents_;

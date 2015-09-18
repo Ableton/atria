@@ -21,52 +21,56 @@
 //
 
 /*!
- * @file
+ * @file Utilities that extend the functionality of `estd::detected_t`
  */
 
 #pragma once
 
+#include <atria/estd/type_traits.hpp>
 #include <atria/meta/utils.hpp>
-#include <iostream>
+#include <atria/meta/eval.hpp>
 
 namespace atria {
-namespace prelude {
+namespace meta {
 
 /*!
- * Prints "<message> <x>" to `std::cerr` and returns the value,
- * forwarded.  Useful for looking at the value that is returned in the
- * middle of an expression.
- *
- * @see tracer
- * @see traced
+ * Like `estd::detected_or`, but evaluates `D` lazily.
  */
-template <typename T>
-auto trace(T&& x, const std::string& message)
-  -> T&&
+template <typename D, template<class...> class Op, typename T>
+struct lazy_detected_or
 {
-  std::cerr << message << " " << x << std::endl;
-  return std::forward<T>(x);
-}
-
-/*!
- * Function object for calling @a trace
- *
- * @see trace
- * @see traced
- */
-struct tracer
-{
-  std::string message;
-
-  template <typename T>
-  auto operator() (T&& x)
-    -> ABL_DECLTYPE_RETURN(
-    trace(std::forward<T>(x), message))
+  template <typename X>
+  using operation_t = identity<Op<X> >;
+  using type = eval_t<estd::detected_or_t<D, operation_t, T> >;
 };
 
-} // namespace prelude
+template <typename D, template<class...> class Op, typename T>
+using lazy_detected_or_t = eval_t<lazy_detected_or<D, Op, T> >;
 
-using prelude::tracer;
-using prelude::trace;
+/*!
+ * Metafunction that returns the first type that is detected via the
+ * metafunctions in `Ops...`
+ */
+template <typename T, template<class...> class... Ops>
+struct detected_any;
 
-} // namespace atria
+template <typename T,
+          template<class...> class Op>
+struct detected_any<T, Op>
+{
+  using type = estd::detected_t<Op, T>;
+};
+
+template <typename T,
+          template<class...> class Op,
+          template<class...> class... Ops>
+struct detected_any<T, Op, Ops...>
+{
+  using type = lazy_detected_or_t<detected_any<T, Ops...>, Op, T>;
+};
+
+template <typename T, template<class...> class... Ops>
+using detected_any_t = typename detected_any<T, Ops...>::type;
+
+} // namespace meta
+} // namespace xform

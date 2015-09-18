@@ -26,28 +26,54 @@
 
 #pragma once
 
-#include <atria/xform/into.hpp>
-#include <atria/xform/state_traits.hpp>
-#include <atria/xform/meta.hpp>
-#include <atria/xform/reducing/last_rf.hpp>
-#include <atria/meta/value_type.hpp>
-#include <vector>
+#include <atria/xform/transducer_impl.hpp>
+#include <atria/estd/functional.hpp>
 
 namespace atria {
 namespace xform {
 
-/*!
- * Similar to clojure.core/into-array
- */
-template <typename XformT,
-          typename ...InputRangeTs>
-auto into_vector(XformT&& xform, InputRangeTs&& ...ranges)
-  -> std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >
+namespace detail {
+
+struct sink_rf_gen
 {
-  return into(
-    std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >{},
-    std::forward<XformT>(xform),
-    std::forward<InputRangeTs>(ranges)...);
+  template <typename ReducingFnT,
+            typename ActionT>
+  struct apply
+  {
+    ReducingFnT step;
+    ActionT action;
+
+    template <typename State, typename ...Inputs>
+    auto operator() (State&& s, Inputs&& ...is)
+      -> decltype(step(std::forward<State>(s)))
+    {
+      estd::invoke(action, std::forward<Inputs>(is)...);
+      return step(std::forward<State>(s));
+    }
+  };
+};
+
+} // namespace detail
+
+template <typename T>
+using sink_t = transducer_impl<detail::sink_rf_gen, T>;
+
+/*!
+ * Transducer that evaluates `action` on each input.  The input is
+ * forwarded into the action and discarded.  The next transducer is
+ * excited for every input, but with no arguments.
+ *
+ * @note This is very similar to `each`, but can perform better
+ *       since the arguments can be moved into the action.  If we are
+ *       not interested in the inputs after the action, this one
+ *       should be preferred.
+ */
+template <typename ActionT>
+auto sink(ActionT&& action)
+  -> sink_t<estd::decay_t<ActionT> >
+{
+  return sink_t<estd::decay_t<ActionT> > {
+    std::forward<ActionT>(action) };
 }
 
 } // namespace xform

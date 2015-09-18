@@ -20,34 +20,21 @@
 // DEALINGS IN THE SOFTWARE.
 //
 
-/*!
- * @file
- */
-
-#pragma once
-
-#include <atria/xform/into.hpp>
-#include <atria/xform/state_traits.hpp>
-#include <atria/xform/meta.hpp>
-#include <atria/xform/reducing/last_rf.hpp>
-#include <atria/meta/value_type.hpp>
-#include <vector>
+#include <atria/xform/into_vector.hpp>
+#include <atria/xform/transducer/each.hpp>
+#include <atria/prelude/identity.hpp>
+#include <atria/testing/gtest.hpp>
 
 namespace atria {
 namespace xform {
 
-/*!
- * Similar to clojure.core/into-array
- */
-template <typename XformT,
-          typename ...InputRangeTs>
-auto into_vector(XformT&& xform, InputRangeTs&& ...ranges)
-  -> std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >
+TEST(each, each)
 {
-  return into(
-    std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >{},
-    std::forward<XformT>(xform),
-    std::forward<InputRangeTs>(ranges)...);
+  auto v = std::vector<int> { 1, 2, 3, 6 };
+  auto r1 = std::vector<int> {};
+  auto r2 = into_vector(each([&](int x) { r1.push_back(x); }), v);
+  EXPECT_EQ(v, r1);
+  EXPECT_EQ(v, r2);
 }
 
 } // namespace xform

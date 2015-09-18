@@ -28,27 +28,57 @@
 
 #include <atria/xform/into.hpp>
 #include <atria/xform/state_traits.hpp>
-#include <atria/xform/meta.hpp>
 #include <atria/xform/reducing/last_rf.hpp>
-#include <atria/meta/value_type.hpp>
-#include <vector>
+#include <atria/meta/utils.hpp>
+#include <atria/meta/eval.hpp>
 
 namespace atria {
 namespace xform {
 
-/*!
- * Similar to clojure.core/into-array
- */
-template <typename XformT,
-          typename ...InputRangeTs>
-auto into_vector(XformT&& xform, InputRangeTs&& ...ranges)
-  -> std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >
+namespace detail {
+
+struct output_of_rf_t
 {
-  return into(
-    std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >{},
-    std::forward<XformT>(xform),
-    std::forward<InputRangeTs>(ranges)...);
-}
+  template <typename StateT, typename ...InputTs>
+  constexpr auto operator() (StateT, InputTs&&...) const
+    -> meta::pack<InputTs&&...>;
+};
+
+} // namespace detail
+
+/*!
+ * Metafunction that given a transducer @a `XformT` and some inputs @a
+ * `InputTs`, returns the type of the outputs of the transducer,
+ * wrapped in a `meta::pack`.  It preserves reference types.
+ */
+template <typename XformT, typename... InputTs>
+struct output_of
+{
+  using type = decltype(
+    state_complete(
+      std::declval<XformT>()(detail::output_of_rf_t{})(
+        std::declval<meta::bottom>(),
+        std::declval<InputTs>()...)));
+};
+ABL_METAFUNCTION_T(output_of);
+
+/*!
+ * Metafunction that given a transducer @a `XformT` and some inputs @a
+ * `InputTs`, returns the type of the output of the transducer,
+ * combined as combined in a single result with `tuplify`.
+ *
+ * @see tuplify
+ */
+template <typename XformT, typename... InputTs>
+struct result_of
+{
+  using type = estd::decay_t<decltype(
+    state_complete(
+      std::declval<XformT>()(last_rf)(
+        std::declval<meta::bottom>(),
+        std::declval<InputTs>()...)))>;
+};
+ABL_METAFUNCTION_T(result_of);
 
 } // namespace xform
 } // namespace atria

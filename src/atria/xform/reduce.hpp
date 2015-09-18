@@ -38,6 +38,31 @@ namespace xform {
  * reduces over a range (doesn't take to distinct iterators) and can
  * reduce over several ranges at the same time.  It also supports
  * early termination for transducers.
+ *
+ * @note Reduce assumes that the ranges that are passed actually hold
+ *       the values.  When the ranges are pased as r-values, the
+ *       elements will be moved from the range into the reducing
+ *       function.  Extra care has to be taken when using range
+ *       adaptors or views -- if the adapted container needs to be
+ *       used after the reduction, make sure to pass the view as an
+ *       l-value, by giving it a name.  Example:
+ *
+ *       @code{.cpp}
+ *           using namespace boost::range::adaptors;
+ *           auto x = std::vector<std::string>{ "foo", ... };
+ *           reduce(..., x | reversed);
+ *           std::cout << x[0] << std::endl; // ooops!
+ *       @endcode
+ *
+ *       One should instead:
+ *
+ *       @code{.cpp}
+ *           using namespace boost::range::adaptors;
+ *           auto x = std::vector<std::string>{ "foo", ... };
+ *           auto y = x | reversed;
+ *           reduce(..., y);
+ *           std::cout << x[0] << std::endl; // ooops!
+ *       @endcode
  */
 template <typename ReducingFnT,
           typename StateT,

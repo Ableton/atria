@@ -34,6 +34,7 @@
     _Pragma("clang diagnostic ignored \"-Wunused-local-typedef\"") \
     _Pragma("clang diagnostic ignored \"-Wunused-parameter\"") \
     _Pragma("clang diagnostic ignored \"-Wused-but-marked-unused\"") \
+    _Pragma("clang diagnostic ignored \"-Wuser-defined-literals\"") \
     _Pragma("clang diagnostic ignored \"-Wweak-vtables\"") \
     /**/
 

@@ -21,6 +21,7 @@
 //
 
 #include <atria/meta/concept.hpp>
+#include <atria/meta/value_type.hpp>
 #include <atria/testing/gtest.hpp>
 
 namespace atria {
@@ -42,9 +43,9 @@ ABL_CONCEPT bool Example_concept()
       // Dereferenceable
       *declval<T>(),
       // Has value type
-      declval<estd::Value_type<T>>(),
+      declval<meta::value_t<T>>(),
       // Can forward dereferenced to value type
-      forward<estd::Value_type<T>>( *declval<T>() ),
+      forward<meta::value_t<T>>( *declval<T>() ),
       // Has an action() method that may return void
       (declval<T>().action(), can_be_void)
       ))>();
@@ -99,9 +100,9 @@ ABL_CONCEPT_SPEC(Example_concept_two)
       // Dereferenceable
       *x,
       // Has value type
-      std::declval<estd::Value_type<T>>(),
+      std::declval<meta::value_t<T>>(),
       // Can forward dereferenced to value type
-      std::forward<estd::Value_type<T>>( *x ),
+      std::forward<meta::value_t<T>>( *x ),
       // Has an action() method that may return void
       (x.action(), can_be_void)
       ));
@@ -145,9 +146,9 @@ struct Example_concept_spec
       // Dereferenceable
       *x,
       // Has value type
-      std::declval<estd::Value_type<T>>(),
+      std::declval<meta::value_t<T>>(),
       // Can forward dereferenced to value type
-      std::forward<estd::Value_type<T>>( *x ),
+      std::forward<meta::value_t<T>>( *x ),
       // Has an action() method that may return void
       (x.action(), can_be_void)
       ));

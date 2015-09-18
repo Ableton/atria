@@ -26,29 +26,52 @@
 
 #pragma once
 
-#include <atria/xform/into.hpp>
-#include <atria/xform/state_traits.hpp>
-#include <atria/xform/meta.hpp>
-#include <atria/xform/reducing/last_rf.hpp>
-#include <atria/meta/value_type.hpp>
-#include <vector>
+#include <atria/estd/type_traits.hpp>
+#include <tuple>
 
 namespace atria {
 namespace xform {
+namespace detail {
 
-/*!
- * Similar to clojure.core/into-array
- */
-template <typename XformT,
-          typename ...InputRangeTs>
-auto into_vector(XformT&& xform, InputRangeTs&& ...ranges)
-  -> std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >
+template <std::size_t Index, std::size_t Max>
+struct tuple_all_neq_t
 {
-  return into(
-    std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >{},
-    std::forward<XformT>(xform),
-    std::forward<InputRangeTs>(ranges)...);
+  template <typename Tuple1T, typename Tuple2T>
+  bool operator()(Tuple1T&& t1, Tuple2T&& t2)
+  {
+    return
+      std::get<Index>(std::forward<Tuple1T>(t1)) !=
+      std::get<Index>(std::forward<Tuple2T>(t2)) &&
+      tuple_all_neq_t<Index + 1, Max>{} (
+        std::forward<Tuple1T>(t1),
+        std::forward<Tuple2T>(t2));
+  }
+};
+
+template <std::size_t Max>
+struct tuple_all_neq_t<Max, Max>
+{
+  template <typename Tuple1T, typename Tuple2T>
+  bool operator()(Tuple1T&&, Tuple2T&&)
+  {
+    return true;
+  }
+};
+
+template <typename Tuple1T, typename Tuple2T>
+bool tuple_all_neq(Tuple1T&& t1, Tuple2T&& t2)
+{
+  constexpr auto size1 = std::tuple_size<estd::decay_t<Tuple1T> >{};
+  constexpr auto size2 = std::tuple_size<estd::decay_t<Tuple2T> >{};
+  static_assert(size1 == size2, "");
+
+  using impl_t = tuple_all_neq_t<0u, (size1 > size2 ? size2 : size1)>;
+
+  return impl_t{} (
+    std::forward<Tuple1T>(t1),
+    std::forward<Tuple2T>(t2));
 }
 
+} // namespace detail
 } // namespace xform
 } // namespace atria

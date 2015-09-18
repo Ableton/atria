@@ -42,9 +42,24 @@ constexpr struct identity_t
       std::forward<ArgT>(x))
 } identity {};
 
+/*!
+ * Similar to @a identity, but it never returns a reference to the
+ * pased in value.
+ */
+constexpr struct identity_t_
+{
+  template <typename ArgT>
+  constexpr auto operator() (ArgT x) const -> ArgT
+  {
+    return x;
+  }
+} identity_ {};
+
 } // namespace prelude
 
 using prelude::identity_t;
 using prelude::identity;
+using prelude::identity_t_;
+using prelude::identity_;
 
 } // namespace atria

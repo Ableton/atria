@@ -20,34 +20,30 @@
 // DEALINGS IN THE SOFTWARE.
 //
 
-/*!
- * @file
- */
-
-#pragma once
-
-#include <atria/xform/into.hpp>
-#include <atria/xform/state_traits.hpp>
-#include <atria/xform/meta.hpp>
-#include <atria/xform/reducing/last_rf.hpp>
-#include <atria/meta/value_type.hpp>
-#include <vector>
+#include <atria/xform/into_vector.hpp>
+#include <atria/xform/transducer/readbuf.hpp>
+#include <atria/xform/transducer/cat.hpp>
+#include <atria/prelude/comp.hpp>
+#include <atria/testing/gtest.hpp>
+#include <sstream>
 
 namespace atria {
 namespace xform {
 
-/*!
- * Similar to clojure.core/into-array
- */
-template <typename XformT,
-          typename ...InputRangeTs>
-auto into_vector(XformT&& xform, InputRangeTs&& ...ranges)
-  -> std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >
+TEST(readbuf, constant_sized)
 {
-  return into(
-    std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >{},
-    std::forward<XformT>(xform),
-    std::forward<InputRangeTs>(ranges)...);
+  auto stream = std::stringstream{"123456"};
+  auto res = into_vector(comp(readbuf<3>(stream), cat));
+  EXPECT_EQ(res, (decltype(res) {
+        '1', '2', '3', '4', '5', '6' }));
+}
+
+TEST(readbuf, dynamic_sized)
+{
+  auto stream = std::stringstream{"123456"};
+  auto res = into_vector(comp(readbuf(stream, 3), cat));
+  EXPECT_EQ(res, (decltype(res) {
+        '1', '2', '3', '4', '5', '6' }));
 }
 
 } // namespace xform

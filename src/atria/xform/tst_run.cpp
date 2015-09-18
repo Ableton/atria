@@ -20,35 +20,49 @@
 // DEALINGS IN THE SOFTWARE.
 //
 
-/*!
- * @file
- */
-
-#pragma once
-
-#include <atria/xform/into.hpp>
-#include <atria/xform/state_traits.hpp>
-#include <atria/xform/meta.hpp>
-#include <atria/xform/reducing/last_rf.hpp>
-#include <atria/meta/value_type.hpp>
+#include <atria/xform/run.hpp>
+#include <atria/xform/transducer/read.hpp>
+#include <atria/xform/transducer/write.hpp>
+#include <atria/xform/transducer/map.hpp>
+#include <atria/prelude/comp.hpp>
+#include <atria/testing/gtest.hpp>
+#include <sstream>
 #include <vector>
 
 namespace atria {
 namespace xform {
 
-/*!
- * Similar to clojure.core/into-array
- */
-template <typename XformT,
-          typename ...InputRangeTs>
-auto into_vector(XformT&& xform, InputRangeTs&& ...ranges)
-  -> std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >
+#if ABL_MAKE_GCC_CRASH
+
+TEST(run, nullary)
 {
-  return into(
-    std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >{},
-    std::forward<XformT>(xform),
-    std::forward<InputRangeTs>(ranges)...);
+  auto input = std::stringstream{"1 2 3 4 5"};
+  auto output = std::stringstream{};
+
+  run(comp(read<int>(input), write(output, ';')));
+  EXPECT_EQ(output.str(), "1;2;3;4;5");
 }
+
+TEST(run, unary)
+{
+  auto v = std::vector<int>{1, 2, 3, 4, 5};
+  auto output = std::stringstream{};
+
+  run(write(output, ';'), v);
+  EXPECT_EQ(output.str(), "1;2;3;4;5");
+}
+
+TEST(run, variadic)
+{
+  auto v1 = std::vector<int>{1, 2, 3, 4, 5};
+  auto v2 = std::vector<char>{'h', 'e', 'l', 'l', 'o'};
+  auto output = std::stringstream{};
+
+  run(write(output, ';', ' '), v1, v2);
+  EXPECT_EQ(output.str(), "1 h;2 e;3 l;4 l;5 o");
+}
+
+#endif // ABL_MAKE_GCC_CRASH
 
 } // namespace xform
 } // namespace atria

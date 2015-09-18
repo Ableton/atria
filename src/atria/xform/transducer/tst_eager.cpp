@@ -20,58 +20,60 @@
 // DEALINGS IN THE SOFTWARE.
 //
 
-#include <atria/xform/config.hpp>
-#include <atria/xform/concepts.hpp>
 #include <atria/xform/into_vector.hpp>
-#include <atria/xform/transducer/take_nth.hpp>
-#include <atria/xform/transducer/take.hpp>
+#include <atria/xform/transducer/eager.hpp>
+#include <atria/xform/transducer/map.hpp>
+#include <atria/xform/transducer/filter.hpp>
 #include <atria/prelude/comp.hpp>
-#include <atria/estd/functional.hpp>
-
+#include <atria/prelude/identity.hpp>
 #include <atria/testing/spies.hpp>
 #include <atria/testing/gtest.hpp>
 
 namespace atria {
 namespace xform {
 
-#if ABL_MAKE_GCC_CRASH
-
-TEST(take_nth, concept)
+TEST(eager, into_vector)
 {
-  using namespace std::placeholders;
-  meta::check<Transparent_transducer_spec(decltype(take_nth(42)))>();
+  auto v = std::vector<int> { 1, 2, 3, 4 };
+  auto r = into_vector(eager(identity), v);
+  EXPECT_EQ(r, (decltype (r) { 1, 2, 3, 4 }));
 }
 
-TEST(take_nth, into)
+TEST(eager, sorted)
 {
-  using namespace std::placeholders;
-  auto v = std::vector<int> { 1, 2, 3, 4, 5 };
+  auto v = std::vector<int> { 6, 2, 1, 12, 3 };
+  auto times2 = [](int x) { return x * 2; };
+  auto div3 = [](int x) { return x % 3 == 0; };
 
-  {
-    auto res = into(std::vector<int>{}, take_nth(1), v);
-    EXPECT_EQ(res, (decltype(res) { 1, 2, 3, 4, 5 }));
-  }
-
-  {
-    auto res = into(std::vector<int>{}, take_nth(2), v);
-    EXPECT_EQ(res, (decltype(res) { 1, 3, 5 }));
-  }
-
-  {
-    auto res = into(std::vector<int>{}, take_nth(3), v);
-    EXPECT_EQ(res, (decltype(res) { 1, 4 }));
-  }
+  // Does not use `into_vector` because travis uses an outdated
+  // version of GCC in which that triggers a link-time bug
+  auto r = into(std::vector<int>{},
+                comp(map(times2), sorted, filter(div3)), v);
+  EXPECT_EQ(r, (decltype (r) { 6, 12, 24 }));
 }
 
-TEST(take_nth, compose)
+TEST(eager, reversed)
 {
-  using namespace std::placeholders;
-  auto v = std::vector<int> { 1, 2, 3, 4, 5 };
-  auto res = into_vector(comp(take_nth(2), take(2)), v);
-  EXPECT_EQ(res, (decltype(res) { 1, 3 }));
+  auto v = std::vector<int> { 1, 2, 3, 6, 12 };
+  auto times2 = [](int x) { return x * 2; };
+  auto div3 = [](int x) { return x % 3 == 0; };
+
+  auto r = into(std::vector<int>{},
+                comp(map(times2), reversed, filter(div3)), v);
+  EXPECT_EQ(r, (decltype (r) { 24, 12, 6 }));
 }
 
-#endif // ABL_MAKE_GCC_CRASH
+TEST(eager, moves_data_around)
+{
+  using elem = testing::copy_spy<>;
+
+  auto x = elem{};
+  auto v = std::vector<elem> { x, x, x, x };
+  auto copies = x.copied.count();
+
+  into_vector(reversed, std::move(v));
+  EXPECT_EQ(x.copied.count(), copies);
+}
 
 } // namespace xform
 } // namespace atria

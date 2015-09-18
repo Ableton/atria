@@ -4,16 +4,16 @@ sudo: false
 
 matrix:
   include:
-    - env: COMPILER=clang++-3.6 STD=11 STDLIB=libc++ CONFIGURATION=Debug
-      addons: &clang36
+    - env: COMPILER=clang++-3.7 STD=11 STDLIB=libc++ CONFIGURATION=Debug
+      addons: &clang37
         apt:
           sources:
-            - llvm-toolchain-precise-3.6
+            - llvm-toolchain-precise-3.7
             - ubuntu-toolchain-r-test
-          packages: clang-3.6
+          packages: clang-3.7
 
-    - env: COMPILER=clang++-3.6 STD=11 STDLIB=libc++ CONFIGURATION=Release
-      addons: *clang36
+    - env: COMPILER=clang++-3.7 STD=11 STDLIB=libc++ CONFIGURATION=Release
+      addons: *clang37
 
     - env: COMPILER=g++-5 STD=11 CONFIGURATION=Debug
       addons: &gcc5
@@ -24,18 +24,27 @@ matrix:
     - env: COMPILER=g++-5 STD=11 CONFIGURATION=Release
       addons: *gcc5
 
-  exclude:
-    - env: COMPILER=clang++-3.6 STD=14 STDLIB=libc++ CONFIGURATION=Debug
-      addons: *clang36
-    - env: COMPILER=clang++-3.6 STD=14 STDLIB=libc++ CONFIGURATION=Release
-      addons: *clang36
+    - env: COMPILER=clang++-3.7 STD=14 STDLIB=libc++ CONFIGURATION=Debug
+      addons: *clang37
+
+    - env: COMPILER=clang++-3.7 STD=14 STDLIB=libc++ CONFIGURATION=Release
+      addons: *clang37
+
     - env: COMPILER=g++-5 STD=14 CONFIGURATION=Debug
       addons: *gcc5
+
     - env: COMPILER=g++-5 STD=14 CONFIGURATION=Release
       addons: *gcc5
 
-env: COMPILER=g++-5
-addons: *gcc5
+env: COMPILER=clang++-3.7 STDLIB=libc++ VALGRIND=true
+addons:
+  apt:
+    sources:
+      - llvm-toolchain-precise-3.7
+      - ubuntu-toolchain-r-test
+    packages:
+      - clang-3.7
+      - valgrind
 
 install:
   # All the dependencies are installed in ${TRAVIS_BUILD_DIR}/deps/
@@ -59,7 +68,7 @@ install:
   # Install libc++ and libc++abi
   - |
     if [[ "${STDLIB}" == "libc++" ]]; then
-      VERSION=3.6.2
+      VERSION=3.7.0
       LLVM_URL="http://llvm.org/releases/${VERSION}/llvm-${VERSION}.src.tar.xz"
       LIBCXX_URL="http://llvm.org/releases/${VERSION}/libcxx-${VERSION}.src.tar.xz"
       LIBCXXABI_URL="http://llvm.org/releases/${VERSION}/libcxxabi-${VERSION}.src.tar.xz"
@@ -79,6 +88,7 @@ install:
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir build && cd build
+  - ${COMPILER} --version
   - |
     cmake .. -DCMAKE_CXX_COMPILER=${COMPILER} \
              -DCMAKE_BUILD_TYPE=${CONFIGURATION} \
@@ -88,4 +98,12 @@ before_script:
 
 script:
   - cmake --build .
-  - ctest -V
+  - |
+    if [[ "${VALGRIND}" == "true" ]]; then
+       VALGRIND_CMD="valgrind --leak-check=full --error-exitcode=1"
+       true \
+           && ${VALGRIND_CMD} ./atria-test-all \
+           && ${VALGRIND_CMD} ./atria-benchmark-xform -i 1 -m 1 -s 10
+    else
+      ctest -V
+    fi

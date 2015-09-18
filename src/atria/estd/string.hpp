@@ -26,29 +26,46 @@
 
 #pragma once
 
-#include <atria/xform/into.hpp>
-#include <atria/xform/state_traits.hpp>
-#include <atria/xform/meta.hpp>
-#include <atria/xform/reducing/last_rf.hpp>
-#include <atria/meta/value_type.hpp>
-#include <vector>
+#include <string>
 
 namespace atria {
-namespace xform {
+namespace estd {
 
-/*!
- * Similar to clojure.core/into-array
- */
-template <typename XformT,
-          typename ...InputRangeTs>
-auto into_vector(XformT&& xform, InputRangeTs&& ...ranges)
-  -> std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >
+inline
+namespace literals {
+inline
+namespace string_literals {
+
+ABL_DISABLE_WARNINGS
+
+inline std::basic_string<char> operator ""_s(
+  const char* str, std::size_t len)
 {
-  return into(
-    std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >{},
-    std::forward<XformT>(xform),
-    std::forward<InputRangeTs>(ranges)...);
+  return std::basic_string<char>(str, len);
 }
 
-} // namespace xform
+inline std::basic_string<wchar_t> operator ""_s(
+  const wchar_t* str, std::size_t len)
+{
+  return std::basic_string<wchar_t>(str, len);
+}
+
+inline std::basic_string<char16_t> operator ""_s(
+  const char16_t* str, std::size_t len)
+{
+  return std::basic_string<char16_t>(str, len);
+}
+
+inline std::basic_string<char32_t> operator ""_s(
+  const char32_t* str, std::size_t len)
+{
+  return std::basic_string<char32_t>(str, len);
+}
+
+ABL_RESTORE_WARNINGS
+
+} // namespace string_literals
+} // namespace literals
+
+} // namespace estd
 } // namespace atria

@@ -26,28 +26,48 @@
 
 #pragma once
 
-#include <atria/xform/into.hpp>
-#include <atria/xform/state_traits.hpp>
-#include <atria/xform/meta.hpp>
-#include <atria/xform/reducing/last_rf.hpp>
-#include <atria/meta/value_type.hpp>
-#include <vector>
+#include <atria/xform/transducer_impl.hpp>
+#include <atria/estd/functional.hpp>
 
 namespace atria {
 namespace xform {
 
-/*!
- * Similar to clojure.core/into-array
- */
-template <typename XformT,
-          typename ...InputRangeTs>
-auto into_vector(XformT&& xform, InputRangeTs&& ...ranges)
-  -> std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >
+namespace detail {
+
+struct each_rf_gen
 {
-  return into(
-    std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >{},
-    std::forward<XformT>(xform),
-    std::forward<InputRangeTs>(ranges)...);
+  template <typename ReducingFnT,
+            typename ActionT>
+  struct apply
+  {
+    ReducingFnT step;
+    ActionT action;
+
+    template <typename State, typename ...Inputs>
+    auto operator() (State&& s, Inputs&& ...is)
+      -> decltype(step(std::forward<State>(s), std::forward<Inputs>(is)...))
+    {
+      estd::invoke(action, is...);
+      return step(std::forward<State>(s),  std::forward<Inputs>(is)...);
+    }
+  };
+};
+
+} // namespace detail
+
+template <typename T>
+using each_t = transducer_impl<detail::each_rf_gen, T>;
+
+/*!
+ * Transducer that evaluates `action` on each input, forwarding the
+ * input down the original inputs down the transducer chain.
+ */
+template <typename ActionT>
+auto each(ActionT&& action)
+  -> each_t<estd::decay_t<ActionT> >
+{
+  return each_t<estd::decay_t<ActionT> > {
+    std::forward<ActionT>(action) };
 }
 
 } // namespace xform

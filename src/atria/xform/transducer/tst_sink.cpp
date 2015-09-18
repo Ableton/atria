@@ -20,34 +20,38 @@
 // DEALINGS IN THE SOFTWARE.
 //
 
-/*!
- * @file
- */
-
-#pragma once
-
-#include <atria/xform/into.hpp>
-#include <atria/xform/state_traits.hpp>
-#include <atria/xform/meta.hpp>
-#include <atria/xform/reducing/last_rf.hpp>
-#include <atria/meta/value_type.hpp>
-#include <vector>
+#include <atria/xform/into_vector.hpp>
+#include <atria/xform/run.hpp>
+#include <atria/xform/transducer/enumerate.hpp>
+#include <atria/xform/transducer/sink.hpp>
+#include <atria/prelude/comp.hpp>
+#include <atria/prelude/identity.hpp>
+#include <atria/testing/spies.hpp>
+#include <atria/testing/gtest.hpp>
 
 namespace atria {
 namespace xform {
 
-/*!
- * Similar to clojure.core/into-array
- */
-template <typename XformT,
-          typename ...InputRangeTs>
-auto into_vector(XformT&& xform, InputRangeTs&& ...ranges)
-  -> std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >
+TEST(sink, sink)
 {
-  return into(
-    std::vector<result_of_t<XformT, meta::value_t<InputRangeTs>... > >{},
-    std::forward<XformT>(xform),
-    std::forward<InputRangeTs>(ranges)...);
+  auto v = std::vector<int> { 1, 2, 3, 6 };
+  auto r = std::vector<int> {};
+  run(sink([&](int x) { r.push_back(x); }), v);
+  EXPECT_EQ(v, r);
+}
+
+TEST(sink, moves_values_out_of_rvalue_container)
+{
+  using elem = testing::copy_spy<>;
+
+  auto x = elem{};
+  auto v = std::vector<elem> { x, x, x, x };
+  auto copies = x.copied.count();
+
+  auto r = into_vector(comp(sink([](elem){}), enumerate), std::move(v));
+
+  EXPECT_EQ(x.copied.count(), copies);
+  EXPECT_EQ(r, (decltype(r) {0, 1, 2, 3}));
 }
 
 } // namespace xform
