@@ -2,6 +2,10 @@ language: c++
 os: linux
 sudo: false
 
+branches:
+  only:
+    - master
+
 matrix:
   include:
     - env: COMPILER=clang++-3.7 STD=11 STDLIB=libc++ CONFIGURATION=Debug
