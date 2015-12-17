@@ -150,6 +150,13 @@ struct default_construct
   }
 };
 
+template<>
+struct default_construct<void>
+{
+  template <typename ...Args>
+  void operator() (Args&& ...) { }
+};
+
 } // namespace detail
 
 template <typename ReturnType = void,
