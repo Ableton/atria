@@ -25,8 +25,11 @@
 #include <atria/xform/state_wrapper.hpp>
 #include <atria/xform/transducer_impl.hpp>
 #include <atria/xform/reducing/first_rf.hpp>
+#include <atria/xform/reducing/last_rf.hpp>
 
 #include <atria/estd/functional.hpp>
+
+#include <atria/testing/spies.hpp>
 #include <atria/testing/gtest.hpp>
 
 namespace atria {
@@ -83,6 +86,41 @@ TEST(reduce, does_not_construct_state_wrapper_from_state)
   auto v = std::vector<int> { 1, 2, 3, 6 };
   auto r = reduce(foo_t{}(first_rf), 13, v);
   EXPECT_EQ(r, 13);
+}
+
+TEST(reduce, copies_values_out_of_lvalue_container)
+{
+  using elem = testing::copy_spy<>;
+
+  auto x = elem{};
+  auto v = std::vector<elem> { x, x, x, x };
+  auto copies = x.copied.count();
+  reduce(last_rf, x, v);
+  EXPECT_EQ(x.copied.count(), copies + 4);
+}
+
+TEST(reduce, moves_values_out_of_rvalue_container)
+{
+  using elem = testing::copy_spy<>;
+
+  auto x = elem{};
+  auto v = std::vector<elem> { x, x, x, x };
+  auto copies = x.copied.count();
+  reduce(last_rf, std::move(x), std::move(v));
+  EXPECT_EQ(x.copied.count(), copies);
+}
+
+TEST(reduce, moves_values_out_of_rvalue_container_variadic)
+{
+  using elem = testing::copy_spy<>;
+
+  auto x = elem{};
+  auto v1 = std::vector<elem> { x, x, x, x };
+  auto v2 = v1;
+  auto init = std::make_tuple(x, x);
+  auto copies = x.copied.count();
+  reduce(last_rf, std::move(init), std::move(v1), std::move(v2));
+  EXPECT_EQ(x.copied.count(), copies);
 }
 
 } // namespace xform

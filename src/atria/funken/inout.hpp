@@ -38,19 +38,19 @@ namespace detail {
 
 template <typename SignalT>
 class inoutput_impl
-  : private watchable<estd::Value_type<SignalT> >
+  : private watchable<meta::value_t<SignalT> >
 {
   template <typename T> friend class inoutput_impl;
   friend class detail::access;
 
-  using base_t = watchable<estd::Value_type<SignalT> >;
+  using base_t = watchable<meta::value_t<SignalT> >;
 
   using signal_ptr_t = std::shared_ptr<SignalT>;
   signal_ptr_t signal_;
   const signal_ptr_t& signal() const { return signal_; }
 
 public:
-  using value_type = estd::Value_type<SignalT>;
+  using value_type = meta::value_t<SignalT>;
 
   inoutput_impl(signal_ptr_t sig)
     : signal_(std::move(sig)) {}

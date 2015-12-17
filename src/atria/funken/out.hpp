@@ -48,7 +48,7 @@ class output_impl
   const signal_ptr_t& signal() const { return signal_; }
 
 public:
-  using value_type = estd::Value_type<SignalT>;
+  using value_type = meta::value_t<SignalT>;
 
   output_impl() = default;
   output_impl(output_impl&&) = default;

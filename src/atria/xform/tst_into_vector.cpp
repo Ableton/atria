@@ -63,6 +63,18 @@ TEST(into_vector, type_deduction)
                                       std::vector<std::string>{}))>{}, "");
 }
 
+TEST(into_vector, zipping)
+{
+  auto v1 = std::vector<int> { 1, 2, 3, 4 };
+  auto v2 = std::vector<std::string> { "a", "b" };
+  using tup = std::tuple<int, std::string>;
+
+  auto res = into_vector(identity, v1, v2);
+  EXPECT_EQ(res, (std::vector<tup> { tup(1, "a"), tup(2, "b") }));
+}
+
+#if ABL_MAKE_GCC_CRASH
+
 TEST(into_vector, transduction)
 {
   auto v = std::vector<int> { 1, 2, 3, 4 };
@@ -72,16 +84,6 @@ TEST(into_vector, transduction)
     map([] (int x) { return std::to_string(x); }));
   auto res = into_vector(xform, v);
   EXPECT_EQ(res, (std::vector<std::string> { "2", "4" }));
-}
-
-TEST(into_vector, zipping)
-{
-  auto v1 = std::vector<int> { 1, 2, 3, 4 };
-  auto v2 = std::vector<std::string> { "a", "b" };
-  using tup = std::tuple<int, std::string>;
-
-  auto res = into_vector(identity, v1, v2);
-  EXPECT_EQ(res, (std::vector<tup> { tup(1, "a"), tup(2, "b") }));
 }
 
 TEST(into_vector, type_erasure)
@@ -96,6 +98,8 @@ TEST(into_vector, type_erasure)
   auto res = into_vector(xform, v);
   EXPECT_EQ(res, (std::vector<std::string> { "2", "4" }));
 }
+
+#endif // ABL_MAKE_GCC_CRASH
 
 } // namespace xform
 } // namespace atria

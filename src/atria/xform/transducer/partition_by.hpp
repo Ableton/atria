@@ -58,7 +58,7 @@ struct partition_by_rf_gen
     auto operator() (StateT&& s, InputTs&& ...is)
       -> decltype(
         wrap_state<tag>(
-          call(step, state_unwrap(s), container_t<InputTs...>{}),
+          skip(step, state_unwrap(s), container_t<InputTs...>{}),
           make_tuple(mapping(is...), container_t<InputTs...>{}, step)))
     {
       auto mapped = estd::invoke(mapping, std::forward<InputTs>(is)...);
@@ -93,7 +93,8 @@ struct partition_by_rf_gen
 
   template <typename T>
   friend auto state_wrapper_complete(tag, T&& wrapper)
-    -> decltype(state_complete(state_unwrap(std::forward<T>(wrapper))))
+    -> estd::decay_t<decltype(
+      state_complete(state_unwrap(std::forward<T>(wrapper))))>
   {
     auto next = std::get<1>(state_wrapper_data(std::forward<T>(wrapper)));
     auto step = std::get<2>(state_wrapper_data(std::forward<T>(wrapper)));

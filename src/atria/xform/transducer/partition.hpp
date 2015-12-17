@@ -30,6 +30,7 @@
 #include <atria/xform/state_wrapper.hpp>
 #include <atria/xform/transducer_impl.hpp>
 #include <atria/xform/skip.hpp>
+#include <atria/prelude/tuplify.hpp>
 #include <vector>
 
 namespace atria {
@@ -57,7 +58,7 @@ struct partition_rf_gen
     auto operator() (StateT&& s, InputTs&& ...is)
       -> decltype(
         wrap_state<tag>(
-          call(step, state_unwrap(s), container_t<InputTs...>{}),
+          skip(step, state_unwrap(s), container_t<InputTs...>{}),
           make_tuple(container_t<InputTs...>{}, step)))
     {
       auto data = state_data(std::forward<StateT>(s), [&] {
@@ -88,7 +89,8 @@ struct partition_rf_gen
 
   template <typename T>
   friend auto state_wrapper_complete(tag, T&& wrapper)
-    -> decltype(state_complete(state_unwrap(std::forward<T>(wrapper))))
+    -> estd::decay_t<decltype(
+      state_complete(state_unwrap(std::forward<T>(wrapper))))>
   {
     auto next = std::get<0>(state_wrapper_data(std::forward<T>(wrapper)));
     auto step = std::get<1>(state_wrapper_data(std::forward<T>(wrapper)));

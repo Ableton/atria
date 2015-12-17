@@ -54,8 +54,11 @@
 #include <atria/meta/utils.hpp>
 #include <atria/meta/pack.hpp>
 
+#include <ableton/build_system/Warnings.hpp>
+ABL_DISABLE_WARNINGS
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/apply.hpp>
+ABL_RESTORE_WARNINGS
 #include <algorithm>
 
 namespace atria {

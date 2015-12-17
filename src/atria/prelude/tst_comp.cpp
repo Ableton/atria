@@ -70,9 +70,9 @@ struct thingy
 {
   int value;
 
-  thingy& times2() { value *= 2; return *this; }
-  thingy& plus2()  { value += 2; return *this; }
-  int extract()    { return value; }
+  thingy times2() { value *= 2; return *this; }
+  thingy plus2()  { value += 2; return *this; }
+  int extract()   { return value; }
 };
 
 int free_func(int x, int y) { return x - y; }
