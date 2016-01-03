@@ -84,7 +84,7 @@ using cycle_t = transducer_impl<detail::cycle_rf_gen, T>;
 
 /*!
  * Generator transducer produces the sequence passed as parameter, by
- * cycleating over it.
+ * cycling over it.
  */
 template <typename InputRangeT>
 constexpr auto cycle(InputRangeT&& r)
