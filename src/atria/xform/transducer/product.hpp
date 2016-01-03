@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2014, 2015 Ableton AG, Berlin. All rights reserved.
+// Copyright (C) 2014, 2015, 2016 Ableton AG, Berlin. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -94,10 +94,11 @@ constexpr auto product(InputRangeT&& r)
     detail::check_non_empty(std::forward<InputRangeT>(r)) };
 }
 
-template <typename InputRangeT, typename ...InputRangeTs>
-constexpr auto product(InputRangeT&& r, InputRangeTs&& ...rs)
+template <typename InputRangeT1, typename InputRangeT2, typename ...InputRangeTs>
+constexpr auto product(InputRangeT1&& r1, InputRangeT2&& r2, InputRangeTs&& ...rs)
   -> ABL_DECLTYPE_RETURN(
-    comp(product(std::forward<InputRangeT>(r)),
+    comp(product(std::forward<InputRangeT1>(r1)),
+         product(std::forward<InputRangeT2>(r2)),
          product(std::forward<InputRangeTs>(rs))...))
 
 } // namespace xform
