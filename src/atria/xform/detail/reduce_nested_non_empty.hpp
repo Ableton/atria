@@ -38,12 +38,11 @@
   ::atria::xform::detail::reduce_nested_non_empty_tail_recursive
 
 #elif ABL_REDUCE_WITH_ACCUMULATE
-#  include <atria/xform/detail/reduce_nested_non_empty_tail_accumulate.hpp>
+#  include <atria/xform/detail/reduce_nested_non_empty_accumulate.hpp>
 #  define ABL_REDUCE_NESTED_NON_EMPTY_NON_VARIADIC_IMPL \
   ::atria::xform::detail::reduce_nested_non_empty_accumulate
 
 #elif ABL_REDUCE_ALWAYS_VARIADIC
-#  include <atria/xform/detail/reduce_nested_non_empty_variadic.hpp>
 #  define ABL_REDUCE_NESTED_NON_EMPTY_NON_VARIADIC_IMPL \
   ::atria::xform::detail::reduce_nested_non_empty_variadic
 
