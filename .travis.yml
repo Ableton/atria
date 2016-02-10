@@ -52,8 +52,8 @@ install:
   - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
 
   # Install google test sources
-  - git clone https://chromium.googlesource.com/external/googletest.git googletest
-  - export GTEST_PATH=${DEPS_DIR}/googletest
+  - git clone https://github.com/google/googletest.git
+  - export GTEST_PATH=${DEPS_DIR}/googletest/googletest
 
   # Install a recent CMake
   - CMAKE_URL="http://www.cmake.org/files/v3.1/cmake-3.1.0-Linux-x86_64.tar.gz"
