@@ -42,7 +42,17 @@ ABL_RESTORE_WARNINGS
 
 #include <iostream>
 
-#if ABL_MAKE_GCC_CRASH && ABL_CXX14
+#if ABL_MAKE_GCC_CRASH
+#if ABL_CXX14
+#define BUILD_EXAMPLE_ 1
+#endif
+#endif
+
+#ifndef BUILD_EXAMPLE_
+#define BUILD_EXAMPLE_ 0
+#endif
+
+#if BUILD_EXAMPLE_
 
 using namespace atria;
 
