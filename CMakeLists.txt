@@ -1,4 +1,4 @@
-# Copyright (c) 2014, 2015 Ableton AG, Berlin
+# Copyright (c) 2014, 2015, 2016 Ableton AG, Berlin
 
 cmake_minimum_required(VERSION 3.1.0)
 
@@ -93,6 +93,9 @@ target_compile_options(atria
   ${warning_options})
 target_link_libraries(atria
   ${Boost_LIBRARIES})
+
+add_executable(example-boost-signal examples/xform_boost_signal.cpp)
+target_link_libraries(example-boost-signal atria)
 
 # Definining tests
 if(GTEST_FOUND)

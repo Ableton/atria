@@ -40,6 +40,9 @@ TEST(output_of, identity)
     output_of_t<identity_t, int, float>{} == pack<int&&, float&&>{}, "");
 
   static_assert(
+    output_of_t<identity_t, meta::pack<int, float> >{} == pack<int&&, float&&>{}, "");
+
+  static_assert(
     output_of_t<identity_t, int&>{} == pack<int&>{}, "");
   static_assert(
     output_of_t<identity_t, int&, const float&>{} ==
@@ -62,6 +65,10 @@ TEST(result_of, identity)
     pack<result_of_t<identity_t, int> >{} == pack<int>{}, "");
   static_assert(
     pack<result_of_t<identity_t, int, float> >{} ==
+    pack<std::tuple<int, float> >{}, "");
+
+  static_assert(
+    pack<result_of_t<identity_t, meta::pack<int, float> > >{} ==
     pack<std::tuple<int, float> >{}, "");
 
   static_assert(
