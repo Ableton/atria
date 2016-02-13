@@ -232,6 +232,15 @@ struct empty_reductor_fn : reductor_fn_base<
   {}
 };
 
+template <typename ReducingFnT,
+          typename InitialStateT,
+          typename... InputTs>
+struct empty_reductor_fn<ReducingFnT, InitialStateT, meta::pack<InputTs...> >
+  : empty_reductor_fn<ReducingFnT, InitialStateT, InputTs...>
+{
+  using empty_reductor_fn<ReducingFnT, InitialStateT, InputTs...>::empty_reductor_fn;
+};
+
 /*!
  * Constructs an @a `empty_reductor_fn` object with deduced argument
  * types.  The `InputTs` over which the reductor_fn functions have to be

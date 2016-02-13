@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2014, 2015 Ableton AG, Berlin. All rights reserved.
+// Copyright (C) 2014, 2015, 2016 Ableton AG, Berlin. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -23,7 +23,9 @@
 #include <atria/xform/concepts.hpp>
 #include <atria/xform/into_vector.hpp>
 #include <atria/xform/transducer/product.hpp>
+#include <atria/xform/transducer/range.hpp>
 #include <atria/xform/transducer/take.hpp>
+#include <atria/xform/sequence.hpp>
 #include <atria/prelude/comp.hpp>
 #include <atria/testing/gtest.hpp>
 
@@ -63,6 +65,17 @@ TEST(product, generator)
   auto res = into_vector(comp(take(1), product(v1, v2)));
   EXPECT_EQ(res, (decltype(res) {
         tup(1, 4), tup(1, 5), tup(2, 4), tup(2, 5) }));
+}
+
+TEST(product, tranducer_product_example)
+{
+  using tup = std::tuple<int, int>;
+
+  auto idx = sequence(range(2));
+  auto res = into_vector(product(idx), idx);
+
+  EXPECT_EQ(res, (decltype(res) {
+        tup(0, 0), tup(0, 1), tup(1, 0), tup(1, 1) }));
 }
 
 } // namespace xform

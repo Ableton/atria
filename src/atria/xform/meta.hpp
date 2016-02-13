@@ -31,6 +31,7 @@
 #include <atria/xform/reducing/last_rf.hpp>
 #include <atria/meta/utils.hpp>
 #include <atria/meta/eval.hpp>
+#include <atria/meta/pack.hpp>
 
 namespace atria {
 namespace xform {
@@ -60,6 +61,13 @@ struct output_of
         std::declval<meta::bottom>(),
         std::declval<InputTs>()...)));
 };
+
+template <typename XformT, typename... InputTs>
+struct output_of<XformT, meta::pack<InputTs...> >
+{
+  using type = typename output_of<XformT, InputTs...>::type;
+};
+
 ABL_METAFUNCTION_T(output_of);
 
 /*!
@@ -78,6 +86,14 @@ struct result_of
         std::declval<meta::bottom>(),
         std::declval<InputTs>()...)))>;
 };
+
+
+template <typename XformT, typename... InputTs>
+struct result_of<XformT, meta::pack<InputTs...> >
+{
+  using type = typename result_of<XformT, InputTs...>::type;
+};
+
 ABL_METAFUNCTION_T(result_of);
 
 } // namespace xform
