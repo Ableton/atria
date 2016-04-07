@@ -1,9 +1,10 @@
 var searchData=
 [
+  ['can_5fnot_5fdo_5fthat',['can_not_do_that',['../structatria_1_1xform_1_1state__traits_3_01skip__state_3_01_skipped_t_00_01_called_t_01_4_01_4_1_1can__not__do__that.html',1,'atria::xform::state_traits&lt; skip_state&lt; SkippedT, CalledT &gt; &gt;']]],
   ['clear_5fimpl_3c_20atria_3a_3ameta_3a_3apack_5ftag_20_3e',['clear_impl&lt; atria::meta::pack_tag &gt;',['../structboost_1_1mpl_1_1clear__impl_3_01atria_1_1meta_1_1pack__tag_01_4.html',1,'boost::mpl']]],
   ['clear_5fimpl_3c_20atria_3a_3ameta_3a_3astd_5ftuple_5ftag_20_3e',['clear_impl&lt; atria::meta::std_tuple_tag &gt;',['../structboost_1_1mpl_1_1clear__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4.html',1,'boost::mpl']]],
   ['common_5ftype',['common_type',['../structatria_1_1meta_1_1common__type.html',1,'atria::meta']]],
-  ['common_5ftype_3c_20t_2c_20ts_2e_2e_2e_3e',['common_type&lt; T, Ts...&gt;',['../structatria_1_1meta_1_1common__type_3_01_t_00_01_ts_8_8_8_4.html',1,'atria::meta']]],
+  ['common_5ftype_3c_20t_2c_20ts_2e_2e_2e_20_3e',['common_type&lt; T, Ts... &gt;',['../structatria_1_1meta_1_1common__type_3_01_t_00_01_ts_8_8_8_01_4.html',1,'atria::meta']]],
   ['common_5ftype_3c_3e',['common_type&lt;&gt;',['../structatria_1_1meta_1_1common__type_3_4.html',1,'atria::meta']]],
   ['complement_5ft',['complement_t',['../structatria_1_1prelude_1_1complement__t.html',1,'atria::prelude']]],
   ['constantly_5ft',['constantly_t',['../structatria_1_1prelude_1_1constantly__t.html',1,'atria::prelude']]],

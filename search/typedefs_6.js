@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['unpack',['unpack',['../namespaceatria_1_1meta.html#a11375eeae94b43372dd0f70a867f200f',1,'atria::meta']]]
+  ['transducer',['transducer',['../namespaceatria_1_1xform.html#a12e4b8c9b4281bf93d4e649374f2d389',1,'atria::xform']]]
 ];

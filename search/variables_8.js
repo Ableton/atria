@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['zip',['zip',['../namespaceatria_1_1xform.html#a3002569b1ecc9b8b0e17d0de591c2915',1,'atria::xform']]]
+  ['verbose',['verbose',['../structatria_1_1testing_1_1benchmark__settings.html#ab3f078684998b83967d507d0f453f454',1,'atria::testing::benchmark_settings']]]
 ];

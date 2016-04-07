@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['size',['size',['../structatria_1_1testing_1_1benchmark__settings.html#a15be4f36d9c953254b9d6d64bbc8590e',1,'atria::testing::benchmark_settings']]]
+  ['reversed',['reversed',['../namespaceatria_1_1xform.html#a9fc45ce6e33283e92568eee03414b0e1',1,'atria::xform']]]
 ];

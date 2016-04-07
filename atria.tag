@@ -1,73 +1,8 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
 <tagfile>
   <compound kind="file">
-    <name>other.md</name>
-    <path>/Users/jbo/dev/abl/atria/doc/</path>
-    <filename>other_8md</filename>
-  </compound>
-  <compound kind="file">
-    <name>README.md</name>
-    <path>/Users/jbo/dev/abl/atria/</path>
-    <filename>_r_e_a_d_m_e_8md</filename>
-  </compound>
-  <compound kind="file">
-    <name>_doc.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/</path>
-    <filename>__doc_8hpp</filename>
-    <namespace>atria</namespace>
-  </compound>
-  <compound kind="file">
-    <name>_doc.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/estd/</path>
-    <filename>estd_2__doc_8hpp</filename>
-    <namespace>atria</namespace>
-    <namespace>atria::estd</namespace>
-  </compound>
-  <compound kind="file">
-    <name>_doc.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/funken/</path>
-    <filename>funken_2__doc_8hpp</filename>
-    <namespace>atria</namespace>
-    <namespace>atria::funken</namespace>
-  </compound>
-  <compound kind="file">
-    <name>_doc.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/meta/</path>
-    <filename>meta_2__doc_8hpp</filename>
-    <namespace>atria</namespace>
-    <namespace>atria::meta</namespace>
-  </compound>
-  <compound kind="file">
-    <name>_doc.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/prelude/</path>
-    <filename>prelude_2__doc_8hpp</filename>
-    <namespace>atria</namespace>
-    <namespace>atria::prelude</namespace>
-  </compound>
-  <compound kind="file">
-    <name>_doc.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/testing/</path>
-    <filename>testing_2__doc_8hpp</filename>
-    <namespace>atria</namespace>
-    <namespace>atria::testing</namespace>
-  </compound>
-  <compound kind="file">
-    <name>_doc.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/variant/</path>
-    <filename>variant_2__doc_8hpp</filename>
-    <namespace>atria</namespace>
-    <namespace>atria::variant</namespace>
-  </compound>
-  <compound kind="file">
-    <name>_doc.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/</path>
-    <filename>xform_2__doc_8hpp</filename>
-    <namespace>atria</namespace>
-    <namespace>atria::xform</namespace>
-  </compound>
-  <compound kind="file">
     <name>functional.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/estd/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/estd/</path>
     <filename>functional_8hpp</filename>
     <includes id="utils_8hpp" name="utils.hpp" local="no" imported="no">atria/meta/utils.hpp</includes>
     <namespace>atria</namespace>
@@ -82,27 +17,35 @@
   </compound>
   <compound kind="file">
     <name>memory.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/estd/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/estd/</path>
     <filename>memory_8hpp</filename>
     <includes id="type__traits_8hpp" name="type_traits.hpp" local="no" imported="no">atria/estd/type_traits.hpp</includes>
     <namespace>atria</namespace>
     <namespace>atria::estd</namespace>
   </compound>
   <compound kind="file">
+    <name>string.hpp</name>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/estd/</path>
+    <filename>string_8hpp</filename>
+    <namespace>atria</namespace>
+    <namespace>atria::estd</namespace>
+  </compound>
+  <compound kind="file">
     <name>tuple_hash.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/estd/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/estd/</path>
     <filename>tuple__hash_8hpp</filename>
-    <class kind="struct">std::hash&lt; tuple&lt; Ts...&gt; &gt;</class>
+    <class kind="struct">std::hash&lt; tuple&lt; Ts... &gt; &gt;</class>
   </compound>
   <compound kind="file">
     <name>type_traits.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/estd/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/estd/</path>
     <filename>type__traits_8hpp</filename>
     <includes id="utils_8hpp" name="utils.hpp" local="no" imported="no">atria/meta/utils.hpp</includes>
+    <class kind="struct">atria::estd::nonesuch</class>
     <namespace>atria</namespace>
     <namespace>atria::estd</namespace>
     <member kind="typedef">
-      <type>typename detail::make_void&lt; Ts...&gt;::type</type>
+      <type>typename detail::make_void&lt; Ts... &gt;::type</type>
       <name>void_t</name>
       <anchorfile>namespaceatria_1_1estd.html</anchorfile>
       <anchor>adbf75a4cd9d4bd42ac66686f1125821a</anchor>
@@ -137,6 +80,13 @@
       <arglist></arglist>
     </member>
     <member kind="typedef">
+      <type>typename std::remove_const&lt; T &gt;::type</type>
+      <name>remove_const_t</name>
+      <anchorfile>namespaceatria_1_1estd.html</anchorfile>
+      <anchor>a31ee6e9231fa50c7fdd7292f0c45f13e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
       <type>typename std::enable_if&lt; X, T &gt;::type</type>
       <name>enable_if_t</name>
       <anchorfile>namespaceatria_1_1estd.html</anchorfile>
@@ -144,16 +94,51 @@
       <arglist></arglist>
     </member>
     <member kind="typedef">
-      <type>typename detail::get_value_type&lt; estd::decay_t&lt; T &gt; &gt;::type</type>
-      <name>Value_type</name>
+      <type>typename detail::detector&lt; nonesuch, void, Op, Args... &gt;::value_t</type>
+      <name>is_detected</name>
       <anchorfile>namespaceatria_1_1estd.html</anchorfile>
-      <anchor>a7a57eea5a9586f696d2f612095aa63f0</anchor>
+      <anchor>a16a19bd6407910d9725dcd05536f5901</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>typename detail::detector&lt; nonesuch, void, Op, Args... &gt;::type</type>
+      <name>detected_t</name>
+      <anchorfile>namespaceatria_1_1estd.html</anchorfile>
+      <anchor>aeddaa6436b2284bf4bc0c4620a2ded33</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>detail::detector&lt; Default, void, Op, Args... &gt;</type>
+      <name>detected_or</name>
+      <anchorfile>namespaceatria_1_1estd.html</anchorfile>
+      <anchor>a0db8e3a48df40f65b7946b4db63747eb</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>typename detected_or&lt; Default, Op, Args... &gt;::type</type>
+      <name>detected_or_t</name>
+      <anchorfile>namespaceatria_1_1estd.html</anchorfile>
+      <anchor>a80f94c5a0b73ffc291247f406ee7e3b2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>std::is_same&lt; Expected, detected_t&lt; Op, Args... &gt; &gt;</type>
+      <name>is_detected_exact</name>
+      <anchorfile>namespaceatria_1_1estd.html</anchorfile>
+      <anchor>a54efded7d5471a1b8d88f5c2422a767e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>std::is_convertible&lt; detected_t&lt; Op, Args... &gt;, To &gt;</type>
+      <name>is_detected_convertible</name>
+      <anchorfile>namespaceatria_1_1estd.html</anchorfile>
+      <anchor>ac286f275998780a3a3ce9fe2795db6aa</anchor>
       <arglist></arglist>
     </member>
   </compound>
   <compound kind="file">
     <name>utility.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/estd/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/estd/</path>
     <filename>utility_8hpp</filename>
     <class kind="struct">atria::estd::integer_sequence</class>
     <namespace>atria</namespace>
@@ -161,7 +146,7 @@
   </compound>
   <compound kind="file">
     <name>commit.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/funken/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/funken/</path>
     <filename>commit_8hpp</filename>
     <includes id="access_8hpp" name="access.hpp" local="no" imported="no">atria/funken/detail/access.hpp</includes>
     <includes id="utils_8hpp" name="utils.hpp" local="no" imported="no">atria/meta/utils.hpp</includes>
@@ -170,9 +155,10 @@
   </compound>
   <compound kind="file">
     <name>concepts.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/funken/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/funken/</path>
     <filename>funken_2concepts_8hpp</filename>
     <includes id="concept_8hpp" name="concept.hpp" local="no" imported="no">atria/meta/concept.hpp</includes>
+    <includes id="value__type_8hpp" name="value_type.hpp" local="no" imported="no">atria/meta/value_type.hpp</includes>
     <includes id="type__traits_8hpp" name="type_traits.hpp" local="no" imported="no">atria/estd/type_traits.hpp</includes>
     <namespace>atria</namespace>
     <namespace>atria::funken</namespace>
@@ -207,7 +193,7 @@
   </compound>
   <compound kind="file">
     <name>concepts.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/</path>
     <filename>xform_2concepts_8hpp</filename>
     <includes id="constantly_8hpp" name="constantly.hpp" local="no" imported="no">atria/prelude/constantly.hpp</includes>
     <includes id="concept_8hpp" name="concept.hpp" local="no" imported="no">atria/meta/concept.hpp</includes>
@@ -245,7 +231,7 @@
   </compound>
   <compound kind="file">
     <name>access.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/funken/detail/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/funken/detail/</path>
     <filename>access_8hpp</filename>
     <includes id="type__traits_8hpp" name="type_traits.hpp" local="no" imported="no">atria/estd/type_traits.hpp</includes>
     <namespace>atria</namespace>
@@ -253,7 +239,7 @@
   </compound>
   <compound kind="file">
     <name>no_value.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/funken/detail/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/funken/detail/</path>
     <filename>no__value_8hpp</filename>
     <includes id="utils_8hpp" name="utils.hpp" local="no" imported="no">atria/meta/utils.hpp</includes>
     <class kind="struct">atria::funken::no_value_error</class>
@@ -262,7 +248,7 @@
   </compound>
   <compound kind="file">
     <name>root_signals.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/funken/detail/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/funken/detail/</path>
     <filename>root__signals_8hpp</filename>
     <includes id="signals_8hpp" name="signals.hpp" local="no" imported="no">atria/funken/detail/signals.hpp</includes>
     <includes id="type__traits_8hpp" name="type_traits.hpp" local="no" imported="no">atria/estd/type_traits.hpp</includes>
@@ -271,27 +257,29 @@
   </compound>
   <compound kind="file">
     <name>signals.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/funken/detail/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/funken/detail/</path>
     <filename>signals_8hpp</filename>
     <namespace>atria</namespace>
     <namespace>atria::funken</namespace>
   </compound>
   <compound kind="file">
     <name>watchable.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/funken/detail/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/funken/detail/</path>
     <filename>watchable_8hpp</filename>
     <namespace>atria</namespace>
     <namespace>atria::funken</namespace>
   </compound>
   <compound kind="file">
     <name>xform_signals.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/funken/detail/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/funken/detail/</path>
     <filename>xform__signals_8hpp</filename>
     <includes id="signals_8hpp" name="signals.hpp" local="no" imported="no">atria/funken/detail/signals.hpp</includes>
     <includes id="no__value_8hpp" name="no_value.hpp" local="no" imported="no">atria/funken/detail/no_value.hpp</includes>
     <includes id="pack_8hpp" name="pack.hpp" local="no" imported="no">atria/meta/pack.hpp</includes>
+    <includes id="value__type_8hpp" name="value_type.hpp" local="no" imported="no">atria/meta/value_type.hpp</includes>
     <includes id="identity_8hpp" name="identity.hpp" local="no" imported="no">atria/prelude/identity.hpp</includes>
     <includes id="tuplify_8hpp" name="tuplify.hpp" local="no" imported="no">atria/prelude/tuplify.hpp</includes>
+    <includes id="meta_8hpp" name="meta.hpp" local="no" imported="no">atria/xform/meta.hpp</includes>
     <includes id="last__rf_8hpp" name="last_rf.hpp" local="no" imported="no">atria/xform/reducing/last_rf.hpp</includes>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <includes id="utility_8hpp" name="utility.hpp" local="no" imported="no">atria/estd/utility.hpp</includes>
@@ -301,7 +289,7 @@
   </compound>
   <compound kind="file">
     <name>in.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/funken/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/funken/</path>
     <filename>in_8hpp</filename>
     <includes id="signals_8hpp" name="signals.hpp" local="no" imported="no">atria/funken/detail/signals.hpp</includes>
     <includes id="access_8hpp" name="access.hpp" local="no" imported="no">atria/funken/detail/access.hpp</includes>
@@ -320,7 +308,7 @@
   </compound>
   <compound kind="file">
     <name>inout.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/funken/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/funken/</path>
     <filename>inout_8hpp</filename>
     <includes id="signals_8hpp" name="signals.hpp" local="no" imported="no">atria/funken/detail/signals.hpp</includes>
     <includes id="access_8hpp" name="access.hpp" local="no" imported="no">atria/funken/detail/access.hpp</includes>
@@ -339,7 +327,7 @@
   </compound>
   <compound kind="file">
     <name>out.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/funken/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/funken/</path>
     <filename>out_8hpp</filename>
     <includes id="signals_8hpp" name="signals.hpp" local="no" imported="no">atria/funken/detail/signals.hpp</includes>
     <includes id="access_8hpp" name="access.hpp" local="no" imported="no">atria/funken/detail/access.hpp</includes>
@@ -358,7 +346,7 @@
   </compound>
   <compound kind="file">
     <name>sensor.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/funken/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/funken/</path>
     <filename>sensor_8hpp</filename>
     <includes id="root__signals_8hpp" name="root_signals.hpp" local="no" imported="no">atria/funken/detail/root_signals.hpp</includes>
     <includes id="access_8hpp" name="access.hpp" local="no" imported="no">atria/funken/detail/access.hpp</includes>
@@ -369,7 +357,7 @@
   </compound>
   <compound kind="file">
     <name>state.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/funken/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/funken/</path>
     <filename>state_8hpp</filename>
     <includes id="root__signals_8hpp" name="root_signals.hpp" local="no" imported="no">atria/funken/detail/root_signals.hpp</includes>
     <includes id="access_8hpp" name="access.hpp" local="no" imported="no">atria/funken/detail/access.hpp</includes>
@@ -380,7 +368,7 @@
   </compound>
   <compound kind="file">
     <name>structure.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/funken/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/funken/</path>
     <filename>structure_8hpp</filename>
     <includes id="type__traits_8hpp" name="type_traits.hpp" local="no" imported="no">atria/estd/type_traits.hpp</includes>
     <class kind="struct">atria::funken::structure</class>
@@ -397,7 +385,7 @@
   </compound>
   <compound kind="file">
     <name>watch.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/funken/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/funken/</path>
     <filename>watch_8hpp</filename>
     <includes id="access_8hpp" name="access.hpp" local="no" imported="no">atria/funken/detail/access.hpp</includes>
     <namespace>atria</namespace>
@@ -405,7 +393,7 @@
   </compound>
   <compound kind="file">
     <name>xformed.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/funken/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/funken/</path>
     <filename>xformed_8hpp</filename>
     <includes id="in_8hpp" name="in.hpp" local="no" imported="no">atria/funken/in.hpp</includes>
     <includes id="inout_8hpp" name="inout.hpp" local="no" imported="no">atria/funken/inout.hpp</includes>
@@ -465,19 +453,19 @@
   </compound>
   <compound kind="file">
     <name>common_type.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/meta/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/meta/</path>
     <filename>common__type_8hpp</filename>
     <includes id="utils_8hpp" name="utils.hpp" local="no" imported="no">atria/meta/utils.hpp</includes>
     <includes id="pack_8hpp" name="pack.hpp" local="no" imported="no">atria/meta/pack.hpp</includes>
     <includes id="type__traits_8hpp" name="type_traits.hpp" local="no" imported="no">atria/estd/type_traits.hpp</includes>
     <class kind="struct">atria::meta::could_not_find_common_type</class>
     <class kind="struct">atria::meta::common_type</class>
-    <class kind="struct">atria::meta::common_type&lt; T, Ts...&gt;</class>
+    <class kind="struct">atria::meta::common_type&lt; T, Ts... &gt;</class>
     <class kind="struct">atria::meta::common_type&lt;&gt;</class>
     <namespace>atria</namespace>
     <namespace>atria::meta</namespace>
     <member kind="typedef">
-      <type>typename common_type&lt; Ts...&gt;::type</type>
+      <type>typename common_type&lt; Ts... &gt;::type</type>
       <name>common_type_t</name>
       <anchorfile>namespaceatria_1_1meta.html</anchorfile>
       <anchor>aba0e22763ba45cf3edf22f604e5ed3ae</anchor>
@@ -486,16 +474,15 @@
   </compound>
   <compound kind="file">
     <name>concept.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/meta/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/meta/</path>
     <filename>concept_8hpp</filename>
     <includes id="type__traits_8hpp" name="type_traits.hpp" local="no" imported="no">atria/estd/type_traits.hpp</includes>
     <includes id="utils_8hpp" name="utils.hpp" local="no" imported="no">atria/meta/utils.hpp</includes>
     <includes id="pack_8hpp" name="pack.hpp" local="no" imported="no">atria/meta/pack.hpp</includes>
     <class kind="struct">atria::meta::models</class>
-    <class kind="struct">atria::meta::models&lt; ConceptSpecT(Ts...), estd::void_t&lt; decltype(std::declval&lt; ConceptSpecT &gt;().requires_(std::declval&lt; Ts &gt;()...)) &gt; &gt;</class>
     <class kind="struct">atria::meta::models_</class>
     <class kind="struct">atria::meta::if_any</class>
-    <class kind="struct">atria::meta::if_any&lt; T, Mf, Mfs...&gt;</class>
+    <class kind="struct">atria::meta::if_any&lt; T, Mf, Mfs... &gt;</class>
     <class kind="struct">atria::meta::if_any&lt; T, Mf &gt;</class>
     <namespace>atria</namespace>
     <namespace>atria::meta</namespace>
@@ -535,7 +522,7 @@
       <arglist></arglist>
     </member>
     <member kind="typedef">
-      <type>estd::enable_if_t&lt; if_any&lt; T, Mfs...&gt;::type::value, int &gt;</type>
+      <type>estd::enable_if_t&lt; if_any&lt; T, Mfs... &gt;::type::value, int &gt;</type>
       <name>require_any</name>
       <anchorfile>namespaceatria_1_1meta.html</anchorfile>
       <anchor>af13ec4b3c9557f037c62921d71fbbfeb</anchor>
@@ -572,7 +559,7 @@
   </compound>
   <compound kind="file">
     <name>copy_traits.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/meta/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/meta/</path>
     <filename>copy__traits_8hpp</filename>
     <includes id="type__traits_8hpp" name="type_traits.hpp" local="no" imported="no">atria/estd/type_traits.hpp</includes>
     <includes id="eval_8hpp" name="eval.hpp" local="no" imported="no">atria/meta/eval.hpp</includes>
@@ -585,7 +572,7 @@
   </compound>
   <compound kind="file">
     <name>eval.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/meta/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/meta/</path>
     <filename>eval_8hpp</filename>
     <namespace>atria</namespace>
     <namespace>atria::meta</namespace>
@@ -606,7 +593,7 @@
   </compound>
   <compound kind="file">
     <name>get_index_sequence.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/meta/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/meta/</path>
     <filename>get__index__sequence_8hpp</filename>
     <includes id="type__traits_8hpp" name="type_traits.hpp" local="no" imported="no">atria/estd/type_traits.hpp</includes>
     <includes id="utility_8hpp" name="utility.hpp" local="no" imported="no">atria/estd/utility.hpp</includes>
@@ -616,7 +603,7 @@
   </compound>
   <compound kind="file">
     <name>lazy_enable_if.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/meta/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/meta/</path>
     <filename>lazy__enable__if_8hpp</filename>
     <includes id="eval_8hpp" name="eval.hpp" local="no" imported="no">atria/meta/eval.hpp</includes>
     <class kind="struct">atria::meta::lazy_enable_if</class>
@@ -625,30 +612,30 @@
   </compound>
   <compound kind="file">
     <name>pack.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/meta/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/meta/</path>
     <filename>pack_8hpp</filename>
     <class kind="struct">atria::meta::pack</class>
     <class kind="struct">atria::meta::pack_iterator</class>
-    <class kind="struct">atria::meta::pack_iterator&lt; atria::meta::pack&lt; Args...&gt; &gt;</class>
-    <class kind="struct">boost::mpl::sequence_tag&lt; atria::meta::pack&lt; Args...&gt; &gt;</class>
+    <class kind="struct">atria::meta::pack_iterator&lt; atria::meta::pack&lt; Args... &gt; &gt;</class>
+    <class kind="struct">boost::mpl::sequence_tag&lt; atria::meta::pack&lt; Args... &gt; &gt;</class>
     <class kind="struct">boost::mpl::front_impl&lt; atria::meta::pack_tag &gt;</class>
     <class kind="struct">boost::mpl::front_impl&lt; atria::meta::pack_tag &gt;::apply</class>
-    <class kind="struct">boost::mpl::front_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; T, Ts...&gt; &gt;</class>
+    <class kind="struct">boost::mpl::front_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; T, Ts... &gt; &gt;</class>
     <class kind="struct">boost::mpl::empty_impl&lt; atria::meta::pack_tag &gt;</class>
     <class kind="struct">boost::mpl::empty_impl&lt; atria::meta::pack_tag &gt;::apply</class>
-    <class kind="struct">boost::mpl::empty_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Ts...&gt; &gt;</class>
+    <class kind="struct">boost::mpl::empty_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Ts... &gt; &gt;</class>
     <class kind="struct">boost::mpl::pop_front_impl&lt; atria::meta::pack_tag &gt;</class>
     <class kind="struct">boost::mpl::pop_front_impl&lt; atria::meta::pack_tag &gt;::apply</class>
-    <class kind="struct">boost::mpl::pop_front_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; First, Types...&gt; &gt;</class>
+    <class kind="struct">boost::mpl::pop_front_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; First, Types... &gt; &gt;</class>
     <class kind="struct">boost::mpl::push_front_impl&lt; atria::meta::pack_tag &gt;</class>
     <class kind="struct">boost::mpl::push_front_impl&lt; atria::meta::pack_tag &gt;::apply</class>
-    <class kind="struct">boost::mpl::push_front_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Args...&gt;, T &gt;</class>
+    <class kind="struct">boost::mpl::push_front_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Args... &gt;, T &gt;</class>
     <class kind="struct">boost::mpl::push_back_impl&lt; atria::meta::pack_tag &gt;</class>
     <class kind="struct">boost::mpl::push_back_impl&lt; atria::meta::pack_tag &gt;::apply</class>
-    <class kind="struct">boost::mpl::push_back_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Args...&gt;, T &gt;</class>
+    <class kind="struct">boost::mpl::push_back_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Args... &gt;, T &gt;</class>
     <class kind="struct">boost::mpl::size_impl&lt; atria::meta::pack_tag &gt;</class>
     <class kind="struct">boost::mpl::size_impl&lt; atria::meta::pack_tag &gt;::apply</class>
-    <class kind="struct">boost::mpl::size_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Ts...&gt; &gt;</class>
+    <class kind="struct">boost::mpl::size_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Ts... &gt; &gt;</class>
     <class kind="struct">boost::mpl::at_impl&lt; atria::meta::pack_tag &gt;</class>
     <class kind="struct">boost::mpl::at_impl&lt; atria::meta::pack_tag &gt;::apply</class>
     <class kind="struct">boost::mpl::back_impl&lt; atria::meta::pack_tag &gt;</class>
@@ -661,8 +648,8 @@
     <class kind="struct">boost::mpl::begin_impl&lt; atria::meta::pack_tag &gt;::apply</class>
     <class kind="struct">boost::mpl::end_impl&lt; atria::meta::pack_tag &gt;</class>
     <class kind="struct">boost::mpl::end_impl&lt; atria::meta::pack_tag &gt;::apply</class>
-    <class kind="struct">boost::mpl::deref&lt; atria::meta::pack_iterator&lt; atria::meta::pack&lt; First, Args...&gt; &gt; &gt;</class>
-    <class kind="struct">boost::mpl::next&lt; atria::meta::pack_iterator&lt; atria::meta::pack&lt; First, Args...&gt; &gt; &gt;</class>
+    <class kind="struct">boost::mpl::deref&lt; atria::meta::pack_iterator&lt; atria::meta::pack&lt; First, Args... &gt; &gt; &gt;</class>
+    <class kind="struct">boost::mpl::next&lt; atria::meta::pack_iterator&lt; atria::meta::pack&lt; First, Args... &gt; &gt; &gt;</class>
     <namespace>atria</namespace>
     <namespace>atria::meta</namespace>
     <member kind="typedef">
@@ -672,27 +659,41 @@
       <anchor>a11375eeae94b43372dd0f70a867f200f</anchor>
       <arglist></arglist>
     </member>
+    <member kind="function">
+      <type>constexpr bool</type>
+      <name>operator==</name>
+      <anchorfile>namespaceatria_1_1meta.html</anchorfile>
+      <anchor>afed7f8e3e576f161e31bc472440ee98d</anchor>
+      <arglist>(const pack&lt; Ts1... &gt; &amp;, const pack&lt; Ts2... &gt; &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr bool</type>
+      <name>operator!=</name>
+      <anchorfile>namespaceatria_1_1meta.html</anchorfile>
+      <anchor>a944e22221a11965e834bb5ca7116d988</anchor>
+      <arglist>(const pack&lt; Ts1... &gt; &amp;, const pack&lt; Ts2... &gt; &amp;)</arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>std_tuple.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/meta/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/meta/</path>
     <filename>std__tuple_8hpp</filename>
     <class kind="struct">atria::meta::std_tuple_iterator</class>
-    <class kind="struct">atria::meta::std_tuple_iterator&lt; std::tuple&lt; Args...&gt; &gt;</class>
-    <class kind="struct">boost::mpl::sequence_tag&lt; std::tuple&lt; Args...&gt; &gt;</class>
+    <class kind="struct">atria::meta::std_tuple_iterator&lt; std::tuple&lt; Args... &gt; &gt;</class>
+    <class kind="struct">boost::mpl::sequence_tag&lt; std::tuple&lt; Args... &gt; &gt;</class>
     <class kind="struct">boost::mpl::front_impl&lt; atria::meta::std_tuple_tag &gt;</class>
     <class kind="struct">boost::mpl::front_impl&lt; atria::meta::std_tuple_tag &gt;::apply</class>
     <class kind="struct">boost::mpl::empty_impl&lt; atria::meta::std_tuple_tag &gt;</class>
     <class kind="struct">boost::mpl::empty_impl&lt; atria::meta::std_tuple_tag &gt;::apply</class>
     <class kind="struct">boost::mpl::pop_front_impl&lt; atria::meta::std_tuple_tag &gt;</class>
     <class kind="struct">boost::mpl::pop_front_impl&lt; atria::meta::std_tuple_tag &gt;::apply</class>
-    <class kind="struct">boost::mpl::pop_front_impl&lt; atria::meta::std_tuple_tag &gt;::apply&lt; std::tuple&lt; First, Types...&gt; &gt;</class>
+    <class kind="struct">boost::mpl::pop_front_impl&lt; atria::meta::std_tuple_tag &gt;::apply&lt; std::tuple&lt; First, Types... &gt; &gt;</class>
     <class kind="struct">boost::mpl::push_front_impl&lt; atria::meta::std_tuple_tag &gt;</class>
     <class kind="struct">boost::mpl::push_front_impl&lt; atria::meta::std_tuple_tag &gt;::apply</class>
-    <class kind="struct">boost::mpl::push_front_impl&lt; atria::meta::std_tuple_tag &gt;::apply&lt; std::tuple&lt; Args...&gt;, T &gt;</class>
+    <class kind="struct">boost::mpl::push_front_impl&lt; atria::meta::std_tuple_tag &gt;::apply&lt; std::tuple&lt; Args... &gt;, T &gt;</class>
     <class kind="struct">boost::mpl::push_back_impl&lt; atria::meta::std_tuple_tag &gt;</class>
     <class kind="struct">boost::mpl::push_back_impl&lt; atria::meta::std_tuple_tag &gt;::apply</class>
-    <class kind="struct">boost::mpl::push_back_impl&lt; atria::meta::std_tuple_tag &gt;::apply&lt; std::tuple&lt; Args...&gt;, T &gt;</class>
+    <class kind="struct">boost::mpl::push_back_impl&lt; atria::meta::std_tuple_tag &gt;::apply&lt; std::tuple&lt; Args... &gt;, T &gt;</class>
     <class kind="struct">boost::mpl::size_impl&lt; atria::meta::std_tuple_tag &gt;</class>
     <class kind="struct">boost::mpl::size_impl&lt; atria::meta::std_tuple_tag &gt;::apply</class>
     <class kind="struct">boost::mpl::at_impl&lt; atria::meta::std_tuple_tag &gt;</class>
@@ -704,23 +705,24 @@
     <class kind="struct">boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;</class>
     <class kind="struct">boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;::tuple_seq</class>
     <class kind="struct">boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;::tuple_gens</class>
-    <class kind="struct">boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;::tuple_gens&lt; 0, S...&gt;</class>
+    <class kind="struct">boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;::tuple_gens&lt; 0, S... &gt;</class>
     <class kind="struct">boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;::apply_impl</class>
-    <class kind="struct">boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;::apply_impl&lt; Tuple, tuple_seq&lt; S...&gt; &gt;</class>
+    <class kind="struct">boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;::apply_impl&lt; Tuple, tuple_seq&lt; S... &gt; &gt;</class>
     <class kind="struct">boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;::apply</class>
     <class kind="struct">boost::mpl::begin_impl&lt; atria::meta::std_tuple_tag &gt;</class>
     <class kind="struct">boost::mpl::begin_impl&lt; atria::meta::std_tuple_tag &gt;::apply</class>
     <class kind="struct">boost::mpl::end_impl&lt; atria::meta::std_tuple_tag &gt;</class>
     <class kind="struct">boost::mpl::end_impl&lt; atria::meta::std_tuple_tag &gt;::apply</class>
-    <class kind="struct">boost::mpl::deref&lt; atria::meta::std_tuple_iterator&lt; std::tuple&lt; First, Args...&gt; &gt; &gt;</class>
-    <class kind="struct">boost::mpl::next&lt; atria::meta::std_tuple_iterator&lt; std::tuple&lt; First, Args...&gt; &gt; &gt;</class>
+    <class kind="struct">boost::mpl::deref&lt; atria::meta::std_tuple_iterator&lt; std::tuple&lt; First, Args... &gt; &gt; &gt;</class>
+    <class kind="struct">boost::mpl::next&lt; atria::meta::std_tuple_iterator&lt; std::tuple&lt; First, Args... &gt; &gt; &gt;</class>
     <namespace>atria</namespace>
     <namespace>atria::meta</namespace>
   </compound>
   <compound kind="file">
     <name>utils.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/meta/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/meta/</path>
     <filename>utils_8hpp</filename>
+    <class kind="struct">atria::meta::identity</class>
     <class kind="struct">atria::meta::bottom</class>
     <class kind="struct">atria::meta::from_void</class>
     <class kind="struct">atria::meta::noop_t</class>
@@ -742,8 +744,23 @@
     </member>
   </compound>
   <compound kind="file">
+    <name>value_type.hpp</name>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/meta/</path>
+    <filename>value__type_8hpp</filename>
+    <class kind="struct">atria::meta::get_value_type</class>
+    <namespace>atria</namespace>
+    <namespace>atria::meta</namespace>
+    <member kind="typedef">
+      <type>eval_t&lt; get_value_type&lt; estd::decay_t&lt; T &gt; &gt; &gt;</type>
+      <name>value_t</name>
+      <anchorfile>namespaceatria_1_1meta.html</anchorfile>
+      <anchor>a5dcf93ca18529def3acf809f9e15c67f</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
     <name>comp.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/prelude/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/prelude/</path>
     <filename>comp_8hpp</filename>
     <includes id="type__traits_8hpp" name="type_traits.hpp" local="no" imported="no">atria/estd/type_traits.hpp</includes>
     <includes id="functional_8hpp" name="functional.hpp" local="no" imported="no">atria/estd/functional.hpp</includes>
@@ -760,7 +777,7 @@
   </compound>
   <compound kind="file">
     <name>complement.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/prelude/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/prelude/</path>
     <filename>complement_8hpp</filename>
     <includes id="utils_8hpp" name="utils.hpp" local="no" imported="no">atria/meta/utils.hpp</includes>
     <includes id="type__traits_8hpp" name="type_traits.hpp" local="no" imported="no">atria/estd/type_traits.hpp</includes>
@@ -778,7 +795,7 @@
   </compound>
   <compound kind="file">
     <name>constantly.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/prelude/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/prelude/</path>
     <filename>constantly_8hpp</filename>
     <includes id="type__traits_8hpp" name="type_traits.hpp" local="no" imported="no">atria/estd/type_traits.hpp</includes>
     <includes id="utils_8hpp" name="utils.hpp" local="no" imported="no">atria/meta/utils.hpp</includes>
@@ -795,16 +812,17 @@
   </compound>
   <compound kind="file">
     <name>identity.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/prelude/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/prelude/</path>
     <filename>identity_8hpp</filename>
     <includes id="utils_8hpp" name="utils.hpp" local="no" imported="no">atria/meta/utils.hpp</includes>
     <class kind="struct">atria::prelude::identity_t</class>
+    <class kind="struct">atria::prelude::identity_t_</class>
     <namespace>atria</namespace>
     <namespace>atria::prelude</namespace>
   </compound>
   <compound kind="file">
     <name>trace.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/prelude/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/prelude/</path>
     <filename>trace_8hpp</filename>
     <includes id="utils_8hpp" name="utils.hpp" local="no" imported="no">atria/meta/utils.hpp</includes>
     <class kind="struct">atria::prelude::tracer</class>
@@ -814,13 +832,13 @@
       <type>auto</type>
       <name>trace</name>
       <anchorfile>namespaceatria_1_1prelude.html</anchorfile>
-      <anchor>a853e1b81b095210cf792a94bc990509b</anchor>
-      <arglist>(T &amp;&amp;x, const std::string &amp;message) -&gt; decltype((std::cerr&lt;&lt; message&lt;&lt; &quot; &quot;&lt;&lt; x&lt;&lt; std::endl, std::forward&lt; T &gt;(x)))</arglist>
+      <anchor>a727c15b2eda2a38e3a7f526349950c22</anchor>
+      <arglist>(T &amp;&amp;x, const std::string &amp;message) -&gt; T &amp;&amp;</arglist>
     </member>
   </compound>
   <compound kind="file">
     <name>tuplify.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/prelude/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/prelude/</path>
     <filename>tuplify_8hpp</filename>
     <includes id="utils_8hpp" name="utils.hpp" local="no" imported="no">atria/meta/utils.hpp</includes>
     <class kind="struct">atria::prelude::tuplify_t</class>
@@ -829,7 +847,7 @@
   </compound>
   <compound kind="file">
     <name>benchmark.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/testing/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/testing/</path>
     <filename>benchmark_8hpp</filename>
     <includes id="map_8hpp" name="map.hpp" local="no" imported="no">atria/xform/transducer/map.hpp</includes>
     <includes id="transduce_8hpp" name="transduce.hpp" local="no" imported="no">atria/xform/transduce.hpp</includes>
@@ -872,12 +890,12 @@
   </compound>
   <compound kind="file">
     <name>gtest.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/testing/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/testing/</path>
     <filename>gtest_8hpp</filename>
   </compound>
   <compound kind="file">
     <name>spies.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/testing/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/testing/</path>
     <filename>spies_8hpp</filename>
     <includes id="utils_8hpp" name="utils.hpp" local="no" imported="no">atria/meta/utils.hpp</includes>
     <class kind="class">atria::testing::variant_spy</class>
@@ -919,7 +937,7 @@
   </compound>
   <compound kind="file">
     <name>match_boost.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/variant/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/variant/</path>
     <filename>match__boost_8hpp</filename>
     <includes id="variant__types__boost_8hpp" name="variant_types_boost.hpp" local="no" imported="no">atria/variant/variant_types_boost.hpp</includes>
     <includes id="visitor_8hpp" name="visitor.hpp" local="no" imported="no">atria/variant/visitor.hpp</includes>
@@ -935,7 +953,7 @@
   </compound>
   <compound kind="file">
     <name>match_eggs.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/variant/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/variant/</path>
     <filename>match__eggs_8hpp</filename>
     <includes id="variant__types__eggs_8hpp" name="variant_types_eggs.hpp" local="no" imported="no">atria/variant/variant_types_eggs.hpp</includes>
     <includes id="visitor_8hpp" name="visitor.hpp" local="no" imported="no">atria/variant/visitor.hpp</includes>
@@ -951,38 +969,38 @@
   </compound>
   <compound kind="file">
     <name>variant_types.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/variant/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/variant/</path>
     <filename>variant__types_8hpp</filename>
     <includes id="type__traits_8hpp" name="type_traits.hpp" local="no" imported="no">atria/estd/type_traits.hpp</includes>
     <includes id="copy__traits_8hpp" name="copy_traits.hpp" local="no" imported="no">atria/meta/copy_traits.hpp</includes>
     <includes id="pack_8hpp" name="pack.hpp" local="no" imported="no">atria/meta/pack.hpp</includes>
     <class kind="struct">atria::variant::variant_types_impl</class>
-    <class kind="struct">atria::variant::variant_types_impl&lt; meta::pack&lt; Ts...&gt; &gt;</class>
+    <class kind="struct">atria::variant::variant_types_impl&lt; meta::pack&lt; Ts... &gt; &gt;</class>
     <class kind="struct">atria::variant::variant_types</class>
     <namespace>atria</namespace>
     <namespace>atria::variant</namespace>
   </compound>
   <compound kind="file">
     <name>variant_types_boost.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/variant/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/variant/</path>
     <filename>variant__types__boost_8hpp</filename>
     <includes id="variant__types_8hpp" name="variant_types.hpp" local="no" imported="no">atria/variant/variant_types.hpp</includes>
-    <class kind="struct">atria::variant::variant_types_impl&lt; boost::variant&lt; T, Ts...&gt; &gt;</class>
+    <class kind="struct">atria::variant::variant_types_impl&lt; boost::variant&lt; T, Ts... &gt; &gt;</class>
     <namespace>atria</namespace>
     <namespace>atria::variant</namespace>
   </compound>
   <compound kind="file">
     <name>variant_types_eggs.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/variant/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/variant/</path>
     <filename>variant__types__eggs_8hpp</filename>
     <includes id="variant__types_8hpp" name="variant_types.hpp" local="no" imported="no">atria/variant/variant_types.hpp</includes>
-    <class kind="struct">atria::variant::variant_types_impl&lt; eggs::variants::variant&lt; Ts...&gt; &gt;</class>
+    <class kind="struct">atria::variant::variant_types_impl&lt; eggs::variants::variant&lt; Ts... &gt; &gt;</class>
     <namespace>atria</namespace>
     <namespace>atria::variant</namespace>
   </compound>
   <compound kind="file">
     <name>visitor.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/variant/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/variant/</path>
     <filename>visitor_8hpp</filename>
     <includes id="variant__types_8hpp" name="variant_types.hpp" local="no" imported="no">atria/variant/variant_types.hpp</includes>
     <includes id="common__type_8hpp" name="common_type.hpp" local="no" imported="no">atria/meta/common_type.hpp</includes>
@@ -992,11 +1010,11 @@
     <class kind="struct">atria::variant::otherwise_t</class>
     <class kind="struct">atria::variant::when_t</class>
     <class kind="struct">atria::variant::visitor_result_of</class>
-    <class kind="struct">atria::variant::visitor_result_of&lt; FnT, meta::pack&lt; VariantTs...&gt; &gt;</class>
+    <class kind="struct">atria::variant::visitor_result_of&lt; FnT, meta::pack&lt; VariantTs... &gt; &gt;</class>
     <namespace>atria</namespace>
     <namespace>atria::variant</namespace>
     <member kind="function">
-      <type>when_t&lt; Fn, typename boost::mpl::if_&lt; std::is_reference&lt; Args &gt;, Args, const Args &amp; &gt;::type...&gt;</type>
+      <type>when_t&lt; Fn, typename boost::mpl::if_&lt; std::is_reference&lt; Args &gt;, Args, const Args &amp; &gt;::type... &gt;</type>
       <name>when</name>
       <anchorfile>namespaceatria_1_1variant.html</anchorfile>
       <anchor>ab60ccb4829cc97083de66d8a36bf1bdd</anchor>
@@ -1006,20 +1024,20 @@
       <type>auto</type>
       <name>visitor</name>
       <anchorfile>namespaceatria_1_1variant.html</anchorfile>
-      <anchor>ab1e89e2e38248203403e2423d058d0c5</anchor>
-      <arglist>(FnTs &amp;&amp;...fns) -&gt; visitor_t&lt; meta::common_type_t&lt; typename std::result_of&lt; FnTs(meta::bottom)&gt;::type...&gt;, FnTs...&gt;</arglist>
+      <anchor>a10afc5003977e330020a61e20234b60b</anchor>
+      <arglist>(FnTs &amp;&amp;...fns) -&gt; visitor_t&lt; meta::common_type_t&lt; typename std::result_of&lt; FnTs(meta::bottom)&gt;::type... &gt;, FnTs... &gt;</arglist>
     </member>
     <member kind="function">
       <type>auto</type>
       <name>visitor_for</name>
       <anchorfile>namespaceatria_1_1variant.html</anchorfile>
-      <anchor>a6081f093cf284dff951dce3ccdd784c0</anchor>
-      <arglist>(FnTs &amp;&amp;...fns) -&gt; visitor_t&lt; visitor_result_of_t&lt; detail::visitor_impl&lt; FnTs...&gt;, variant_types_t&lt; VariantT &gt; &gt;, FnTs...&gt;</arglist>
+      <anchor>a3f51bdd52d97616ef2fed5f7e5a63c0b</anchor>
+      <arglist>(FnTs &amp;&amp;...fns) -&gt; visitor_t&lt; visitor_result_of_t&lt; detail::visitor_impl&lt; FnTs... &gt;, variant_types_t&lt; VariantT &gt; &gt;, FnTs... &gt;</arglist>
     </member>
   </compound>
   <compound kind="file">
     <name>any_state.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/</path>
     <filename>any__state_8hpp</filename>
     <includes id="config_8hpp" name="config.hpp" local="no" imported="no">atria/xform/config.hpp</includes>
     <includes id="state__traits_8hpp" name="state_traits.hpp" local="no" imported="no">atria/xform/state_traits.hpp</includes>
@@ -1032,7 +1050,7 @@
   </compound>
   <compound kind="file">
     <name>config.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/</path>
     <filename>config_8hpp</filename>
     <member kind="define">
       <type>#define</type>
@@ -1076,24 +1094,31 @@
       <anchor>afbd6db7d5f53015242a09b4c4d0e4b2b</anchor>
       <arglist></arglist>
     </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>ABL_MAKE_GCC_CRASH</name>
+      <anchorfile>config_8hpp.html</anchorfile>
+      <anchor>aeeb223fd9ae35cef72238c38c4293e1c</anchor>
+      <arglist></arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>empty_transducer_error.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/detail/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/detail/</path>
     <filename>empty__transducer__error_8hpp</filename>
     <namespace>atria</namespace>
     <namespace>atria::xform</namespace>
   </compound>
   <compound kind="file">
     <name>is_non_empty.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/detail/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/detail/</path>
     <filename>is__non__empty_8hpp</filename>
     <namespace>atria</namespace>
     <namespace>atria::xform</namespace>
   </compound>
   <compound kind="file">
     <name>reduce_nested_non_empty.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/detail/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/detail/</path>
     <filename>reduce__nested__non__empty_8hpp</filename>
     <includes id="config_8hpp" name="config.hpp" local="no" imported="no">atria/xform/config.hpp</includes>
     <includes id="reduce__nested__non__empty__variadic_8hpp" name="reduce_nested_non_empty_variadic.hpp" local="no" imported="no">atria/xform/detail/reduce_nested_non_empty_variadic.hpp</includes>
@@ -1104,22 +1129,23 @@
   </compound>
   <compound kind="file">
     <name>reduce_nested_non_empty_accumulate.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/detail/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/detail/</path>
     <filename>reduce__nested__non__empty__accumulate_8hpp</filename>
     <namespace>atria</namespace>
     <namespace>atria::xform</namespace>
   </compound>
   <compound kind="file">
     <name>reduce_nested_non_empty_non_variadic.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/detail/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/detail/</path>
     <filename>reduce__nested__non__empty__non__variadic_8hpp</filename>
     <includes id="state__traits_8hpp" name="state_traits.hpp" local="no" imported="no">atria/xform/state_traits.hpp</includes>
+    <includes id="copy__traits_8hpp" name="copy_traits.hpp" local="no" imported="no">atria/meta/copy_traits.hpp</includes>
     <namespace>atria</namespace>
     <namespace>atria::xform</namespace>
   </compound>
   <compound kind="file">
     <name>reduce_nested_non_empty_nullary.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/detail/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/detail/</path>
     <filename>reduce__nested__non__empty__nullary_8hpp</filename>
     <includes id="state__traits_8hpp" name="state_traits.hpp" local="no" imported="no">atria/xform/state_traits.hpp</includes>
     <namespace>atria</namespace>
@@ -1127,23 +1153,34 @@
   </compound>
   <compound kind="file">
     <name>reduce_nested_non_empty_tail_recursive.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/detail/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/detail/</path>
     <filename>reduce__nested__non__empty__tail__recursive_8hpp</filename>
     <namespace>atria</namespace>
     <namespace>atria::xform</namespace>
   </compound>
   <compound kind="file">
     <name>reduce_nested_non_empty_variadic.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/detail/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/detail/</path>
     <filename>reduce__nested__non__empty__variadic_8hpp</filename>
+    <includes id="tuple__utils_8hpp" name="tuple_utils.hpp" local="no" imported="no">atria/xform/detail/tuple_utils.hpp</includes>
     <includes id="state__traits_8hpp" name="state_traits.hpp" local="no" imported="no">atria/xform/state_traits.hpp</includes>
     <includes id="utility_8hpp" name="utility.hpp" local="no" imported="no">atria/estd/utility.hpp</includes>
+    <includes id="copy__traits_8hpp" name="copy_traits.hpp" local="no" imported="no">atria/meta/copy_traits.hpp</includes>
+    <includes id="pack_8hpp" name="pack.hpp" local="no" imported="no">atria/meta/pack.hpp</includes>
+    <namespace>atria</namespace>
+    <namespace>atria::xform</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tuple_utils.hpp</name>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/detail/</path>
+    <filename>tuple__utils_8hpp</filename>
+    <includes id="type__traits_8hpp" name="type_traits.hpp" local="no" imported="no">atria/estd/type_traits.hpp</includes>
     <namespace>atria</namespace>
     <namespace>atria::xform</namespace>
   </compound>
   <compound kind="file">
     <name>abort_reduce.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/impure/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/impure/</path>
     <filename>abort__reduce_8hpp</filename>
     <includes id="state__traits_8hpp" name="state_traits.hpp" local="no" imported="no">atria/xform/state_traits.hpp</includes>
     <includes id="utility_8hpp" name="utility.hpp" local="no" imported="no">atria/estd/utility.hpp</includes>
@@ -1151,10 +1188,24 @@
     <class kind="struct">atria::xform::impure::reduce_aborted_error</class>
     <namespace>atria</namespace>
     <namespace>atria::xform</namespace>
+    <member kind="function">
+      <type>void</type>
+      <name>abort_reduce</name>
+      <anchorfile>abort__reduce_8hpp.html</anchorfile>
+      <anchor>ac57e3e1f24e61cb12a073c149d6de15d</anchor>
+      <arglist>(StateT &amp;&amp;state)</arglist>
+    </member>
+    <member kind="function">
+      <type>auto</type>
+      <name>abort_reduce</name>
+      <anchorfile>abort__reduce_8hpp.html</anchorfile>
+      <anchor>afe20a664e109957f4b78e19ffe2f9c76</anchor>
+      <arglist>(ReducingFnT &amp;&amp;step, StateT &amp;&amp;state, InputTs &amp;&amp;...ins) -&gt; decltype(step(state, ins...))</arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>into.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/impure/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/impure/</path>
     <filename>impure_2into_8hpp</filename>
     <includes id="impure_2transduce_8hpp" name="transduce.hpp" local="no" imported="no">atria/xform/impure/transduce.hpp</includes>
     <includes id="output__rf_8hpp" name="output_rf.hpp" local="no" imported="no">atria/xform/reducing/output_rf.hpp</includes>
@@ -1163,7 +1214,7 @@
   </compound>
   <compound kind="file">
     <name>into.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/</path>
     <filename>into_8hpp</filename>
     <includes id="config_8hpp" name="config.hpp" local="no" imported="no">atria/xform/config.hpp</includes>
     <includes id="transduce_8hpp" name="transduce.hpp" local="no" imported="no">atria/xform/transduce.hpp</includes>
@@ -1180,7 +1231,7 @@
   </compound>
   <compound kind="file">
     <name>reduce.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/impure/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/impure/</path>
     <filename>impure_2reduce_8hpp</filename>
     <includes id="any__state_8hpp" name="any_state.hpp" local="no" imported="no">atria/xform/any_state.hpp</includes>
     <includes id="abort__reduce_8hpp" name="abort_reduce.hpp" local="no" imported="no">atria/xform/impure/abort_reduce.hpp</includes>
@@ -1191,7 +1242,7 @@
   </compound>
   <compound kind="file">
     <name>reduce.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/</path>
     <filename>reduce_8hpp</filename>
     <includes id="reduce__nested__non__empty_8hpp" name="reduce_nested_non_empty.hpp" local="no" imported="no">atria/xform/detail/reduce_nested_non_empty.hpp</includes>
     <includes id="is__non__empty_8hpp" name="is_non_empty.hpp" local="no" imported="no">atria/xform/detail/is_non_empty.hpp</includes>
@@ -1208,7 +1259,7 @@
   </compound>
   <compound kind="file">
     <name>transduce.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/impure/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/impure/</path>
     <filename>impure_2transduce_8hpp</filename>
     <includes id="impure_2reduce_8hpp" name="reduce.hpp" local="no" imported="no">atria/xform/impure/reduce.hpp</includes>
     <namespace>atria</namespace>
@@ -1216,7 +1267,7 @@
   </compound>
   <compound kind="file">
     <name>transduce.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/</path>
     <filename>transduce_8hpp</filename>
     <includes id="reduce_8hpp" name="reduce.hpp" local="no" imported="no">atria/xform/reduce.hpp</includes>
     <namespace>atria</namespace>
@@ -1231,7 +1282,7 @@
   </compound>
   <compound kind="file">
     <name>enumerate.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/impure/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/impure/transducer/</path>
     <filename>impure_2transducer_2enumerate_8hpp</filename>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <namespace>atria</namespace>
@@ -1239,10 +1290,11 @@
   </compound>
   <compound kind="file">
     <name>enumerate.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>transducer_2enumerate_8hpp</filename>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <includes id="state__wrapper_8hpp" name="state_wrapper.hpp" local="no" imported="no">atria/xform/state_wrapper.hpp</includes>
+    <includes id="constantly_8hpp" name="constantly.hpp" local="no" imported="no">atria/prelude/constantly.hpp</includes>
     <namespace>atria</namespace>
     <namespace>atria::xform</namespace>
     <member kind="function">
@@ -1262,7 +1314,7 @@
   </compound>
   <compound kind="file">
     <name>take.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/impure/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/impure/transducer/</path>
     <filename>impure_2transducer_2take_8hpp</filename>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <namespace>atria</namespace>
@@ -1270,7 +1322,7 @@
   </compound>
   <compound kind="file">
     <name>take.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>transducer_2take_8hpp</filename>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <includes id="state__wrapper_8hpp" name="state_wrapper.hpp" local="no" imported="no">atria/xform/state_wrapper.hpp</includes>
@@ -1288,7 +1340,7 @@
   </compound>
   <compound kind="file">
     <name>transducer.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/impure/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/impure/transducer/</path>
     <filename>impure_2transducer_2transducer_8hpp</filename>
     <includes id="pack_8hpp" name="pack.hpp" local="no" imported="no">atria/meta/pack.hpp</includes>
     <includes id="any__state_8hpp" name="any_state.hpp" local="no" imported="no">atria/xform/any_state.hpp</includes>
@@ -1299,7 +1351,7 @@
   </compound>
   <compound kind="file">
     <name>transducer.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>transducer_2transducer_8hpp</filename>
     <includes id="pack_8hpp" name="pack.hpp" local="no" imported="no">atria/meta/pack.hpp</includes>
     <includes id="any__state_8hpp" name="any_state.hpp" local="no" imported="no">atria/xform/any_state.hpp</includes>
@@ -1319,24 +1371,26 @@
   </compound>
   <compound kind="file">
     <name>into_vector.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/</path>
     <filename>into__vector_8hpp</filename>
     <includes id="into_8hpp" name="into.hpp" local="no" imported="no">atria/xform/into.hpp</includes>
     <includes id="state__traits_8hpp" name="state_traits.hpp" local="no" imported="no">atria/xform/state_traits.hpp</includes>
+    <includes id="meta_8hpp" name="meta.hpp" local="no" imported="no">atria/xform/meta.hpp</includes>
     <includes id="last__rf_8hpp" name="last_rf.hpp" local="no" imported="no">atria/xform/reducing/last_rf.hpp</includes>
+    <includes id="value__type_8hpp" name="value_type.hpp" local="no" imported="no">atria/meta/value_type.hpp</includes>
     <namespace>atria</namespace>
     <namespace>atria::xform</namespace>
     <member kind="function">
       <type>auto</type>
       <name>into_vector</name>
       <anchorfile>namespaceatria_1_1xform.html</anchorfile>
-      <anchor>ac89301f0fadabb5c6ca41b05957d52eb</anchor>
-      <arglist>(XformT &amp;&amp;xform, InputRangeTs &amp;&amp;...ranges) -&gt; detail::into_vector_result_t&lt; XformT, InputRangeTs...&gt;</arglist>
+      <anchor>ad21b8bf7db847c2dd1ad4e426b938f85</anchor>
+      <arglist>(XformT &amp;&amp;xform, InputRangeTs &amp;&amp;...ranges) -&gt; std::vector&lt; result_of_t&lt; XformT, meta::value_t&lt; InputRangeTs &gt;... &gt; &gt;</arglist>
     </member>
   </compound>
   <compound kind="file">
     <name>maybe_reduced.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/</path>
     <filename>maybe__reduced_8hpp</filename>
     <includes id="state__wrapper_8hpp" name="state_wrapper.hpp" local="no" imported="no">atria/xform/state_wrapper.hpp</includes>
     <class kind="struct">atria::xform::maybe_reduced_tag</class>
@@ -1372,8 +1426,25 @@
     </member>
   </compound>
   <compound kind="file">
+    <name>meta.hpp</name>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/</path>
+    <filename>meta_8hpp</filename>
+    <includes id="into_8hpp" name="into.hpp" local="no" imported="no">atria/xform/into.hpp</includes>
+    <includes id="state__traits_8hpp" name="state_traits.hpp" local="no" imported="no">atria/xform/state_traits.hpp</includes>
+    <includes id="last__rf_8hpp" name="last_rf.hpp" local="no" imported="no">atria/xform/reducing/last_rf.hpp</includes>
+    <includes id="utils_8hpp" name="utils.hpp" local="no" imported="no">atria/meta/utils.hpp</includes>
+    <includes id="eval_8hpp" name="eval.hpp" local="no" imported="no">atria/meta/eval.hpp</includes>
+    <includes id="pack_8hpp" name="pack.hpp" local="no" imported="no">atria/meta/pack.hpp</includes>
+    <class kind="struct">atria::xform::output_of</class>
+    <class kind="struct">atria::xform::output_of&lt; XformT, meta::pack&lt; InputTs... &gt; &gt;</class>
+    <class kind="struct">atria::xform::result_of</class>
+    <class kind="struct">atria::xform::result_of&lt; XformT, meta::pack&lt; InputTs... &gt; &gt;</class>
+    <namespace>atria</namespace>
+    <namespace>atria::xform</namespace>
+  </compound>
+  <compound kind="file">
     <name>reduce_nested.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/</path>
     <filename>reduce__nested_8hpp</filename>
     <includes id="skip_8hpp" name="skip.hpp" local="no" imported="no">atria/xform/skip.hpp</includes>
     <includes id="reduce__nested__non__empty_8hpp" name="reduce_nested_non_empty.hpp" local="no" imported="no">atria/xform/detail/reduce_nested_non_empty.hpp</includes>
@@ -1390,7 +1461,7 @@
   </compound>
   <compound kind="file">
     <name>emplace_back_rf.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/reducing/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/reducing/</path>
     <filename>emplace__back__rf_8hpp</filename>
     <includes id="utility_8hpp" name="utility.hpp" local="no" imported="no">atria/estd/utility.hpp</includes>
     <class kind="struct">atria::xform::emplace_back_rf_t</class>
@@ -1399,7 +1470,7 @@
   </compound>
   <compound kind="file">
     <name>first_rf.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/reducing/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/reducing/</path>
     <filename>first__rf_8hpp</filename>
     <includes id="utility_8hpp" name="utility.hpp" local="no" imported="no">atria/estd/utility.hpp</includes>
     <class kind="struct">atria::xform::first_rf_t</class>
@@ -1408,7 +1479,7 @@
   </compound>
   <compound kind="file">
     <name>last_rf.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/reducing/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/reducing/</path>
     <filename>last__rf_8hpp</filename>
     <includes id="utility_8hpp" name="utility.hpp" local="no" imported="no">atria/estd/utility.hpp</includes>
     <includes id="type__traits_8hpp" name="type_traits.hpp" local="no" imported="no">atria/estd/type_traits.hpp</includes>
@@ -1419,7 +1490,7 @@
   </compound>
   <compound kind="file">
     <name>output_rf.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/reducing/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/reducing/</path>
     <filename>output__rf_8hpp</filename>
     <includes id="utility_8hpp" name="utility.hpp" local="no" imported="no">atria/estd/utility.hpp</includes>
     <includes id="tuplify_8hpp" name="tuplify.hpp" local="no" imported="no">atria/prelude/tuplify.hpp</includes>
@@ -1428,8 +1499,72 @@
     <namespace>atria::xform</namespace>
   </compound>
   <compound kind="file">
+    <name>reductor.hpp</name>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/</path>
+    <filename>reductor_8hpp</filename>
+    <includes id="skip_8hpp" name="skip.hpp" local="no" imported="no">atria/xform/skip.hpp</includes>
+    <includes id="state__traits_8hpp" name="state_traits.hpp" local="no" imported="no">atria/xform/state_traits.hpp</includes>
+    <includes id="type__traits_8hpp" name="type_traits.hpp" local="no" imported="no">atria/estd/type_traits.hpp</includes>
+    <class kind="struct">atria::xform::reductor_fn_base</class>
+    <class kind="struct">atria::xform::reductor_fn</class>
+    <class kind="struct">atria::xform::empty_reductor_fn</class>
+    <class kind="struct">atria::xform::empty_reductor_fn&lt; ReducingFnT, InitialStateT, meta::pack&lt; InputTs... &gt; &gt;</class>
+    <namespace>atria</namespace>
+    <namespace>atria::xform</namespace>
+    <member kind="function">
+      <type>auto</type>
+      <name>reductor</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a4ffe29be166bd03ff4b070aec0f728fd</anchor>
+      <arglist>(ReducingFnT &amp;&amp;step, InitialStateT &amp;&amp;state, InputTs &amp;&amp;...ins) -&gt; reductor_fn&lt; estd::decay_t&lt; ReducingFnT &gt;, estd::decay_t&lt; InitialStateT &gt;, estd::decay_t&lt; InputTs &gt;... &gt;</arglist>
+    </member>
+    <member kind="function">
+      <type>auto</type>
+      <name>empty_reductor</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>ae8fccb7ef320d3d3c2bf26d568fcdb41</anchor>
+      <arglist>(ReducingFnT &amp;&amp;step, InitialStateT &amp;&amp;state) -&gt; empty_reductor_fn&lt; estd::decay_t&lt; ReducingFnT &gt;, estd::decay_t&lt; InitialStateT &gt;, estd::decay_t&lt; InputTs &gt;... &gt;</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>run.hpp</name>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/</path>
+    <filename>run_8hpp</filename>
+    <includes id="transduce_8hpp" name="transduce.hpp" local="no" imported="no">atria/xform/transduce.hpp</includes>
+    <includes id="first__rf_8hpp" name="first_rf.hpp" local="no" imported="no">atria/xform/reducing/first_rf.hpp</includes>
+    <namespace>atria</namespace>
+    <namespace>atria::xform</namespace>
+    <member kind="function">
+      <type>void</type>
+      <name>run</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a556bdf7d92cfc3f9678e478b2e0a7ac9</anchor>
+      <arglist>(XformT &amp;&amp;xform, InputRangeTs &amp;&amp;...ranges)</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>sequence.hpp</name>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/</path>
+    <filename>sequence_8hpp</filename>
+    <includes id="reductor_8hpp" name="reductor.hpp" local="no" imported="no">atria/xform/reductor.hpp</includes>
+    <includes id="meta_8hpp" name="meta.hpp" local="no" imported="no">atria/xform/meta.hpp</includes>
+    <includes id="tuple__utils_8hpp" name="tuple_utils.hpp" local="no" imported="no">atria/xform/detail/tuple_utils.hpp</includes>
+    <includes id="value__type_8hpp" name="value_type.hpp" local="no" imported="no">atria/meta/value_type.hpp</includes>
+    <class kind="struct">atria::xform::sequence_range</class>
+    <class kind="struct">atria::xform::sequence_range::iterator</class>
+    <namespace>atria</namespace>
+    <namespace>atria::xform</namespace>
+    <member kind="function">
+      <type>auto</type>
+      <name>sequence</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a6f19480678f62a39eb87dc3a05294d45</anchor>
+      <arglist>(XformT &amp;&amp;xform, const RangeTs &amp;...ranges) -&gt; sequence_range&lt; typename boost::mpl::eval_if&lt; std::is_same&lt; ValueT, detail::deduce_value_type &gt;, result_of&lt; XformT, meta::value_t&lt; RangeTs &gt;... &gt;, meta::identity&lt; ValueT &gt; &gt;::type, estd::decay_t&lt; XformT &gt;, estd::decay_t&lt; RangeTs &gt;... &gt;</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
     <name>skip.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/</path>
     <filename>skip_8hpp</filename>
     <includes id="state__traits_8hpp" name="state_traits.hpp" local="no" imported="no">atria/xform/state_traits.hpp</includes>
     <includes id="match__eggs_8hpp" name="match_eggs.hpp" local="no" imported="no">atria/variant/match_eggs.hpp</includes>
@@ -1439,6 +1574,7 @@
     <class kind="struct">atria::xform::is_skip_state</class>
     <class kind="struct">atria::xform::is_skip_state&lt; skip_state&lt; SkippedT, CalledT &gt; &gt;</class>
     <class kind="struct">atria::xform::state_traits&lt; skip_state&lt; SkippedT, CalledT &gt; &gt;</class>
+    <class kind="struct">atria::xform::state_traits&lt; skip_state&lt; SkippedT, CalledT &gt; &gt;::can_not_do_that</class>
     <class kind="struct">atria::xform::skip_result</class>
     <namespace>atria</namespace>
     <namespace>atria::xform</namespace>
@@ -1446,8 +1582,8 @@
       <type>auto</type>
       <name>skip</name>
       <anchorfile>namespaceatria_1_1xform.html</anchorfile>
-      <anchor>a1cb9f11ae0e3df98b2c2e1f39f5302f2</anchor>
-      <arglist>(ReducingFnT &amp;&amp;, StateT &amp;&amp;state, InputTs &amp;&amp;...) -&gt; skip_result_t&lt; ReducingFnT, StateT, InputTs...&gt;</arglist>
+      <anchor>a7b5d683f19ef370bc5e121c89f861c89</anchor>
+      <arglist>(ReducingFnT &amp;&amp;, StateT &amp;&amp;state, InputTs &amp;&amp;...) -&gt; skip_result_t&lt; ReducingFnT, StateT, InputTs... &gt;</arglist>
     </member>
     <member kind="function">
       <type>auto</type>
@@ -1459,7 +1595,7 @@
   </compound>
   <compound kind="file">
     <name>state_traits.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/</path>
     <filename>state__traits_8hpp</filename>
     <includes id="type__traits_8hpp" name="type_traits.hpp" local="no" imported="no">atria/estd/type_traits.hpp</includes>
     <includes id="utility_8hpp" name="utility.hpp" local="no" imported="no">atria/estd/utility.hpp</includes>
@@ -1494,10 +1630,24 @@
       <anchor>a8f3d5f97c45a219e65ba34cd3838e7ed</anchor>
       <arglist>(T &amp;&amp;s) -&gt; decltype(state_traits_t&lt; T &gt;::unwrap(std::forward&lt; T &gt;(s)))</arglist>
     </member>
+    <member kind="function">
+      <type>auto</type>
+      <name>state_unwrap_all</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a4b8a06f0fe7f2e877ce00ebb20feac76</anchor>
+      <arglist>(T &amp;&amp;s) -&gt; decltype(state_traits_t&lt; T &gt;::unwrap_all(std::forward&lt; T &gt;(s)))</arglist>
+    </member>
+    <member kind="function">
+      <type>auto</type>
+      <name>state_rewrap</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a6a2fb9067174fbd25ff78adaeb41650f</anchor>
+      <arglist>(T &amp;&amp;s, U &amp;&amp;x) -&gt; decltype(state_traits_t&lt; T &gt;::rewrap(std::forward&lt; T &gt;(s), std::forward&lt; U &gt;(x)))</arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>state_wrapper.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/</path>
     <filename>state__wrapper_8hpp</filename>
     <includes id="state__traits_8hpp" name="state_traits.hpp" local="no" imported="no">atria/xform/state_traits.hpp</includes>
     <class kind="struct">atria::xform::no_tag</class>
@@ -1530,6 +1680,20 @@
     </member>
     <member kind="function">
       <type>auto</type>
+      <name>state_wrapper_unwrap_all</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>ab9b5e75829c1fdfe3f57451bc70790b0</anchor>
+      <arglist>(TagT, T &amp;&amp;s) -&gt; decltype(state_unwrap_all(state_unwrap(std::forward&lt; T &gt;(s))))</arglist>
+    </member>
+    <member kind="function">
+      <type>auto</type>
+      <name>state_wrapper_rewrap</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a5cb41eebbd96fd51a1bb5592e51e2d93</anchor>
+      <arglist>(TagT, T &amp;&amp;s, U &amp;&amp;x) -&gt; decltype(wrap_state&lt; TagT &gt;(state_rewrap(state_unwrap(std::forward&lt; T &gt;(s)), x), state_wrapper_data(std::forward&lt; T &gt;(s))))</arglist>
+    </member>
+    <member kind="function">
+      <type>auto</type>
       <name>state_wrapper_data</name>
       <anchorfile>namespaceatria_1_1xform.html</anchorfile>
       <anchor>a8100207fd3c7ddf71e629248b76a184b</anchor>
@@ -1552,7 +1716,7 @@
   </compound>
   <compound kind="file">
     <name>cat.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>cat_8hpp</filename>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <includes id="reduce__nested_8hpp" name="reduce_nested.hpp" local="no" imported="no">atria/xform/reduce_nested.hpp</includes>
@@ -1568,7 +1732,7 @@
   </compound>
   <compound kind="file">
     <name>chain.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>chain_8hpp</filename>
     <includes id="empty__transducer__error_8hpp" name="empty_transducer_error.hpp" local="no" imported="no">atria/xform/detail/empty_transducer_error.hpp</includes>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
@@ -1576,6 +1740,7 @@
     <includes id="with__state_8hpp" name="with_state.hpp" local="no" imported="no">atria/xform/with_state.hpp</includes>
     <includes id="reduce__nested_8hpp" name="reduce_nested.hpp" local="no" imported="no">atria/xform/reduce_nested.hpp</includes>
     <includes id="comp_8hpp" name="comp.hpp" local="no" imported="no">atria/prelude/comp.hpp</includes>
+    <includes id="identity_8hpp" name="identity.hpp" local="no" imported="no">atria/prelude/identity.hpp</includes>
     <includes id="copy__traits_8hpp" name="copy_traits.hpp" local="no" imported="no">atria/meta/copy_traits.hpp</includes>
     <namespace>atria</namespace>
     <namespace>atria::xform</namespace>
@@ -1603,7 +1768,7 @@
   </compound>
   <compound kind="file">
     <name>count.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>count_8hpp</filename>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <includes id="state__wrapper_8hpp" name="state_wrapper.hpp" local="no" imported="no">atria/xform/state_wrapper.hpp</includes>
@@ -1620,7 +1785,7 @@
   </compound>
   <compound kind="file">
     <name>cycle.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>cycle_8hpp</filename>
     <includes id="empty__transducer__error_8hpp" name="empty_transducer_error.hpp" local="no" imported="no">atria/xform/detail/empty_transducer_error.hpp</includes>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
@@ -1638,7 +1803,7 @@
   </compound>
   <compound kind="file">
     <name>dedupe.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>dedupe_8hpp</filename>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <includes id="state__wrapper_8hpp" name="state_wrapper.hpp" local="no" imported="no">atria/xform/state_wrapper.hpp</includes>
@@ -1658,7 +1823,7 @@
   </compound>
   <compound kind="file">
     <name>distinct.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>distinct_8hpp</filename>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <includes id="state__wrapper_8hpp" name="state_wrapper.hpp" local="no" imported="no">atria/xform/state_wrapper.hpp</includes>
@@ -1679,7 +1844,7 @@
   </compound>
   <compound kind="file">
     <name>drop.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>drop_8hpp</filename>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <includes id="state__wrapper_8hpp" name="state_wrapper.hpp" local="no" imported="no">atria/xform/state_wrapper.hpp</includes>
@@ -1697,7 +1862,7 @@
   </compound>
   <compound kind="file">
     <name>drop_while.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>drop__while_8hpp</filename>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <includes id="state__wrapper_8hpp" name="state_wrapper.hpp" local="no" imported="no">atria/xform/state_wrapper.hpp</includes>
@@ -1715,8 +1880,57 @@
     </member>
   </compound>
   <compound kind="file">
+    <name>each.hpp</name>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
+    <filename>each_8hpp</filename>
+    <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
+    <includes id="functional_8hpp" name="functional.hpp" local="no" imported="no">atria/estd/functional.hpp</includes>
+    <namespace>atria</namespace>
+    <namespace>atria::xform</namespace>
+    <member kind="function">
+      <type>auto</type>
+      <name>each</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>ae2bc188bb24ad7c3799ad8198cbeb3c9</anchor>
+      <arglist>(ActionT &amp;&amp;action) -&gt; each_t&lt; estd::decay_t&lt; ActionT &gt; &gt;</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>eager.hpp</name>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
+    <filename>eager_8hpp</filename>
+    <includes id="reduce__nested_8hpp" name="reduce_nested.hpp" local="no" imported="no">atria/xform/reduce_nested.hpp</includes>
+    <includes id="state__wrapper_8hpp" name="state_wrapper.hpp" local="no" imported="no">atria/xform/state_wrapper.hpp</includes>
+    <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
+    <includes id="tuplify_8hpp" name="tuplify.hpp" local="no" imported="no">atria/prelude/tuplify.hpp</includes>
+    <includes id="identity_8hpp" name="identity.hpp" local="no" imported="no">atria/prelude/identity.hpp</includes>
+    <namespace>atria</namespace>
+    <namespace>atria::xform</namespace>
+    <member kind="function">
+      <type>auto</type>
+      <name>eager</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a2f58051c6b87fb2548954b6f9d744126</anchor>
+      <arglist>(MappingT &amp;&amp;mapping) -&gt; eager_t&lt; estd::decay_t&lt; MappingT &gt; &gt;</arglist>
+    </member>
+    <member kind="variable">
+      <type>constexpr sorted_t</type>
+      <name>sorted</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a642cff3421f4c943d8f5039baa6feef9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>constexpr reversed_t</type>
+      <name>reversed</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a9fc45ce6e33283e92568eee03414b0e1</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
     <name>filter.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>filter_8hpp</filename>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <includes id="skip_8hpp" name="skip.hpp" local="no" imported="no">atria/xform/skip.hpp</includes>
@@ -1733,7 +1947,7 @@
   </compound>
   <compound kind="file">
     <name>interleave.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>interleave_8hpp</filename>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <includes id="state__traits_8hpp" name="state_traits.hpp" local="no" imported="no">atria/xform/state_traits.hpp</includes>
@@ -1749,7 +1963,7 @@
   </compound>
   <compound kind="file">
     <name>interpose.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>interpose_8hpp</filename>
     <includes id="empty__transducer__error_8hpp" name="empty_transducer_error.hpp" local="no" imported="no">atria/xform/detail/empty_transducer_error.hpp</includes>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
@@ -1762,13 +1976,13 @@
       <type>constexpr auto</type>
       <name>interpose</name>
       <anchorfile>namespaceatria_1_1xform.html</anchorfile>
-      <anchor>a88287d69938c5ac4fb74dbbbe985a449</anchor>
-      <arglist>(ValueTs &amp;&amp;...xs) -&gt; interpose_t&lt; estd::make_index_sequence&lt; sizeof...(ValueTs)&gt;, std::tuple&lt; estd::decay_t&lt; ValueTs &gt;...&gt; &gt;</arglist>
+      <anchor>ac198643a9fdb0042d6a9dc7895656cbb</anchor>
+      <arglist>(ValueTs &amp;&amp;...xs) -&gt; interpose_t&lt; estd::make_index_sequence&lt; sizeof...(ValueTs)&gt;, std::tuple&lt; estd::decay_t&lt; ValueTs &gt;... &gt; &gt;</arglist>
     </member>
   </compound>
   <compound kind="file">
     <name>iter.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>iter_8hpp</filename>
     <includes id="empty__transducer__error_8hpp" name="empty_transducer_error.hpp" local="no" imported="no">atria/xform/detail/empty_transducer_error.hpp</includes>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
@@ -1786,7 +2000,7 @@
   </compound>
   <compound kind="file">
     <name>map.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>map_8hpp</filename>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <includes id="utils_8hpp" name="utils.hpp" local="no" imported="no">atria/meta/utils.hpp</includes>
@@ -1803,7 +2017,7 @@
   </compound>
   <compound kind="file">
     <name>map_indexed.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>map__indexed_8hpp</filename>
     <includes id="map_8hpp" name="map.hpp" local="no" imported="no">atria/xform/transducer/map.hpp</includes>
     <includes id="count_8hpp" name="count.hpp" local="no" imported="no">atria/xform/transducer/count.hpp</includes>
@@ -1820,7 +2034,7 @@
   </compound>
   <compound kind="file">
     <name>mapcat.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>mapcat_8hpp</filename>
     <includes id="cat_8hpp" name="cat.hpp" local="no" imported="no">atria/xform/transducer/cat.hpp</includes>
     <includes id="map_8hpp" name="map.hpp" local="no" imported="no">atria/xform/transducer/map.hpp</includes>
@@ -1837,12 +2051,13 @@
   </compound>
   <compound kind="file">
     <name>partition.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>partition_8hpp</filename>
     <includes id="reduce_8hpp" name="reduce.hpp" local="no" imported="no">atria/xform/reduce.hpp</includes>
     <includes id="state__wrapper_8hpp" name="state_wrapper.hpp" local="no" imported="no">atria/xform/state_wrapper.hpp</includes>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <includes id="skip_8hpp" name="skip.hpp" local="no" imported="no">atria/xform/skip.hpp</includes>
+    <includes id="tuplify_8hpp" name="tuplify.hpp" local="no" imported="no">atria/prelude/tuplify.hpp</includes>
     <namespace>atria</namespace>
     <namespace>atria::xform</namespace>
     <member kind="function">
@@ -1855,7 +2070,7 @@
   </compound>
   <compound kind="file">
     <name>partition_by.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>partition__by_8hpp</filename>
     <includes id="reduce_8hpp" name="reduce.hpp" local="no" imported="no">atria/xform/reduce.hpp</includes>
     <includes id="state__wrapper_8hpp" name="state_wrapper.hpp" local="no" imported="no">atria/xform/state_wrapper.hpp</includes>
@@ -1874,7 +2089,7 @@
   </compound>
   <compound kind="file">
     <name>product.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>product_8hpp</filename>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <includes id="empty__transducer__error_8hpp" name="empty_transducer_error.hpp" local="no" imported="no">atria/xform/detail/empty_transducer_error.hpp</includes>
@@ -1892,7 +2107,7 @@
   </compound>
   <compound kind="file">
     <name>random_sample.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>random__sample_8hpp</filename>
     <includes id="filter_8hpp" name="filter.hpp" local="no" imported="no">atria/xform/transducer/filter.hpp</includes>
     <includes id="map_8hpp" name="map.hpp" local="no" imported="no">atria/xform/transducer/map.hpp</includes>
@@ -1909,7 +2124,7 @@
   </compound>
   <compound kind="file">
     <name>range.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>range_8hpp</filename>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <includes id="state__wrapper_8hpp" name="state_wrapper.hpp" local="no" imported="no">atria/xform/state_wrapper.hpp</includes>
@@ -1927,8 +2142,50 @@
     </member>
   </compound>
   <compound kind="file">
+    <name>read.hpp</name>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
+    <filename>read_8hpp</filename>
+    <includes id="maybe__reduced_8hpp" name="maybe_reduced.hpp" local="no" imported="no">atria/xform/maybe_reduced.hpp</includes>
+    <includes id="skip_8hpp" name="skip.hpp" local="no" imported="no">atria/xform/skip.hpp</includes>
+    <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
+    <includes id="comp_8hpp" name="comp.hpp" local="no" imported="no">atria/prelude/comp.hpp</includes>
+    <namespace>atria</namespace>
+    <namespace>atria::xform</namespace>
+    <member kind="function">
+      <type>auto</type>
+      <name>read</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a433828f060fdc4d07dcd50c9486833af</anchor>
+      <arglist>(InputStreamT &amp;stream) -&gt; read_t&lt; T, std::reference_wrapper&lt; InputStreamT &gt; &gt;</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>readbuf.hpp</name>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
+    <filename>readbuf_8hpp</filename>
+    <includes id="maybe__reduced_8hpp" name="maybe_reduced.hpp" local="no" imported="no">atria/xform/maybe_reduced.hpp</includes>
+    <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
+    <includes id="comp_8hpp" name="comp.hpp" local="no" imported="no">atria/prelude/comp.hpp</includes>
+    <namespace>atria</namespace>
+    <namespace>atria::xform</namespace>
+    <member kind="function">
+      <type>auto</type>
+      <name>readbuf</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a6dac4023e221361610f4f65fee508057</anchor>
+      <arglist>(InputStreamT &amp;stream) -&gt; readbuf_t&lt; std::reference_wrapper&lt; InputStreamT &gt;, std::array&lt; char, N &gt; &gt;</arglist>
+    </member>
+    <member kind="function">
+      <type>auto</type>
+      <name>readbuf</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a9a8a0ac5d4f0bc817d5f1b4e11b11b30</anchor>
+      <arglist>(InputStreamT &amp;stream, std::size_t n) -&gt; readbuf_t&lt; std::reference_wrapper&lt; InputStreamT &gt;, std::vector&lt; char &gt; &gt;</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
     <name>remove.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>remove_8hpp</filename>
     <includes id="filter_8hpp" name="filter.hpp" local="no" imported="no">atria/xform/transducer/filter.hpp</includes>
     <includes id="map_8hpp" name="map.hpp" local="no" imported="no">atria/xform/transducer/map.hpp</includes>
@@ -1945,7 +2202,7 @@
   </compound>
   <compound kind="file">
     <name>repeat.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>repeat_8hpp</filename>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <includes id="transducer_2take_8hpp" name="take.hpp" local="no" imported="no">atria/xform/transducer/take.hpp</includes>
@@ -1969,7 +2226,7 @@
   </compound>
   <compound kind="file">
     <name>replace.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>replace_8hpp</filename>
     <includes id="map_8hpp" name="map.hpp" local="no" imported="no">atria/xform/transducer/map.hpp</includes>
     <includes id="tuplify_8hpp" name="tuplify.hpp" local="no" imported="no">atria/prelude/tuplify.hpp</includes>
@@ -1999,8 +2256,24 @@
     </member>
   </compound>
   <compound kind="file">
+    <name>sink.hpp</name>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
+    <filename>sink_8hpp</filename>
+    <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
+    <includes id="functional_8hpp" name="functional.hpp" local="no" imported="no">atria/estd/functional.hpp</includes>
+    <namespace>atria</namespace>
+    <namespace>atria::xform</namespace>
+    <member kind="function">
+      <type>auto</type>
+      <name>sink</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>af614a13bb66957508876cefc21cb4902</anchor>
+      <arglist>(ActionT &amp;&amp;action) -&gt; sink_t&lt; estd::decay_t&lt; ActionT &gt; &gt;</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
     <name>take_nth.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>take__nth_8hpp</filename>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <includes id="state__wrapper_8hpp" name="state_wrapper.hpp" local="no" imported="no">atria/xform/state_wrapper.hpp</includes>
@@ -2019,7 +2292,7 @@
   </compound>
   <compound kind="file">
     <name>take_while.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>take__while_8hpp</filename>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <includes id="maybe__reduced_8hpp" name="maybe_reduced.hpp" local="no" imported="no">atria/xform/maybe_reduced.hpp</includes>
@@ -2037,7 +2310,7 @@
   </compound>
   <compound kind="file">
     <name>traced.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>traced_8hpp</filename>
     <includes id="trace_8hpp" name="trace.hpp" local="no" imported="no">atria/prelude/trace.hpp</includes>
     <namespace>atria</namespace>
@@ -2052,7 +2325,7 @@
   </compound>
   <compound kind="file">
     <name>unzip.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>unzip_8hpp</filename>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <includes id="get__index__sequence_8hpp" name="get_index_sequence.hpp" local="no" imported="no">atria/meta/get_index_sequence.hpp</includes>
@@ -2068,8 +2341,42 @@
     </member>
   </compound>
   <compound kind="file">
+    <name>write.hpp</name>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
+    <filename>write_8hpp</filename>
+    <includes id="state__wrapper_8hpp" name="state_wrapper.hpp" local="no" imported="no">atria/xform/state_wrapper.hpp</includes>
+    <includes id="with__state_8hpp" name="with_state.hpp" local="no" imported="no">atria/xform/with_state.hpp</includes>
+    <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
+    <includes id="comp_8hpp" name="comp.hpp" local="no" imported="no">atria/prelude/comp.hpp</includes>
+    <includes id="copy__traits_8hpp" name="copy_traits.hpp" local="no" imported="no">atria/meta/copy_traits.hpp</includes>
+    <namespace>atria</namespace>
+    <namespace>atria::xform</namespace>
+    <member kind="function">
+      <type>auto</type>
+      <name>write</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a8506b77708921f642212a1d44fcc5f93</anchor>
+      <arglist>(OutputStreamT &amp;stream, InSeparatorT in_sep=InSeparatorT{}) -&gt; write_t&lt; std::reference_wrapper&lt; OutputStreamT &gt;, InSeparatorT, InSeparatorT &gt;</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>writebuf.hpp</name>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
+    <filename>writebuf_8hpp</filename>
+    <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
+    <namespace>atria</namespace>
+    <namespace>atria::xform</namespace>
+    <member kind="function">
+      <type>auto</type>
+      <name>writebuf</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a17cf9b4f857005aa681a5f59b78b9d11</anchor>
+      <arglist>(OutputStreamT &amp;stream) -&gt; writebuf_t&lt; std::reference_wrapper&lt; OutputStreamT &gt; &gt;</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
     <name>zip.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/transducer/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/transducer/</path>
     <filename>zip_8hpp</filename>
     <includes id="tuplify_8hpp" name="tuplify.hpp" local="no" imported="no">atria/prelude/tuplify.hpp</includes>
     <includes id="map_8hpp" name="map.hpp" local="no" imported="no">atria/xform/transducer/map.hpp</includes>
@@ -2085,7 +2392,7 @@
   </compound>
   <compound kind="file">
     <name>transducer_impl.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/</path>
     <filename>transducer__impl_8hpp</filename>
     <includes id="type__traits_8hpp" name="type_traits.hpp" local="no" imported="no">atria/estd/type_traits.hpp</includes>
     <includes id="utility_8hpp" name="utility.hpp" local="no" imported="no">atria/estd/utility.hpp</includes>
@@ -2095,7 +2402,7 @@
   </compound>
   <compound kind="file">
     <name>with_state.hpp</name>
-    <path>/Users/jbo/dev/abl/atria/src/atria/xform/</path>
+    <path>/home/raskolnikov/dev/abl/atria/src/atria/xform/</path>
     <filename>with__state_8hpp</filename>
     <includes id="any__state_8hpp" name="any_state.hpp" local="no" imported="no">atria/xform/any_state.hpp</includes>
     <includes id="lazy__enable__if_8hpp" name="lazy_enable_if.hpp" local="no" imported="no">atria/meta/lazy_enable_if.hpp</includes>
@@ -2118,18 +2425,8 @@
     <filename>classatria_1_1xform_1_1any__state.html</filename>
   </compound>
   <compound kind="struct">
-    <name>boost::mpl::front_impl&lt; atria::meta::std_tuple_tag &gt;::apply</name>
-    <filename>structboost_1_1mpl_1_1front__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4_1_1apply.html</filename>
-    <templarg></templarg>
-  </compound>
-  <compound kind="struct">
     <name>boost::mpl::empty_impl&lt; atria::meta::std_tuple_tag &gt;::apply</name>
     <filename>structboost_1_1mpl_1_1empty__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4_1_1apply.html</filename>
-    <templarg></templarg>
-  </compound>
-  <compound kind="struct">
-    <name>boost::mpl::pop_front_impl&lt; atria::meta::std_tuple_tag &gt;::apply</name>
-    <filename>structboost_1_1mpl_1_1pop__front__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4_1_1apply.html</filename>
     <templarg></templarg>
   </compound>
   <compound kind="struct">
@@ -2139,14 +2436,19 @@
     <templarg></templarg>
   </compound>
   <compound kind="struct">
-    <name>boost::mpl::push_back_impl&lt; atria::meta::std_tuple_tag &gt;::apply</name>
-    <filename>structboost_1_1mpl_1_1push__back__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4_1_1apply.html</filename>
-    <templarg></templarg>
+    <name>boost::mpl::pop_front_impl&lt; atria::meta::std_tuple_tag &gt;::apply</name>
+    <filename>structboost_1_1mpl_1_1pop__front__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4_1_1apply.html</filename>
     <templarg></templarg>
   </compound>
   <compound kind="struct">
     <name>boost::mpl::size_impl&lt; atria::meta::std_tuple_tag &gt;::apply</name>
     <filename>structboost_1_1mpl_1_1size__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4_1_1apply.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>boost::mpl::push_back_impl&lt; atria::meta::std_tuple_tag &gt;::apply</name>
+    <filename>structboost_1_1mpl_1_1push__back__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4_1_1apply.html</filename>
+    <templarg></templarg>
     <templarg></templarg>
   </compound>
   <compound kind="struct">
@@ -2243,54 +2545,59 @@
     <templarg></templarg>
   </compound>
   <compound kind="struct">
-    <name>boost::mpl::push_front_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Args...&gt;, T &gt;</name>
-    <filename>structboost_1_1mpl_1_1push__front__impl_3_01atria_1_1meta_1_1pack__tag_01_4_1_1apply_3_01atria_1dcca6d3d07c74ec9f311d0859baaa0ce.html</filename>
+    <name>boost::mpl::front_impl&lt; atria::meta::std_tuple_tag &gt;::apply</name>
+    <filename>structboost_1_1mpl_1_1front__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4_1_1apply.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>boost::mpl::push_front_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Args... &gt;, T &gt;</name>
+    <filename>structboost_1_1mpl_1_1push__front__impl_3_01atria_1_1meta_1_1pack__tag_01_4_1_1apply_3_01atria_168ec05978b41f4c505ab63e52ddad1e4.html</filename>
     <templarg></templarg>
     <templarg>Args</templarg>
   </compound>
   <compound kind="struct">
-    <name>boost::mpl::push_back_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Args...&gt;, T &gt;</name>
-    <filename>structboost_1_1mpl_1_1push__back__impl_3_01atria_1_1meta_1_1pack__tag_01_4_1_1apply_3_01atria_1_30c718a74c3342beacf16ab41e0c44e4.html</filename>
+    <name>boost::mpl::push_back_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Args... &gt;, T &gt;</name>
+    <filename>structboost_1_1mpl_1_1push__back__impl_3_01atria_1_1meta_1_1pack__tag_01_4_1_1apply_3_01atria_1_f49ef35a24259998c151abb70357a262.html</filename>
     <templarg></templarg>
     <templarg>Args</templarg>
   </compound>
   <compound kind="struct">
-    <name>boost::mpl::pop_front_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; First, Types...&gt; &gt;</name>
-    <filename>structboost_1_1mpl_1_1pop__front__impl_3_01atria_1_1meta_1_1pack__tag_01_4_1_1apply_3_01atria_1_af5b1703d87df5c4d30a289c1c8daeed.html</filename>
+    <name>boost::mpl::pop_front_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; First, Types... &gt; &gt;</name>
+    <filename>structboost_1_1mpl_1_1pop__front__impl_3_01atria_1_1meta_1_1pack__tag_01_4_1_1apply_3_01atria_1_209c11484cc18a6080b8124e0bb5a9e3.html</filename>
     <templarg></templarg>
     <templarg>Types</templarg>
   </compound>
   <compound kind="struct">
-    <name>boost::mpl::front_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; T, Ts...&gt; &gt;</name>
-    <filename>structboost_1_1mpl_1_1front__impl_3_01atria_1_1meta_1_1pack__tag_01_4_1_1apply_3_01atria_1_1meta757492ae48bc04627bd94b1eb46b142e.html</filename>
+    <name>boost::mpl::front_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; T, Ts... &gt; &gt;</name>
+    <filename>structboost_1_1mpl_1_1front__impl_3_01atria_1_1meta_1_1pack__tag_01_4_1_1apply_3_01atria_1_1metaafd3b017d3c85cac1b457e3d468ef178.html</filename>
     <templarg></templarg>
     <templarg>Ts</templarg>
   </compound>
   <compound kind="struct">
-    <name>boost::mpl::empty_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Ts...&gt; &gt;</name>
-    <filename>structboost_1_1mpl_1_1empty__impl_3_01atria_1_1meta_1_1pack__tag_01_4_1_1apply_3_01atria_1_1meta_1_1pack_3_01_ts_8_8_8_4_01_4.html</filename>
+    <name>boost::mpl::empty_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Ts... &gt; &gt;</name>
+    <filename>structboost_1_1mpl_1_1empty__impl_3_01atria_1_1meta_1_1pack__tag_01_4_1_1apply_3_01atria_1_1meta8a11dfc374735b44eb57da8b0063204d.html</filename>
     <templarg>Ts</templarg>
   </compound>
   <compound kind="struct">
-    <name>boost::mpl::size_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Ts...&gt; &gt;</name>
-    <filename>structboost_1_1mpl_1_1size__impl_3_01atria_1_1meta_1_1pack__tag_01_4_1_1apply_3_01atria_1_1meta_1_1pack_3_01_ts_8_8_8_4_01_4.html</filename>
+    <name>boost::mpl::size_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Ts... &gt; &gt;</name>
+    <filename>structboost_1_1mpl_1_1size__impl_3_01atria_1_1meta_1_1pack__tag_01_4_1_1apply_3_01atria_1_1meta_1_1pack_3_01_ts_8_8_8_01_4_01_4.html</filename>
     <templarg>Ts</templarg>
   </compound>
   <compound kind="struct">
-    <name>boost::mpl::push_front_impl&lt; atria::meta::std_tuple_tag &gt;::apply&lt; std::tuple&lt; Args...&gt;, T &gt;</name>
-    <filename>structboost_1_1mpl_1_1push__front__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4_1_1apply_3_01sb86e6c7bf0dc8cf99e4fb3c326ca5c0f.html</filename>
-    <templarg></templarg>
-    <templarg>Args</templarg>
-  </compound>
-  <compound kind="struct">
-    <name>boost::mpl::push_back_impl&lt; atria::meta::std_tuple_tag &gt;::apply&lt; std::tuple&lt; Args...&gt;, T &gt;</name>
-    <filename>structboost_1_1mpl_1_1push__back__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4_1_1apply_3_01stb480c15b6c7985947b6cf85cc7e9da02.html</filename>
+    <name>boost::mpl::push_front_impl&lt; atria::meta::std_tuple_tag &gt;::apply&lt; std::tuple&lt; Args... &gt;, T &gt;</name>
+    <filename>structboost_1_1mpl_1_1push__front__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4_1_1apply_3_01seb5514c636a19d143ea214deabf2c057.html</filename>
     <templarg></templarg>
     <templarg>Args</templarg>
   </compound>
   <compound kind="struct">
-    <name>boost::mpl::pop_front_impl&lt; atria::meta::std_tuple_tag &gt;::apply&lt; std::tuple&lt; First, Types...&gt; &gt;</name>
-    <filename>structboost_1_1mpl_1_1pop__front__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4_1_1apply_3_01stb1d77724e3a2792aaf3ed8aa6cebe6cd.html</filename>
+    <name>boost::mpl::push_back_impl&lt; atria::meta::std_tuple_tag &gt;::apply&lt; std::tuple&lt; Args... &gt;, T &gt;</name>
+    <filename>structboost_1_1mpl_1_1push__back__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4_1_1apply_3_01st212b018f89ff4b11e2b8cdb170213d3d.html</filename>
+    <templarg></templarg>
+    <templarg>Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>boost::mpl::pop_front_impl&lt; atria::meta::std_tuple_tag &gt;::apply&lt; std::tuple&lt; First, Types... &gt; &gt;</name>
+    <filename>structboost_1_1mpl_1_1pop__front__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4_1_1apply_3_01std91f25010509e075db465cb424972b71.html</filename>
     <templarg></templarg>
     <templarg>Types</templarg>
   </compound>
@@ -2301,8 +2608,8 @@
     <templarg></templarg>
   </compound>
   <compound kind="struct">
-    <name>boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;::apply_impl&lt; Tuple, tuple_seq&lt; S...&gt; &gt;</name>
-    <filename>structboost_1_1mpl_1_1pop__back__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4_1_1apply__impl_3ae45847a2fda2cad4da46d92024d73d3.html</filename>
+    <name>boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;::apply_impl&lt; Tuple, tuple_seq&lt; S... &gt; &gt;</name>
+    <filename>structboost_1_1mpl_1_1pop__back__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4_1_1apply__impl_3f7d1f5aecfbde9b8e3c8a13c4f06e41b.html</filename>
     <templarg></templarg>
     <templarg>S</templarg>
   </compound>
@@ -2390,6 +2697,10 @@
     <filename>structatria_1_1meta_1_1bottom.html</filename>
   </compound>
   <compound kind="struct">
+    <name>atria::xform::state_traits&lt; skip_state&lt; SkippedT, CalledT &gt; &gt;::can_not_do_that</name>
+    <filename>structatria_1_1xform_1_1state__traits_3_01skip__state_3_01_skipped_t_00_01_called_t_01_4_01_4_1_1can__not__do__that.html</filename>
+  </compound>
+  <compound kind="struct">
     <name>boost::mpl::clear_impl&lt; atria::meta::pack_tag &gt;</name>
     <filename>structboost_1_1mpl_1_1clear__impl_3_01atria_1_1meta_1_1pack__tag_01_4.html</filename>
     <class kind="struct">boost::mpl::clear_impl&lt; atria::meta::pack_tag &gt;::apply</class>
@@ -2405,8 +2716,8 @@
     <templarg>Ts</templarg>
   </compound>
   <compound kind="struct">
-    <name>atria::meta::common_type&lt; T, Ts...&gt;</name>
-    <filename>structatria_1_1meta_1_1common__type_3_01_t_00_01_ts_8_8_8_4.html</filename>
+    <name>atria::meta::common_type&lt; T, Ts... &gt;</name>
+    <filename>structatria_1_1meta_1_1common__type_3_01_t_00_01_ts_8_8_8_01_4.html</filename>
     <templarg></templarg>
     <templarg>Ts</templarg>
   </compound>
@@ -2475,16 +2786,39 @@
     <templarg></templarg>
   </compound>
   <compound kind="struct">
-    <name>boost::mpl::deref&lt; atria::meta::pack_iterator&lt; atria::meta::pack&lt; First, Args...&gt; &gt; &gt;</name>
-    <filename>structboost_1_1mpl_1_1deref_3_01atria_1_1meta_1_1pack__iterator_3_01atria_1_1meta_1_1pack_3_01_fb79656f051ca2f831f50ea1bba1c0d88.html</filename>
+    <name>boost::mpl::deref&lt; atria::meta::pack_iterator&lt; atria::meta::pack&lt; First, Args... &gt; &gt; &gt;</name>
+    <filename>structboost_1_1mpl_1_1deref_3_01atria_1_1meta_1_1pack__iterator_3_01atria_1_1meta_1_1pack_3_01_fd41c9ff9088210dd0fe14b94b90ac10a.html</filename>
     <templarg></templarg>
     <templarg>Args</templarg>
   </compound>
   <compound kind="struct">
-    <name>boost::mpl::deref&lt; atria::meta::std_tuple_iterator&lt; std::tuple&lt; First, Args...&gt; &gt; &gt;</name>
-    <filename>structboost_1_1mpl_1_1deref_3_01atria_1_1meta_1_1std__tuple__iterator_3_01std_1_1tuple_3_01_first_00_01_args_8_8_8_4_01_4_01_4.html</filename>
+    <name>boost::mpl::deref&lt; atria::meta::std_tuple_iterator&lt; std::tuple&lt; First, Args... &gt; &gt; &gt;</name>
+    <filename>structboost_1_1mpl_1_1deref_3_01atria_1_1meta_1_1std__tuple__iterator_3_01std_1_1tuple_3_01_firsd03b90aace3c7c925a319c7aba0c004c.html</filename>
     <templarg></templarg>
     <templarg>Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>atria::meta::detected_any</name>
+    <filename>structatria_1_1meta_1_1detected__any.html</filename>
+    <templarg></templarg>
+    <templarg>Ops</templarg>
+  </compound>
+  <compound kind="class">
+    <name>detected_any&lt; T, detail::value_type_t, detail::iterator_value_t, detail::dereference_t, detail::getter_t &gt;</name>
+    <filename>structatria_1_1meta_1_1detected__any.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>atria::meta::detected_any&lt; T, Op &gt;</name>
+    <filename>structatria_1_1meta_1_1detected__any_3_01_t_00_01_op_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>Op</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>atria::meta::detected_any&lt; T, Op, Ops... &gt;</name>
+    <filename>structatria_1_1meta_1_1detected__any_3_01_t_00_01_op_00_01_ops_8_8_8_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>Op</templarg>
+    <templarg>Ops</templarg>
   </compound>
   <compound kind="struct">
     <name>atria::xform::emplace_back_rf_t</name>
@@ -2494,12 +2828,33 @@
     <name>boost::mpl::empty_impl&lt; atria::meta::pack_tag &gt;</name>
     <filename>structboost_1_1mpl_1_1empty__impl_3_01atria_1_1meta_1_1pack__tag_01_4.html</filename>
     <class kind="struct">boost::mpl::empty_impl&lt; atria::meta::pack_tag &gt;::apply</class>
-    <class kind="struct">boost::mpl::empty_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Ts...&gt; &gt;</class>
+    <class kind="struct">boost::mpl::empty_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Ts... &gt; &gt;</class>
   </compound>
   <compound kind="struct">
     <name>boost::mpl::empty_impl&lt; atria::meta::std_tuple_tag &gt;</name>
     <filename>structboost_1_1mpl_1_1empty__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4.html</filename>
     <class kind="struct">boost::mpl::empty_impl&lt; atria::meta::std_tuple_tag &gt;::apply</class>
+  </compound>
+  <compound kind="struct">
+    <name>atria::xform::empty_reductor_fn</name>
+    <filename>structatria_1_1xform_1_1empty__reductor__fn.html</filename>
+    <templarg>ReducingFnT</templarg>
+    <templarg>InitialStateT</templarg>
+    <templarg>InputTs</templarg>
+    <base>reductor_fn_base&lt; detail::caller&lt; estd::decay_t&lt; ReducingFnT &gt; &gt;, estd::decay_t&lt; skip_result_t&lt; ReducingFnT, InitialStateT, InputTs... &gt; &gt;, InputTs... &gt;</base>
+  </compound>
+  <compound kind="class">
+    <name>empty_reductor_fn&lt; ReducingFnT, InitialStateT, InputTs... &gt;</name>
+    <filename>structatria_1_1xform_1_1empty__reductor__fn.html</filename>
+    <base>reductor_fn_base&lt; detail::caller&lt; estd::decay_t&lt; ReducingFnT &gt; &gt;, estd::decay_t&lt; skip_result_t&lt; ReducingFnT, InitialStateT, InputTs... &gt; &gt;, InputTs... &gt;</base>
+  </compound>
+  <compound kind="struct">
+    <name>atria::xform::empty_reductor_fn&lt; ReducingFnT, InitialStateT, meta::pack&lt; InputTs... &gt; &gt;</name>
+    <filename>structatria_1_1xform_1_1empty__reductor__fn_3_01_reducing_fn_t_00_01_initial_state_t_00_01meta_1c4281aba4e6bb984f4d262b3b6c3fb56.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>InputTs</templarg>
+    <base>empty_reductor_fn&lt; ReducingFnT, InitialStateT, InputTs... &gt;</base>
   </compound>
   <compound kind="struct">
     <name>boost::mpl::end_impl&lt; atria::meta::pack_tag &gt;</name>
@@ -2523,7 +2878,7 @@
     <name>boost::mpl::front_impl&lt; atria::meta::pack_tag &gt;</name>
     <filename>structboost_1_1mpl_1_1front__impl_3_01atria_1_1meta_1_1pack__tag_01_4.html</filename>
     <class kind="struct">boost::mpl::front_impl&lt; atria::meta::pack_tag &gt;::apply</class>
-    <class kind="struct">boost::mpl::front_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; T, Ts...&gt; &gt;</class>
+    <class kind="struct">boost::mpl::front_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; T, Ts... &gt; &gt;</class>
   </compound>
   <compound kind="struct">
     <name>boost::mpl::front_impl&lt; atria::meta::std_tuple_tag &gt;</name>
@@ -2531,18 +2886,33 @@
     <class kind="struct">boost::mpl::front_impl&lt; atria::meta::std_tuple_tag &gt;::apply</class>
   </compound>
   <compound kind="struct">
+    <name>atria::meta::get_value_type</name>
+    <filename>structatria_1_1meta_1_1get__value__type.html</filename>
+    <templarg></templarg>
+    <base>detected_any&lt; T, detail::value_type_t, detail::iterator_value_t, detail::dereference_t, detail::getter_t &gt;</base>
+  </compound>
+  <compound kind="struct">
     <name>std::hash&lt; atria::funken::structure&lt; T &gt; &gt;</name>
     <filename>structstd_1_1hash_3_01atria_1_1funken_1_1structure_3_01_t_01_4_01_4.html</filename>
     <templarg></templarg>
   </compound>
   <compound kind="struct">
-    <name>std::hash&lt; tuple&lt; Ts...&gt; &gt;</name>
-    <filename>structstd_1_1hash_3_01tuple_3_01_ts_8_8_8_4_01_4.html</filename>
+    <name>std::hash&lt; tuple&lt; Ts... &gt; &gt;</name>
+    <filename>structstd_1_1hash_3_01tuple_3_01_ts_8_8_8_01_4_01_4.html</filename>
     <templarg>Ts</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>atria::meta::identity</name>
+    <filename>structatria_1_1meta_1_1identity.html</filename>
+    <templarg>T</templarg>
   </compound>
   <compound kind="struct">
     <name>atria::prelude::identity_t</name>
     <filename>structatria_1_1prelude_1_1identity__t.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>atria::prelude::identity_t_</name>
+    <filename>structatria_1_1prelude_1_1identity__t__.html</filename>
   </compound>
   <compound kind="struct">
     <name>atria::meta::if_any</name>
@@ -2557,8 +2927,8 @@
     <templarg></templarg>
   </compound>
   <compound kind="struct">
-    <name>atria::meta::if_any&lt; T, Mf, Mfs...&gt;</name>
-    <filename>structatria_1_1meta_1_1if__any_3_01_t_00_01_mf_00_01_mfs_8_8_8_4.html</filename>
+    <name>atria::meta::if_any&lt; T, Mf, Mfs... &gt;</name>
+    <filename>structatria_1_1meta_1_1if__any_3_01_t_00_01_mf_00_01_mfs_8_8_8_01_4.html</filename>
     <templarg></templarg>
     <templarg></templarg>
     <templarg>Mfs</templarg>
@@ -2605,8 +2975,19 @@
     <templarg></templarg>
   </compound>
   <compound kind="struct">
+    <name>atria::xform::sequence_range::iterator</name>
+    <filename>structatria_1_1xform_1_1sequence__range_1_1iterator.html</filename>
+  </compound>
+  <compound kind="struct">
     <name>atria::xform::last_rf_t</name>
     <filename>structatria_1_1xform_1_1last__rf__t.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>atria::meta::lazy_detected_or</name>
+    <filename>structatria_1_1meta_1_1lazy__detected__or.html</filename>
+    <templarg></templarg>
+    <templarg>Op</templarg>
+    <templarg></templarg>
   </compound>
   <compound kind="struct">
     <name>atria::meta::lazy_enable_if</name>
@@ -2629,27 +3010,21 @@
     <filename>structatria_1_1meta_1_1models.html</filename>
   </compound>
   <compound kind="struct">
-    <name>atria::meta::models&lt; ConceptSpecT(Ts...), estd::void_t&lt; decltype(std::declval&lt; ConceptSpecT &gt;().requires_(std::declval&lt; Ts &gt;()...)) &gt; &gt;</name>
-    <filename>structatria_1_1meta_1_1models_3_01_concept_spec_t_07_ts_8_8_8_08_00_01estd_1_1void__t_3_01declty99b5205d677f8bc5365f29cc701ad618.html</filename>
-    <templarg></templarg>
-    <templarg>Ts</templarg>
-  </compound>
-  <compound kind="struct">
     <name>atria::meta::models_</name>
     <filename>structatria_1_1meta_1_1models__.html</filename>
     <templarg></templarg>
-    <templarg></templarg>
+    <templarg>Ts</templarg>
     <base>models&lt; ConceptSpecT(T)&gt;</base>
   </compound>
   <compound kind="struct">
-    <name>boost::mpl::next&lt; atria::meta::pack_iterator&lt; atria::meta::pack&lt; First, Args...&gt; &gt; &gt;</name>
-    <filename>structboost_1_1mpl_1_1next_3_01atria_1_1meta_1_1pack__iterator_3_01atria_1_1meta_1_1pack_3_01_fi43466d95303afd4148c76d29f9f51774.html</filename>
+    <name>boost::mpl::next&lt; atria::meta::pack_iterator&lt; atria::meta::pack&lt; First, Args... &gt; &gt; &gt;</name>
+    <filename>structboost_1_1mpl_1_1next_3_01atria_1_1meta_1_1pack__iterator_3_01atria_1_1meta_1_1pack_3_01_fi190a155126ce3fada1cecee3db82ddaf.html</filename>
     <templarg></templarg>
     <templarg>Args</templarg>
   </compound>
   <compound kind="struct">
-    <name>boost::mpl::next&lt; atria::meta::std_tuple_iterator&lt; std::tuple&lt; First, Args...&gt; &gt; &gt;</name>
-    <filename>structboost_1_1mpl_1_1next_3_01atria_1_1meta_1_1std__tuple__iterator_3_01std_1_1tuple_3_01_first_00_01_args_8_8_8_4_01_4_01_4.html</filename>
+    <name>boost::mpl::next&lt; atria::meta::std_tuple_iterator&lt; std::tuple&lt; First, Args... &gt; &gt; &gt;</name>
+    <filename>structboost_1_1mpl_1_1next_3_01atria_1_1meta_1_1std__tuple__iterator_3_01std_1_1tuple_3_01_first709229a3738552992f955d44cb278216.html</filename>
     <templarg></templarg>
     <templarg>Args</templarg>
   </compound>
@@ -2660,6 +3035,10 @@
   <compound kind="struct">
     <name>atria::funken::no_value_error</name>
     <filename>structatria_1_1funken_1_1no__value__error.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>atria::estd::nonesuch</name>
+    <filename>structatria_1_1estd_1_1nonesuch.html</filename>
   </compound>
   <compound kind="struct">
     <name>atria::meta::noop_t</name>
@@ -2677,6 +3056,18 @@
     <templarg></templarg>
   </compound>
   <compound kind="struct">
+    <name>atria::xform::output_of</name>
+    <filename>structatria_1_1xform_1_1output__of.html</filename>
+    <templarg></templarg>
+    <templarg>InputTs</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>atria::xform::output_of&lt; XformT, meta::pack&lt; InputTs... &gt; &gt;</name>
+    <filename>structatria_1_1xform_1_1output__of_3_01_xform_t_00_01meta_1_1pack_3_01_input_ts_8_8_8_01_4_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>InputTs</templarg>
+  </compound>
+  <compound kind="struct">
     <name>atria::xform::output_rf_t</name>
     <filename>structatria_1_1xform_1_1output__rf__t.html</filename>
   </compound>
@@ -2691,8 +3082,8 @@
     <templarg>Args</templarg>
   </compound>
   <compound kind="struct">
-    <name>atria::meta::pack_iterator&lt; atria::meta::pack&lt; Args...&gt; &gt;</name>
-    <filename>structatria_1_1meta_1_1pack__iterator_3_01atria_1_1meta_1_1pack_3_01_args_8_8_8_4_01_4.html</filename>
+    <name>atria::meta::pack_iterator&lt; atria::meta::pack&lt; Args... &gt; &gt;</name>
+    <filename>structatria_1_1meta_1_1pack__iterator_3_01atria_1_1meta_1_1pack_3_01_args_8_8_8_01_4_01_4.html</filename>
     <templarg>Args</templarg>
   </compound>
   <compound kind="struct">
@@ -2705,46 +3096,46 @@
     <filename>structboost_1_1mpl_1_1pop__back__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4.html</filename>
     <class kind="struct">boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;::apply</class>
     <class kind="struct">boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;::apply_impl</class>
-    <class kind="struct">boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;::apply_impl&lt; Tuple, tuple_seq&lt; S...&gt; &gt;</class>
+    <class kind="struct">boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;::apply_impl&lt; Tuple, tuple_seq&lt; S... &gt; &gt;</class>
     <class kind="struct">boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;::tuple_gens</class>
-    <class kind="struct">boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;::tuple_gens&lt; 0, S...&gt;</class>
+    <class kind="struct">boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;::tuple_gens&lt; 0, S... &gt;</class>
     <class kind="struct">boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;::tuple_seq</class>
   </compound>
   <compound kind="struct">
     <name>boost::mpl::pop_front_impl&lt; atria::meta::pack_tag &gt;</name>
     <filename>structboost_1_1mpl_1_1pop__front__impl_3_01atria_1_1meta_1_1pack__tag_01_4.html</filename>
     <class kind="struct">boost::mpl::pop_front_impl&lt; atria::meta::pack_tag &gt;::apply</class>
-    <class kind="struct">boost::mpl::pop_front_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; First, Types...&gt; &gt;</class>
+    <class kind="struct">boost::mpl::pop_front_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; First, Types... &gt; &gt;</class>
   </compound>
   <compound kind="struct">
     <name>boost::mpl::pop_front_impl&lt; atria::meta::std_tuple_tag &gt;</name>
     <filename>structboost_1_1mpl_1_1pop__front__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4.html</filename>
     <class kind="struct">boost::mpl::pop_front_impl&lt; atria::meta::std_tuple_tag &gt;::apply</class>
-    <class kind="struct">boost::mpl::pop_front_impl&lt; atria::meta::std_tuple_tag &gt;::apply&lt; std::tuple&lt; First, Types...&gt; &gt;</class>
+    <class kind="struct">boost::mpl::pop_front_impl&lt; atria::meta::std_tuple_tag &gt;::apply&lt; std::tuple&lt; First, Types... &gt; &gt;</class>
   </compound>
   <compound kind="struct">
     <name>boost::mpl::push_back_impl&lt; atria::meta::pack_tag &gt;</name>
     <filename>structboost_1_1mpl_1_1push__back__impl_3_01atria_1_1meta_1_1pack__tag_01_4.html</filename>
     <class kind="struct">boost::mpl::push_back_impl&lt; atria::meta::pack_tag &gt;::apply</class>
-    <class kind="struct">boost::mpl::push_back_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Args...&gt;, T &gt;</class>
+    <class kind="struct">boost::mpl::push_back_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Args... &gt;, T &gt;</class>
   </compound>
   <compound kind="struct">
     <name>boost::mpl::push_back_impl&lt; atria::meta::std_tuple_tag &gt;</name>
     <filename>structboost_1_1mpl_1_1push__back__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4.html</filename>
     <class kind="struct">boost::mpl::push_back_impl&lt; atria::meta::std_tuple_tag &gt;::apply</class>
-    <class kind="struct">boost::mpl::push_back_impl&lt; atria::meta::std_tuple_tag &gt;::apply&lt; std::tuple&lt; Args...&gt;, T &gt;</class>
+    <class kind="struct">boost::mpl::push_back_impl&lt; atria::meta::std_tuple_tag &gt;::apply&lt; std::tuple&lt; Args... &gt;, T &gt;</class>
   </compound>
   <compound kind="struct">
     <name>boost::mpl::push_front_impl&lt; atria::meta::pack_tag &gt;</name>
     <filename>structboost_1_1mpl_1_1push__front__impl_3_01atria_1_1meta_1_1pack__tag_01_4.html</filename>
     <class kind="struct">boost::mpl::push_front_impl&lt; atria::meta::pack_tag &gt;::apply</class>
-    <class kind="struct">boost::mpl::push_front_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Args...&gt;, T &gt;</class>
+    <class kind="struct">boost::mpl::push_front_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Args... &gt;, T &gt;</class>
   </compound>
   <compound kind="struct">
     <name>boost::mpl::push_front_impl&lt; atria::meta::std_tuple_tag &gt;</name>
     <filename>structboost_1_1mpl_1_1push__front__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4.html</filename>
     <class kind="struct">boost::mpl::push_front_impl&lt; atria::meta::std_tuple_tag &gt;::apply</class>
-    <class kind="struct">boost::mpl::push_front_impl&lt; atria::meta::std_tuple_tag &gt;::apply&lt; std::tuple&lt; Args...&gt;, T &gt;</class>
+    <class kind="struct">boost::mpl::push_front_impl&lt; atria::meta::std_tuple_tag &gt;::apply&lt; std::tuple&lt; Args... &gt;, T &gt;</class>
   </compound>
   <compound kind="struct">
     <name>atria::xform::impure::reduce_aborted_error</name>
@@ -2757,6 +3148,97 @@
     <filename>structatria_1_1xform_1_1impure_1_1reduce__aborted__error__base.html</filename>
   </compound>
   <compound kind="struct">
+    <name>atria::xform::reductor_fn</name>
+    <filename>structatria_1_1xform_1_1reductor__fn.html</filename>
+    <templarg>ReducingFnT</templarg>
+    <templarg>InitialStateT</templarg>
+    <templarg>InputTs</templarg>
+    <base>reductor_fn_base&lt; ReducingFnT, estd::result_of_t&lt; ReducingFnT(InitialStateT, InputTs...)&gt;, InputTs... &gt;</base>
+  </compound>
+  <compound kind="struct">
+    <name>atria::xform::reductor_fn_base</name>
+    <filename>structatria_1_1xform_1_1reductor__fn__base.html</filename>
+    <templarg>ReducingFnT</templarg>
+    <templarg>StateT</templarg>
+    <templarg>InputTs</templarg>
+    <member kind="function">
+      <type></type>
+      <name>operator bool</name>
+      <anchorfile>structatria_1_1xform_1_1reductor__fn__base.html</anchorfile>
+      <anchor>aa385aa18f5e42db5a415c25a90f4193d</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>complete_type</type>
+      <name>complete</name>
+      <anchorfile>structatria_1_1xform_1_1reductor__fn__base.html</anchorfile>
+      <anchor>a87719260e4e46aee899b3e9a39c47fd3</anchor>
+      <arglist>() const &amp;</arglist>
+    </member>
+    <member kind="function">
+      <type>complete_type</type>
+      <name>current</name>
+      <anchorfile>structatria_1_1xform_1_1reductor__fn__base.html</anchorfile>
+      <anchor>aa989a52376a17bfd48d1da22da7aa0fb</anchor>
+      <arglist>() const &amp;</arglist>
+    </member>
+    <member kind="function">
+      <type>reductor_fn_base &amp;</type>
+      <name>operator()</name>
+      <anchorfile>structatria_1_1xform_1_1reductor__fn__base.html</anchorfile>
+      <anchor>a718625045dbe306bb5a5a1d49ede8bd4</anchor>
+      <arglist>(InputTs2 &amp;&amp;...ins)&amp;</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>reductor_fn_base&lt; detail::caller&lt; estd::decay_t&lt; ReducingFnT &gt; &gt;, estd::decay_t&lt; skip_result_t&lt; ReducingFnT, InitialStateT, InputTs... &gt; &gt;, InputTs... &gt;</name>
+    <filename>structatria_1_1xform_1_1reductor__fn__base.html</filename>
+  </compound>
+  <compound kind="class">
+    <name>reductor_fn_base&lt; ReducingFnT, estd::result_of_t&lt; ReducingFnT(InitialStateT, InputTs...)&gt;, InputTs... &gt;</name>
+    <filename>structatria_1_1xform_1_1reductor__fn__base.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>operator bool</name>
+      <anchorfile>structatria_1_1xform_1_1reductor__fn__base.html</anchorfile>
+      <anchor>aa385aa18f5e42db5a415c25a90f4193d</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>complete_type</type>
+      <name>complete</name>
+      <anchorfile>structatria_1_1xform_1_1reductor__fn__base.html</anchorfile>
+      <anchor>a87719260e4e46aee899b3e9a39c47fd3</anchor>
+      <arglist>() const &amp;</arglist>
+    </member>
+    <member kind="function">
+      <type>complete_type</type>
+      <name>current</name>
+      <anchorfile>structatria_1_1xform_1_1reductor__fn__base.html</anchorfile>
+      <anchor>aa989a52376a17bfd48d1da22da7aa0fb</anchor>
+      <arglist>() const &amp;</arglist>
+    </member>
+    <member kind="function">
+      <type>reductor_fn_base &amp;</type>
+      <name>operator()</name>
+      <anchorfile>structatria_1_1xform_1_1reductor__fn__base.html</anchorfile>
+      <anchor>a718625045dbe306bb5a5a1d49ede8bd4</anchor>
+      <arglist>(InputTs2 &amp;&amp;...ins)&amp;</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>atria::xform::result_of</name>
+    <filename>structatria_1_1xform_1_1result__of.html</filename>
+    <templarg></templarg>
+    <templarg>InputTs</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>atria::xform::result_of&lt; XformT, meta::pack&lt; InputTs... &gt; &gt;</name>
+    <filename>structatria_1_1xform_1_1result__of_3_01_xform_t_00_01meta_1_1pack_3_01_input_ts_8_8_8_01_4_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>InputTs</templarg>
+  </compound>
+  <compound kind="struct">
     <name>atria::testing::mocks::returning</name>
     <filename>structatria_1_1testing_1_1mocks_1_1returning.html</filename>
     <templarg></templarg>
@@ -2767,20 +3249,28 @@
     <templarg></templarg>
   </compound>
   <compound kind="struct">
-    <name>boost::mpl::sequence_tag&lt; atria::meta::pack&lt; Args...&gt; &gt;</name>
-    <filename>structboost_1_1mpl_1_1sequence__tag_3_01atria_1_1meta_1_1pack_3_01_args_8_8_8_4_01_4.html</filename>
+    <name>atria::xform::sequence_range</name>
+    <filename>structatria_1_1xform_1_1sequence__range.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>RangeTs</templarg>
+    <class kind="struct">atria::xform::sequence_range::iterator</class>
+  </compound>
+  <compound kind="struct">
+    <name>boost::mpl::sequence_tag&lt; atria::meta::pack&lt; Args... &gt; &gt;</name>
+    <filename>structboost_1_1mpl_1_1sequence__tag_3_01atria_1_1meta_1_1pack_3_01_args_8_8_8_01_4_01_4.html</filename>
     <templarg>Args</templarg>
   </compound>
   <compound kind="struct">
-    <name>boost::mpl::sequence_tag&lt; std::tuple&lt; Args...&gt; &gt;</name>
-    <filename>structboost_1_1mpl_1_1sequence__tag_3_01std_1_1tuple_3_01_args_8_8_8_4_01_4.html</filename>
+    <name>boost::mpl::sequence_tag&lt; std::tuple&lt; Args... &gt; &gt;</name>
+    <filename>structboost_1_1mpl_1_1sequence__tag_3_01std_1_1tuple_3_01_args_8_8_8_01_4_01_4.html</filename>
     <templarg>Args</templarg>
   </compound>
   <compound kind="struct">
     <name>boost::mpl::size_impl&lt; atria::meta::pack_tag &gt;</name>
     <filename>structboost_1_1mpl_1_1size__impl_3_01atria_1_1meta_1_1pack__tag_01_4.html</filename>
     <class kind="struct">boost::mpl::size_impl&lt; atria::meta::pack_tag &gt;::apply</class>
-    <class kind="struct">boost::mpl::size_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Ts...&gt; &gt;</class>
+    <class kind="struct">boost::mpl::size_impl&lt; atria::meta::pack_tag &gt;::apply&lt; atria::meta::pack&lt; Ts... &gt; &gt;</class>
   </compound>
   <compound kind="struct">
     <name>boost::mpl::size_impl&lt; atria::meta::std_tuple_tag &gt;</name>
@@ -2842,6 +3332,20 @@
       <anchor>a7a61e1d47a98a6262eeb5d3c1dc17a89</anchor>
       <arglist>(T &amp;&amp;state) -&gt; decltype(std::forward&lt; T &gt;(state))</arglist>
     </member>
+    <member kind="function" static="yes">
+      <type>static auto</type>
+      <name>unwrap_all</name>
+      <anchorfile>structatria_1_1xform_1_1state__traits.html</anchorfile>
+      <anchor>ab28ded51695652beb897602b1760c341</anchor>
+      <arglist>(T &amp;&amp;state) -&gt; decltype(std::forward&lt; T &gt;(state))</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static auto</type>
+      <name>rewrap</name>
+      <anchorfile>structatria_1_1xform_1_1state__traits.html</anchorfile>
+      <anchor>a0859a028d9d963bc95e583b70b938233</anchor>
+      <arglist>(T &amp;&amp;, U &amp;&amp;x) -&gt; decltype(std::forward&lt; U &gt;(x))</arglist>
+    </member>
   </compound>
   <compound kind="struct">
     <name>atria::xform::state_traits&lt; any_state &gt;</name>
@@ -2852,6 +3356,7 @@
     <filename>structatria_1_1xform_1_1state__traits_3_01skip__state_3_01_skipped_t_00_01_called_t_01_4_01_4.html</filename>
     <templarg></templarg>
     <templarg></templarg>
+    <class kind="struct">atria::xform::state_traits&lt; skip_state&lt; SkippedT, CalledT &gt; &gt;::can_not_do_that</class>
   </compound>
   <compound kind="struct">
     <name>atria::xform::state_traits&lt; state_wrapper&lt; TagT, StateT, DataT &gt; &gt;</name>
@@ -2873,8 +3378,8 @@
     <templarg>Args</templarg>
   </compound>
   <compound kind="struct">
-    <name>atria::meta::std_tuple_iterator&lt; std::tuple&lt; Args...&gt; &gt;</name>
-    <filename>structatria_1_1meta_1_1std__tuple__iterator_3_01std_1_1tuple_3_01_args_8_8_8_4_01_4.html</filename>
+    <name>atria::meta::std_tuple_iterator&lt; std::tuple&lt; Args... &gt; &gt;</name>
+    <filename>structatria_1_1meta_1_1std__tuple__iterator_3_01std_1_1tuple_3_01_args_8_8_8_01_4_01_4.html</filename>
     <templarg>Args</templarg>
   </compound>
   <compound kind="struct">
@@ -2899,8 +3404,8 @@
     <templarg>S</templarg>
   </compound>
   <compound kind="struct">
-    <name>boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;::tuple_gens&lt; 0, S...&gt;</name>
-    <filename>structboost_1_1mpl_1_1pop__back__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4_1_1tuple__gens_3_010_00_01_s_8_8_8_4.html</filename>
+    <name>boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;::tuple_gens&lt; 0, S... &gt;</name>
+    <filename>structboost_1_1mpl_1_1pop__back__impl_3_01atria_1_1meta_1_1std__tuple__tag_01_4_1_1tuple__gens_3_010_00_01_s_8_8_8_01_4.html</filename>
     <templarg>S</templarg>
   </compound>
   <compound kind="struct">
@@ -2928,19 +3433,19 @@
     <templarg></templarg>
   </compound>
   <compound kind="struct">
-    <name>atria::variant::variant_types_impl&lt; boost::variant&lt; T, Ts...&gt; &gt;</name>
-    <filename>structatria_1_1variant_1_1variant__types__impl_3_01boost_1_1variant_3_01_t_00_01_ts_8_8_8_4_01_4.html</filename>
+    <name>atria::variant::variant_types_impl&lt; boost::variant&lt; T, Ts... &gt; &gt;</name>
+    <filename>structatria_1_1variant_1_1variant__types__impl_3_01boost_1_1variant_3_01_t_00_01_ts_8_8_8_01_4_01_4.html</filename>
     <templarg></templarg>
     <templarg>Ts</templarg>
   </compound>
   <compound kind="struct">
-    <name>atria::variant::variant_types_impl&lt; eggs::variants::variant&lt; Ts...&gt; &gt;</name>
-    <filename>structatria_1_1variant_1_1variant__types__impl_3_01eggs_1_1variants_1_1variant_3_01_ts_8_8_8_4_01_4.html</filename>
+    <name>atria::variant::variant_types_impl&lt; eggs::variants::variant&lt; Ts... &gt; &gt;</name>
+    <filename>structatria_1_1variant_1_1variant__types__impl_3_01eggs_1_1variants_1_1variant_3_01_ts_8_8_8_01_4_01_4.html</filename>
     <templarg>Ts</templarg>
   </compound>
   <compound kind="struct">
-    <name>atria::variant::variant_types_impl&lt; meta::pack&lt; Ts...&gt; &gt;</name>
-    <filename>structatria_1_1variant_1_1variant__types__impl_3_01meta_1_1pack_3_01_ts_8_8_8_4_01_4.html</filename>
+    <name>atria::variant::variant_types_impl&lt; meta::pack&lt; Ts... &gt; &gt;</name>
+    <filename>structatria_1_1variant_1_1variant__types__impl_3_01meta_1_1pack_3_01_ts_8_8_8_01_4_01_4.html</filename>
     <templarg>Ts</templarg>
   </compound>
   <compound kind="struct">
@@ -2950,14 +3455,14 @@
     <templarg>VariantTs</templarg>
   </compound>
   <compound kind="struct">
-    <name>atria::variant::visitor_result_of&lt; FnT, meta::pack&lt; VariantTs...&gt; &gt;</name>
-    <filename>structatria_1_1variant_1_1visitor__result__of_3_01_fn_t_00_01meta_1_1pack_3_01_variant_ts_8_8_8_4_01_4.html</filename>
+    <name>atria::variant::visitor_result_of&lt; FnT, meta::pack&lt; VariantTs... &gt; &gt;</name>
+    <filename>structatria_1_1variant_1_1visitor__result__of_3_01_fn_t_00_01meta_1_1pack_3_01_variant_ts_8_8_8_01_4_01_4.html</filename>
     <templarg></templarg>
     <templarg>VariantTs</templarg>
-    <base>visitor_result_of&lt; FnT, VariantTs...&gt;</base>
+    <base>visitor_result_of&lt; FnT, VariantTs... &gt;</base>
   </compound>
   <compound kind="class">
-    <name>visitor_result_of&lt; FnT, VariantTs...&gt;</name>
+    <name>visitor_result_of&lt; FnT, VariantTs... &gt;</name>
     <filename>structatria_1_1variant_1_1visitor__result__of.html</filename>
   </compound>
   <compound kind="class">
@@ -2987,8 +3492,9 @@
     <name>atria::estd</name>
     <filename>namespaceatria_1_1estd.html</filename>
     <class kind="struct">atria::estd::integer_sequence</class>
+    <class kind="struct">atria::estd::nonesuch</class>
     <member kind="typedef">
-      <type>typename detail::make_void&lt; Ts...&gt;::type</type>
+      <type>typename detail::make_void&lt; Ts... &gt;::type</type>
       <name>void_t</name>
       <anchorfile>namespaceatria_1_1estd.html</anchorfile>
       <anchor>adbf75a4cd9d4bd42ac66686f1125821a</anchor>
@@ -3023,6 +3529,13 @@
       <arglist></arglist>
     </member>
     <member kind="typedef">
+      <type>typename std::remove_const&lt; T &gt;::type</type>
+      <name>remove_const_t</name>
+      <anchorfile>namespaceatria_1_1estd.html</anchorfile>
+      <anchor>a31ee6e9231fa50c7fdd7292f0c45f13e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
       <type>typename std::enable_if&lt; X, T &gt;::type</type>
       <name>enable_if_t</name>
       <anchorfile>namespaceatria_1_1estd.html</anchorfile>
@@ -3030,10 +3543,45 @@
       <arglist></arglist>
     </member>
     <member kind="typedef">
-      <type>typename detail::get_value_type&lt; estd::decay_t&lt; T &gt; &gt;::type</type>
-      <name>Value_type</name>
+      <type>typename detail::detector&lt; nonesuch, void, Op, Args... &gt;::value_t</type>
+      <name>is_detected</name>
       <anchorfile>namespaceatria_1_1estd.html</anchorfile>
-      <anchor>a7a57eea5a9586f696d2f612095aa63f0</anchor>
+      <anchor>a16a19bd6407910d9725dcd05536f5901</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>typename detail::detector&lt; nonesuch, void, Op, Args... &gt;::type</type>
+      <name>detected_t</name>
+      <anchorfile>namespaceatria_1_1estd.html</anchorfile>
+      <anchor>aeddaa6436b2284bf4bc0c4620a2ded33</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>detail::detector&lt; Default, void, Op, Args... &gt;</type>
+      <name>detected_or</name>
+      <anchorfile>namespaceatria_1_1estd.html</anchorfile>
+      <anchor>a0db8e3a48df40f65b7946b4db63747eb</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>typename detected_or&lt; Default, Op, Args... &gt;::type</type>
+      <name>detected_or_t</name>
+      <anchorfile>namespaceatria_1_1estd.html</anchorfile>
+      <anchor>a80f94c5a0b73ffc291247f406ee7e3b2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>std::is_same&lt; Expected, detected_t&lt; Op, Args... &gt; &gt;</type>
+      <name>is_detected_exact</name>
+      <anchorfile>namespaceatria_1_1estd.html</anchorfile>
+      <anchor>a54efded7d5471a1b8d88f5c2422a767e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>std::is_convertible&lt; detected_t&lt; Op, Args... &gt;, To &gt;</type>
+      <name>is_detected_convertible</name>
+      <anchorfile>namespaceatria_1_1estd.html</anchorfile>
+      <anchor>ac286f275998780a3a3ce9fe2795db6aa</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -3043,10 +3591,6 @@
       <anchor>aa0499895bf4cb63f3c77fef8f21de904</anchor>
       <arglist>(F &amp;&amp;f, ArgTypes &amp;&amp;...args) -&gt; decltype(detail::INVOKE(std::forward&lt; F &gt;(f), std::forward&lt; ArgTypes &gt;(args)...))</arglist>
     </member>
-  </compound>
-  <compound kind="namespace">
-    <name>atria::estd::detail</name>
-    <filename>namespaceatria_1_1estd_1_1detail.html</filename>
   </compound>
   <compound kind="namespace">
     <name>atria::funken</name>
@@ -3165,15 +3709,11 @@
     </member>
   </compound>
   <compound kind="namespace">
-    <name>atria::funken::detail</name>
-    <filename>namespaceatria_1_1funken_1_1detail.html</filename>
-  </compound>
-  <compound kind="namespace">
     <name>atria::meta</name>
     <filename>namespaceatria_1_1meta.html</filename>
     <class kind="struct">atria::meta::bottom</class>
     <class kind="struct">atria::meta::common_type</class>
-    <class kind="struct">atria::meta::common_type&lt; T, Ts...&gt;</class>
+    <class kind="struct">atria::meta::common_type&lt; T, Ts... &gt;</class>
     <class kind="struct">atria::meta::common_type&lt;&gt;</class>
     <class kind="struct">atria::meta::copy_cv</class>
     <class kind="struct">atria::meta::copy_decay</class>
@@ -3181,22 +3721,27 @@
     <class kind="struct">atria::meta::copy_trait</class>
     <class kind="struct">atria::meta::could_not_find_common_type</class>
     <class kind="struct">atria::meta::could_not_get_index_sequence</class>
+    <class kind="struct">atria::meta::detected_any</class>
+    <class kind="struct">atria::meta::detected_any&lt; T, Op &gt;</class>
+    <class kind="struct">atria::meta::detected_any&lt; T, Op, Ops... &gt;</class>
     <class kind="struct">atria::meta::from_void</class>
+    <class kind="struct">atria::meta::get_value_type</class>
+    <class kind="struct">atria::meta::identity</class>
     <class kind="struct">atria::meta::if_any</class>
     <class kind="struct">atria::meta::if_any&lt; T, Mf &gt;</class>
-    <class kind="struct">atria::meta::if_any&lt; T, Mf, Mfs...&gt;</class>
+    <class kind="struct">atria::meta::if_any&lt; T, Mf, Mfs... &gt;</class>
+    <class kind="struct">atria::meta::lazy_detected_or</class>
     <class kind="struct">atria::meta::lazy_enable_if</class>
     <class kind="struct">atria::meta::models</class>
-    <class kind="struct">atria::meta::models&lt; ConceptSpecT(Ts...), estd::void_t&lt; decltype(std::declval&lt; ConceptSpecT &gt;().requires_(std::declval&lt; Ts &gt;()...)) &gt; &gt;</class>
     <class kind="struct">atria::meta::models_</class>
     <class kind="struct">atria::meta::noop_t</class>
     <class kind="struct">atria::meta::pack</class>
     <class kind="struct">atria::meta::pack_iterator</class>
-    <class kind="struct">atria::meta::pack_iterator&lt; atria::meta::pack&lt; Args...&gt; &gt;</class>
+    <class kind="struct">atria::meta::pack_iterator&lt; atria::meta::pack&lt; Args... &gt; &gt;</class>
     <class kind="struct">atria::meta::std_tuple_iterator</class>
-    <class kind="struct">atria::meta::std_tuple_iterator&lt; std::tuple&lt; Args...&gt; &gt;</class>
+    <class kind="struct">atria::meta::std_tuple_iterator&lt; std::tuple&lt; Args... &gt; &gt;</class>
     <member kind="typedef">
-      <type>typename common_type&lt; Ts...&gt;::type</type>
+      <type>typename common_type&lt; Ts... &gt;::type</type>
       <name>common_type_t</name>
       <anchorfile>namespaceatria_1_1meta.html</anchorfile>
       <anchor>aba0e22763ba45cf3edf22f604e5ed3ae</anchor>
@@ -3210,7 +3755,7 @@
       <arglist></arglist>
     </member>
     <member kind="typedef">
-      <type>estd::enable_if_t&lt; if_any&lt; T, Mfs...&gt;::type::value, int &gt;</type>
+      <type>estd::enable_if_t&lt; if_any&lt; T, Mfs... &gt;::type::value, int &gt;</type>
       <name>require_any</name>
       <anchorfile>namespaceatria_1_1meta.html</anchorfile>
       <anchor>af13ec4b3c9557f037c62921d71fbbfeb</anchor>
@@ -3228,6 +3773,13 @@
       <name>unpack</name>
       <anchorfile>namespaceatria_1_1meta.html</anchorfile>
       <anchor>a11375eeae94b43372dd0f70a867f200f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>eval_t&lt; get_value_type&lt; estd::decay_t&lt; T &gt; &gt; &gt;</type>
+      <name>value_t</name>
+      <anchorfile>namespaceatria_1_1meta.html</anchorfile>
+      <anchor>a5dcf93ca18529def3acf809f9e15c67f</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -3258,6 +3810,20 @@
       <anchor>adf7033d67a82ad70d515d189a054fe2f</anchor>
       <arglist>()</arglist>
     </member>
+    <member kind="function">
+      <type>constexpr bool</type>
+      <name>operator==</name>
+      <anchorfile>namespaceatria_1_1meta.html</anchorfile>
+      <anchor>afed7f8e3e576f161e31bc472440ee98d</anchor>
+      <arglist>(const pack&lt; Ts1... &gt; &amp;, const pack&lt; Ts2... &gt; &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr bool</type>
+      <name>operator!=</name>
+      <anchorfile>namespaceatria_1_1meta.html</anchorfile>
+      <anchor>a944e22221a11965e834bb5ca7116d988</anchor>
+      <arglist>(const pack&lt; Ts1... &gt; &amp;, const pack&lt; Ts2... &gt; &amp;)</arglist>
+    </member>
     <member kind="variable">
       <type>constexpr int</type>
       <name>can_be_void</name>
@@ -3267,15 +3833,12 @@
     </member>
   </compound>
   <compound kind="namespace">
-    <name>atria::meta::detail</name>
-    <filename>namespaceatria_1_1meta_1_1detail.html</filename>
-  </compound>
-  <compound kind="namespace">
     <name>atria::prelude</name>
     <filename>namespaceatria_1_1prelude.html</filename>
     <class kind="struct">atria::prelude::complement_t</class>
     <class kind="struct">atria::prelude::constantly_t</class>
     <class kind="struct">atria::prelude::identity_t</class>
+    <class kind="struct">atria::prelude::identity_t_</class>
     <class kind="struct">atria::prelude::tracer</class>
     <class kind="struct">atria::prelude::tuplify_t</class>
     <member kind="function">
@@ -3303,13 +3866,9 @@
       <type>auto</type>
       <name>trace</name>
       <anchorfile>namespaceatria_1_1prelude.html</anchorfile>
-      <anchor>a853e1b81b095210cf792a94bc990509b</anchor>
-      <arglist>(T &amp;&amp;x, const std::string &amp;message) -&gt; decltype((std::cerr&lt;&lt; message&lt;&lt; &quot; &quot;&lt;&lt; x&lt;&lt; std::endl, std::forward&lt; T &gt;(x)))</arglist>
+      <anchor>a727c15b2eda2a38e3a7f526349950c22</anchor>
+      <arglist>(T &amp;&amp;x, const std::string &amp;message) -&gt; T &amp;&amp;</arglist>
     </member>
-  </compound>
-  <compound kind="namespace">
-    <name>atria::prelude::detail</name>
-    <filename>namespaceatria_1_1prelude_1_1detail.html</filename>
   </compound>
   <compound kind="namespace">
     <name>atria::testing</name>
@@ -3373,26 +3932,16 @@
     </member>
   </compound>
   <compound kind="namespace">
-    <name>atria::testing::detail</name>
-    <filename>namespaceatria_1_1testing_1_1detail.html</filename>
-  </compound>
-  <compound kind="namespace">
-    <name>atria::testing::mocks</name>
-    <filename>namespaceatria_1_1testing_1_1mocks.html</filename>
-    <class kind="struct">atria::testing::mocks::defaulting</class>
-    <class kind="struct">atria::testing::mocks::returning</class>
-  </compound>
-  <compound kind="namespace">
     <name>atria::variant</name>
     <filename>namespaceatria_1_1variant.html</filename>
     <class kind="struct">atria::variant::otherwise_t</class>
     <class kind="struct">atria::variant::variant_types</class>
     <class kind="struct">atria::variant::variant_types_impl</class>
-    <class kind="struct">atria::variant::variant_types_impl&lt; boost::variant&lt; T, Ts...&gt; &gt;</class>
-    <class kind="struct">atria::variant::variant_types_impl&lt; eggs::variants::variant&lt; Ts...&gt; &gt;</class>
-    <class kind="struct">atria::variant::variant_types_impl&lt; meta::pack&lt; Ts...&gt; &gt;</class>
+    <class kind="struct">atria::variant::variant_types_impl&lt; boost::variant&lt; T, Ts... &gt; &gt;</class>
+    <class kind="struct">atria::variant::variant_types_impl&lt; eggs::variants::variant&lt; Ts... &gt; &gt;</class>
+    <class kind="struct">atria::variant::variant_types_impl&lt; meta::pack&lt; Ts... &gt; &gt;</class>
     <class kind="struct">atria::variant::visitor_result_of</class>
-    <class kind="struct">atria::variant::visitor_result_of&lt; FnT, meta::pack&lt; VariantTs...&gt; &gt;</class>
+    <class kind="struct">atria::variant::visitor_result_of&lt; FnT, meta::pack&lt; VariantTs... &gt; &gt;</class>
     <class kind="class">atria::variant::visitor_t</class>
     <class kind="struct">atria::variant::when_t</class>
     <member kind="function">
@@ -3410,7 +3959,7 @@
       <arglist>(VariantT &amp;&amp;variant, FnTs &amp;&amp;...fns) -&gt; estd::enable_if_t&lt; detail::is_eggs_variant&lt; estd::decay_t&lt; VariantT &gt; &gt;</arglist>
     </member>
     <member kind="function">
-      <type>when_t&lt; Fn, typename boost::mpl::if_&lt; std::is_reference&lt; Args &gt;, Args, const Args &amp; &gt;::type...&gt;</type>
+      <type>when_t&lt; Fn, typename boost::mpl::if_&lt; std::is_reference&lt; Args &gt;, Args, const Args &amp; &gt;::type... &gt;</type>
       <name>when</name>
       <anchorfile>namespaceatria_1_1variant.html</anchorfile>
       <anchor>ab60ccb4829cc97083de66d8a36bf1bdd</anchor>
@@ -3420,26 +3969,24 @@
       <type>auto</type>
       <name>visitor</name>
       <anchorfile>namespaceatria_1_1variant.html</anchorfile>
-      <anchor>ab1e89e2e38248203403e2423d058d0c5</anchor>
-      <arglist>(FnTs &amp;&amp;...fns) -&gt; visitor_t&lt; meta::common_type_t&lt; typename std::result_of&lt; FnTs(meta::bottom)&gt;::type...&gt;, FnTs...&gt;</arglist>
+      <anchor>a10afc5003977e330020a61e20234b60b</anchor>
+      <arglist>(FnTs &amp;&amp;...fns) -&gt; visitor_t&lt; meta::common_type_t&lt; typename std::result_of&lt; FnTs(meta::bottom)&gt;::type... &gt;, FnTs... &gt;</arglist>
     </member>
     <member kind="function">
       <type>auto</type>
       <name>visitor_for</name>
       <anchorfile>namespaceatria_1_1variant.html</anchorfile>
-      <anchor>a6081f093cf284dff951dce3ccdd784c0</anchor>
-      <arglist>(FnTs &amp;&amp;...fns) -&gt; visitor_t&lt; visitor_result_of_t&lt; detail::visitor_impl&lt; FnTs...&gt;, variant_types_t&lt; VariantT &gt; &gt;, FnTs...&gt;</arglist>
+      <anchor>a3f51bdd52d97616ef2fed5f7e5a63c0b</anchor>
+      <arglist>(FnTs &amp;&amp;...fns) -&gt; visitor_t&lt; visitor_result_of_t&lt; detail::visitor_impl&lt; FnTs... &gt;, variant_types_t&lt; VariantT &gt; &gt;, FnTs... &gt;</arglist>
     </member>
-  </compound>
-  <compound kind="namespace">
-    <name>atria::variant::detail</name>
-    <filename>namespaceatria_1_1variant_1_1detail.html</filename>
   </compound>
   <compound kind="namespace">
     <name>atria::xform</name>
     <filename>namespaceatria_1_1xform.html</filename>
     <class kind="class">atria::xform::any_state</class>
     <class kind="struct">atria::xform::emplace_back_rf_t</class>
+    <class kind="struct">atria::xform::empty_reductor_fn</class>
+    <class kind="struct">atria::xform::empty_reductor_fn&lt; ReducingFnT, InitialStateT, meta::pack&lt; InputTs... &gt; &gt;</class>
     <class kind="struct">atria::xform::first_rf_t</class>
     <class kind="struct">atria::xform::is_skip_state</class>
     <class kind="struct">atria::xform::is_skip_state&lt; skip_state&lt; SkippedT, CalledT &gt; &gt;</class>
@@ -3448,7 +3995,14 @@
     <class kind="struct">atria::xform::last_rf_t</class>
     <class kind="struct">atria::xform::maybe_reduced_tag</class>
     <class kind="struct">atria::xform::no_tag</class>
+    <class kind="struct">atria::xform::output_of</class>
+    <class kind="struct">atria::xform::output_of&lt; XformT, meta::pack&lt; InputTs... &gt; &gt;</class>
     <class kind="struct">atria::xform::output_rf_t</class>
+    <class kind="struct">atria::xform::reductor_fn</class>
+    <class kind="struct">atria::xform::reductor_fn_base</class>
+    <class kind="struct">atria::xform::result_of</class>
+    <class kind="struct">atria::xform::result_of&lt; XformT, meta::pack&lt; InputTs... &gt; &gt;</class>
+    <class kind="struct">atria::xform::sequence_range</class>
     <class kind="struct">atria::xform::skip_result</class>
     <class kind="struct">atria::xform::skip_state</class>
     <class kind="struct">atria::xform::state_traits</class>
@@ -3510,8 +4064,8 @@
       <type>auto</type>
       <name>into_vector</name>
       <anchorfile>namespaceatria_1_1xform.html</anchorfile>
-      <anchor>ac89301f0fadabb5c6ca41b05957d52eb</anchor>
-      <arglist>(XformT &amp;&amp;xform, InputRangeTs &amp;&amp;...ranges) -&gt; detail::into_vector_result_t&lt; XformT, InputRangeTs...&gt;</arglist>
+      <anchor>ad21b8bf7db847c2dd1ad4e426b938f85</anchor>
+      <arglist>(XformT &amp;&amp;xform, InputRangeTs &amp;&amp;...ranges) -&gt; std::vector&lt; result_of_t&lt; XformT, meta::value_t&lt; InputRangeTs &gt;... &gt; &gt;</arglist>
     </member>
     <member kind="function">
       <type>auto</type>
@@ -3550,10 +4104,38 @@
     </member>
     <member kind="function">
       <type>auto</type>
+      <name>reductor</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a4ffe29be166bd03ff4b070aec0f728fd</anchor>
+      <arglist>(ReducingFnT &amp;&amp;step, InitialStateT &amp;&amp;state, InputTs &amp;&amp;...ins) -&gt; reductor_fn&lt; estd::decay_t&lt; ReducingFnT &gt;, estd::decay_t&lt; InitialStateT &gt;, estd::decay_t&lt; InputTs &gt;... &gt;</arglist>
+    </member>
+    <member kind="function">
+      <type>auto</type>
+      <name>empty_reductor</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>ae8fccb7ef320d3d3c2bf26d568fcdb41</anchor>
+      <arglist>(ReducingFnT &amp;&amp;step, InitialStateT &amp;&amp;state) -&gt; empty_reductor_fn&lt; estd::decay_t&lt; ReducingFnT &gt;, estd::decay_t&lt; InitialStateT &gt;, estd::decay_t&lt; InputTs &gt;... &gt;</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>run</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a556bdf7d92cfc3f9678e478b2e0a7ac9</anchor>
+      <arglist>(XformT &amp;&amp;xform, InputRangeTs &amp;&amp;...ranges)</arglist>
+    </member>
+    <member kind="function">
+      <type>auto</type>
+      <name>sequence</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a6f19480678f62a39eb87dc3a05294d45</anchor>
+      <arglist>(XformT &amp;&amp;xform, const RangeTs &amp;...ranges) -&gt; sequence_range&lt; typename boost::mpl::eval_if&lt; std::is_same&lt; ValueT, detail::deduce_value_type &gt;, result_of&lt; XformT, meta::value_t&lt; RangeTs &gt;... &gt;, meta::identity&lt; ValueT &gt; &gt;::type, estd::decay_t&lt; XformT &gt;, estd::decay_t&lt; RangeTs &gt;... &gt;</arglist>
+    </member>
+    <member kind="function">
+      <type>auto</type>
       <name>skip</name>
       <anchorfile>namespaceatria_1_1xform.html</anchorfile>
-      <anchor>a1cb9f11ae0e3df98b2c2e1f39f5302f2</anchor>
-      <arglist>(ReducingFnT &amp;&amp;, StateT &amp;&amp;state, InputTs &amp;&amp;...) -&gt; skip_result_t&lt; ReducingFnT, StateT, InputTs...&gt;</arglist>
+      <anchor>a7b5d683f19ef370bc5e121c89f861c89</anchor>
+      <arglist>(ReducingFnT &amp;&amp;, StateT &amp;&amp;state, InputTs &amp;&amp;...) -&gt; skip_result_t&lt; ReducingFnT, StateT, InputTs... &gt;</arglist>
     </member>
     <member kind="function">
       <type>auto</type>
@@ -3592,6 +4174,20 @@
     </member>
     <member kind="function">
       <type>auto</type>
+      <name>state_unwrap_all</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a4b8a06f0fe7f2e877ce00ebb20feac76</anchor>
+      <arglist>(T &amp;&amp;s) -&gt; decltype(state_traits_t&lt; T &gt;::unwrap_all(std::forward&lt; T &gt;(s)))</arglist>
+    </member>
+    <member kind="function">
+      <type>auto</type>
+      <name>state_rewrap</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a6a2fb9067174fbd25ff78adaeb41650f</anchor>
+      <arglist>(T &amp;&amp;s, U &amp;&amp;x) -&gt; decltype(state_traits_t&lt; T &gt;::rewrap(std::forward&lt; T &gt;(s), std::forward&lt; U &gt;(x)))</arglist>
+    </member>
+    <member kind="function">
+      <type>auto</type>
       <name>wrap_state</name>
       <anchorfile>namespaceatria_1_1xform.html</anchorfile>
       <anchor>ae241d09b36ebe81badd419120047f7ab</anchor>
@@ -3610,6 +4206,20 @@
       <anchorfile>namespaceatria_1_1xform.html</anchorfile>
       <anchor>a0a1356003e10762cec1b6e68b4676ee8</anchor>
       <arglist>(TagT, T &amp;&amp;s) -&gt; decltype(std::get&lt; 0 &gt;(std::forward&lt; T &gt;(s)))</arglist>
+    </member>
+    <member kind="function">
+      <type>auto</type>
+      <name>state_wrapper_unwrap_all</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>ab9b5e75829c1fdfe3f57451bc70790b0</anchor>
+      <arglist>(TagT, T &amp;&amp;s) -&gt; decltype(state_unwrap_all(state_unwrap(std::forward&lt; T &gt;(s))))</arglist>
+    </member>
+    <member kind="function">
+      <type>auto</type>
+      <name>state_wrapper_rewrap</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a5cb41eebbd96fd51a1bb5592e51e2d93</anchor>
+      <arglist>(TagT, T &amp;&amp;s, U &amp;&amp;x) -&gt; decltype(wrap_state&lt; TagT &gt;(state_rewrap(state_unwrap(std::forward&lt; T &gt;(s)), x), state_wrapper_data(std::forward&lt; T &gt;(s))))</arglist>
     </member>
     <member kind="function">
       <type>auto</type>
@@ -3689,6 +4299,20 @@
       <arglist>(PredicateT &amp;&amp;n) -&gt; drop_while_t&lt; estd::decay_t&lt; PredicateT &gt; &gt;</arglist>
     </member>
     <member kind="function">
+      <type>auto</type>
+      <name>each</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>ae2bc188bb24ad7c3799ad8198cbeb3c9</anchor>
+      <arglist>(ActionT &amp;&amp;action) -&gt; each_t&lt; estd::decay_t&lt; ActionT &gt; &gt;</arglist>
+    </member>
+    <member kind="function">
+      <type>auto</type>
+      <name>eager</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a2f58051c6b87fb2548954b6f9d744126</anchor>
+      <arglist>(MappingT &amp;&amp;mapping) -&gt; eager_t&lt; estd::decay_t&lt; MappingT &gt; &gt;</arglist>
+    </member>
+    <member kind="function">
       <type>constexpr auto</type>
       <name>enumerate_from</name>
       <anchorfile>namespaceatria_1_1xform.html</anchorfile>
@@ -3706,8 +4330,8 @@
       <type>constexpr auto</type>
       <name>interpose</name>
       <anchorfile>namespaceatria_1_1xform.html</anchorfile>
-      <anchor>a88287d69938c5ac4fb74dbbbe985a449</anchor>
-      <arglist>(ValueTs &amp;&amp;...xs) -&gt; interpose_t&lt; estd::make_index_sequence&lt; sizeof...(ValueTs)&gt;, std::tuple&lt; estd::decay_t&lt; ValueTs &gt;...&gt; &gt;</arglist>
+      <anchor>ac198643a9fdb0042d6a9dc7895656cbb</anchor>
+      <arglist>(ValueTs &amp;&amp;...xs) -&gt; interpose_t&lt; estd::make_index_sequence&lt; sizeof...(ValueTs)&gt;, std::tuple&lt; estd::decay_t&lt; ValueTs &gt;... &gt; &gt;</arglist>
     </member>
     <member kind="function">
       <type>constexpr auto</type>
@@ -3774,6 +4398,27 @@
     </member>
     <member kind="function">
       <type>auto</type>
+      <name>read</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a433828f060fdc4d07dcd50c9486833af</anchor>
+      <arglist>(InputStreamT &amp;stream) -&gt; read_t&lt; T, std::reference_wrapper&lt; InputStreamT &gt; &gt;</arglist>
+    </member>
+    <member kind="function">
+      <type>auto</type>
+      <name>readbuf</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a6dac4023e221361610f4f65fee508057</anchor>
+      <arglist>(InputStreamT &amp;stream) -&gt; readbuf_t&lt; std::reference_wrapper&lt; InputStreamT &gt;, std::array&lt; char, N &gt; &gt;</arglist>
+    </member>
+    <member kind="function">
+      <type>auto</type>
+      <name>readbuf</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a9a8a0ac5d4f0bc817d5f1b4e11b11b30</anchor>
+      <arglist>(InputStreamT &amp;stream, std::size_t n) -&gt; readbuf_t&lt; std::reference_wrapper&lt; InputStreamT &gt;, std::vector&lt; char &gt; &gt;</arglist>
+    </member>
+    <member kind="function">
+      <type>auto</type>
       <name>remove</name>
       <anchorfile>namespaceatria_1_1xform.html</anchorfile>
       <anchor>ad6801522a4749259f1da08257065abc3</anchor>
@@ -3816,6 +4461,13 @@
     </member>
     <member kind="function">
       <type>auto</type>
+      <name>sink</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>af614a13bb66957508876cefc21cb4902</anchor>
+      <arglist>(ActionT &amp;&amp;action) -&gt; sink_t&lt; estd::decay_t&lt; ActionT &gt; &gt;</arglist>
+    </member>
+    <member kind="function">
+      <type>auto</type>
       <name>take</name>
       <anchorfile>namespaceatria_1_1xform.html</anchorfile>
       <anchor>ad1392e213eac822dbbb8500608012bb4</anchor>
@@ -3844,6 +4496,20 @@
     </member>
     <member kind="function">
       <type>auto</type>
+      <name>write</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a8506b77708921f642212a1d44fcc5f93</anchor>
+      <arglist>(OutputStreamT &amp;stream, InSeparatorT in_sep=InSeparatorT{}) -&gt; write_t&lt; std::reference_wrapper&lt; OutputStreamT &gt;, InSeparatorT, InSeparatorT &gt;</arglist>
+    </member>
+    <member kind="function">
+      <type>auto</type>
+      <name>writebuf</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a17cf9b4f857005aa681a5f59b78b9d11</anchor>
+      <arglist>(OutputStreamT &amp;stream) -&gt; writebuf_t&lt; std::reference_wrapper&lt; OutputStreamT &gt; &gt;</arglist>
+    </member>
+    <member kind="function">
+      <type>auto</type>
       <name>with_state</name>
       <anchorfile>namespaceatria_1_1xform.html</anchorfile>
       <anchor>ade4a7505add816a4798fcb3cc96c7e7d</anchor>
@@ -3868,6 +4534,20 @@
       <name>distinct</name>
       <anchorfile>namespaceatria_1_1xform.html</anchorfile>
       <anchor>a71ceccfe79ea71598ee8534b2c7bade7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>constexpr sorted_t</type>
+      <name>sorted</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a642cff3421f4c943d8f5039baa6feef9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>constexpr reversed_t</type>
+      <name>reversed</name>
+      <anchorfile>namespaceatria_1_1xform.html</anchorfile>
+      <anchor>a9fc45ce6e33283e92568eee03414b0e1</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -3899,64 +4579,6 @@
       <arglist></arglist>
     </member>
   </compound>
-  <compound kind="namespace">
-    <name>atria::xform::detail</name>
-    <filename>namespaceatria_1_1xform_1_1detail.html</filename>
-  </compound>
-  <compound kind="namespace">
-    <name>atria::xform::impure</name>
-    <filename>namespaceatria_1_1xform_1_1impure.html</filename>
-    <class kind="struct">atria::xform::impure::reduce_aborted_error</class>
-    <class kind="struct">atria::xform::impure::reduce_aborted_error_base</class>
-  </compound>
-  <compound kind="namespace">
-    <name>atria::xform::impure::detail</name>
-    <filename>namespaceatria_1_1xform_1_1impure_1_1detail.html</filename>
-  </compound>
-  <compound kind="namespace">
-    <name>boost</name>
-    <filename>namespaceboost.html</filename>
-  </compound>
-  <compound kind="namespace">
-    <name>boost::mpl</name>
-    <filename>namespaceboost_1_1mpl.html</filename>
-    <class kind="struct">boost::mpl::at_impl&lt; atria::meta::pack_tag &gt;</class>
-    <class kind="struct">boost::mpl::at_impl&lt; atria::meta::std_tuple_tag &gt;</class>
-    <class kind="struct">boost::mpl::back_impl&lt; atria::meta::pack_tag &gt;</class>
-    <class kind="struct">boost::mpl::back_impl&lt; atria::meta::std_tuple_tag &gt;</class>
-    <class kind="struct">boost::mpl::begin_impl&lt; atria::meta::pack_tag &gt;</class>
-    <class kind="struct">boost::mpl::begin_impl&lt; atria::meta::std_tuple_tag &gt;</class>
-    <class kind="struct">boost::mpl::clear_impl&lt; atria::meta::pack_tag &gt;</class>
-    <class kind="struct">boost::mpl::clear_impl&lt; atria::meta::std_tuple_tag &gt;</class>
-    <class kind="struct">boost::mpl::deref&lt; atria::meta::pack_iterator&lt; atria::meta::pack&lt; First, Args...&gt; &gt; &gt;</class>
-    <class kind="struct">boost::mpl::deref&lt; atria::meta::std_tuple_iterator&lt; std::tuple&lt; First, Args...&gt; &gt; &gt;</class>
-    <class kind="struct">boost::mpl::empty_impl&lt; atria::meta::pack_tag &gt;</class>
-    <class kind="struct">boost::mpl::empty_impl&lt; atria::meta::std_tuple_tag &gt;</class>
-    <class kind="struct">boost::mpl::end_impl&lt; atria::meta::pack_tag &gt;</class>
-    <class kind="struct">boost::mpl::end_impl&lt; atria::meta::std_tuple_tag &gt;</class>
-    <class kind="struct">boost::mpl::front_impl&lt; atria::meta::pack_tag &gt;</class>
-    <class kind="struct">boost::mpl::front_impl&lt; atria::meta::std_tuple_tag &gt;</class>
-    <class kind="struct">boost::mpl::next&lt; atria::meta::pack_iterator&lt; atria::meta::pack&lt; First, Args...&gt; &gt; &gt;</class>
-    <class kind="struct">boost::mpl::next&lt; atria::meta::std_tuple_iterator&lt; std::tuple&lt; First, Args...&gt; &gt; &gt;</class>
-    <class kind="struct">boost::mpl::pop_back_impl&lt; atria::meta::pack_tag &gt;</class>
-    <class kind="struct">boost::mpl::pop_back_impl&lt; atria::meta::std_tuple_tag &gt;</class>
-    <class kind="struct">boost::mpl::pop_front_impl&lt; atria::meta::pack_tag &gt;</class>
-    <class kind="struct">boost::mpl::pop_front_impl&lt; atria::meta::std_tuple_tag &gt;</class>
-    <class kind="struct">boost::mpl::push_back_impl&lt; atria::meta::pack_tag &gt;</class>
-    <class kind="struct">boost::mpl::push_back_impl&lt; atria::meta::std_tuple_tag &gt;</class>
-    <class kind="struct">boost::mpl::push_front_impl&lt; atria::meta::pack_tag &gt;</class>
-    <class kind="struct">boost::mpl::push_front_impl&lt; atria::meta::std_tuple_tag &gt;</class>
-    <class kind="struct">boost::mpl::sequence_tag&lt; atria::meta::pack&lt; Args...&gt; &gt;</class>
-    <class kind="struct">boost::mpl::sequence_tag&lt; std::tuple&lt; Args...&gt; &gt;</class>
-    <class kind="struct">boost::mpl::size_impl&lt; atria::meta::pack_tag &gt;</class>
-    <class kind="struct">boost::mpl::size_impl&lt; atria::meta::std_tuple_tag &gt;</class>
-  </compound>
-  <compound kind="namespace">
-    <name>std</name>
-    <filename>namespacestd.html</filename>
-    <class kind="struct">std::hash&lt; atria::funken::structure&lt; T &gt; &gt;</class>
-    <class kind="struct">std::hash&lt; tuple&lt; Ts...&gt; &gt;</class>
-  </compound>
   <compound kind="page">
     <name>testing</name>
     <title>Testing</title>
@@ -3964,7 +4586,7 @@
   </compound>
   <compound kind="page">
     <name>index</name>
-    <title></title>
+    <title>Atria</title>
     <filename>index</filename>
   </compound>
 </tagfile>

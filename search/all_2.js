@@ -2,6 +2,7 @@ var searchData=
 [
   ['call',['call',['../namespaceatria_1_1xform.html#a2da0bbda0517148bb5c7a784235bf88c',1,'atria::xform']]],
   ['can_5fbe_5fvoid',['can_be_void',['../namespaceatria_1_1meta.html#a3ea3b7864ce402cf4a3060ccea7502f3',1,'atria::meta']]],
+  ['can_5fnot_5fdo_5fthat',['can_not_do_that',['../structatria_1_1xform_1_1state__traits_3_01skip__state_3_01_skipped_t_00_01_called_t_01_4_01_4_1_1can__not__do__that.html',1,'atria::xform::state_traits&lt; skip_state&lt; SkippedT, CalledT &gt; &gt;']]],
   ['cat',['cat',['../namespaceatria_1_1xform.html#a7b3db0b1325b015399b0d50f75e33220',1,'atria::xform']]],
   ['cat_2ehpp',['cat.hpp',['../cat_8hpp.html',1,'']]],
   ['chain',['chain',['../namespaceatria_1_1xform.html#ac2b85e8714c0aa88ddb6dcc59c3501e6',1,'atria::xform']]],
@@ -14,7 +15,7 @@ var searchData=
   ['commit_2ehpp',['commit.hpp',['../commit_8hpp.html',1,'']]],
   ['common_5ftype',['common_type',['../structatria_1_1meta_1_1common__type.html',1,'atria::meta']]],
   ['common_5ftype_2ehpp',['common_type.hpp',['../common__type_8hpp.html',1,'']]],
-  ['common_5ftype_3c_20t_2c_20ts_2e_2e_2e_3e',['common_type&lt; T, Ts...&gt;',['../structatria_1_1meta_1_1common__type_3_01_t_00_01_ts_8_8_8_4.html',1,'atria::meta']]],
+  ['common_5ftype_3c_20t_2c_20ts_2e_2e_2e_20_3e',['common_type&lt; T, Ts... &gt;',['../structatria_1_1meta_1_1common__type_3_01_t_00_01_ts_8_8_8_01_4.html',1,'atria::meta']]],
   ['common_5ftype_3c_3e',['common_type&lt;&gt;',['../structatria_1_1meta_1_1common__type_3_4.html',1,'atria::meta']]],
   ['common_5ftype_5ft',['common_type_t',['../namespaceatria_1_1meta.html#aba0e22763ba45cf3edf22f604e5ed3ae',1,'atria::meta']]],
   ['comp',['comp',['../namespaceatria_1_1prelude.html#a76571986e0dbf8a149a1ae55ede5bfde',1,'atria::prelude']]],
@@ -22,10 +23,10 @@ var searchData=
   ['complement',['complement',['../namespaceatria_1_1prelude.html#a7458009df9fab4d7899bbda48dd9713d',1,'atria::prelude']]],
   ['complement_2ehpp',['complement.hpp',['../complement_8hpp.html',1,'']]],
   ['complement_5ft',['complement_t',['../structatria_1_1prelude_1_1complement__t.html',1,'atria::prelude']]],
-  ['complete',['complete',['../structatria_1_1xform_1_1state__traits.html#a18456c946a84c9b57eb4e0bd2732024a',1,'atria::xform::state_traits']]],
+  ['complete',['complete',['../structatria_1_1xform_1_1reductor__fn__base.html#a87719260e4e46aee899b3e9a39c47fd3',1,'atria::xform::reductor_fn_base::complete()'],['../structatria_1_1xform_1_1state__traits.html#a18456c946a84c9b57eb4e0bd2732024a',1,'atria::xform::state_traits::complete()']]],
   ['concept_2ehpp',['concept.hpp',['../concept_8hpp.html',1,'']]],
-  ['concepts_2ehpp',['concepts.hpp',['../xform_2concepts_8hpp.html',1,'']]],
   ['concepts_2ehpp',['concepts.hpp',['../funken_2concepts_8hpp.html',1,'']]],
+  ['concepts_2ehpp',['concepts.hpp',['../xform_2concepts_8hpp.html',1,'']]],
   ['conditional_5ft',['conditional_t',['../namespaceatria_1_1estd.html#a7e8ac30440b9ec3fef45a9172f1f43f1',1,'atria::estd']]],
   ['config_2ehpp',['config.hpp',['../config_8hpp.html',1,'']]],
   ['constantly',['constantly',['../namespaceatria_1_1prelude.html#ae84f7a055fedf797752abfb80f34ae90',1,'atria::prelude']]],
@@ -42,6 +43,7 @@ var searchData=
   ['could_5fnot_5fget_5findex_5fsequence',['could_not_get_index_sequence',['../structatria_1_1meta_1_1could__not__get__index__sequence.html',1,'atria::meta']]],
   ['count',['count',['../namespaceatria_1_1xform.html#a355c4a75a7b2d4a537ef915446b4e307',1,'atria::xform']]],
   ['count_2ehpp',['count.hpp',['../count_8hpp.html',1,'']]],
+  ['current',['current',['../structatria_1_1xform_1_1reductor__fn__base.html#aa989a52376a17bfd48d1da22da7aa0fb',1,'atria::xform::reductor_fn_base']]],
   ['cycle',['cycle',['../namespaceatria_1_1xform.html#a6ca64e4188beed34b52a9ddc7e692bd5',1,'atria::xform']]],
   ['cycle_2ehpp',['cycle.hpp',['../cycle_8hpp.html',1,'']]]
 ];
