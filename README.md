@@ -75,9 +75,9 @@ submodule update --init --recursive` before building.
 
 ## Maintainers
 
-- Juan Pedro Bolívar Puente ([\@jbo-ableton](https://github.com/jbo-ableton))
-- Brent Shields ([\@brs-ableton](https://github.com/brs-ableton))
-- Tobias Hahn ([\@toh-ableton](https://github.com/toh-ableton))
+- Juan Pedro Bolívar Puente ([`@arximboldi`](https://github.com/arximboldi))
+- Tobias Hahn ([`@toh-ableton`](https://github.com/toh-ableton))
+- Stephan Bots ([`@sbs-ableton`](https://github.com/sbs-ableton))
 
 License
 -------
