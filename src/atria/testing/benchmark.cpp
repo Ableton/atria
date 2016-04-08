@@ -21,8 +21,6 @@
 //
 
 #include <atria/testing/benchmark.hpp>
-#include <atria/xform/transducer/map.hpp>
-#include <atria/xform/transduce.hpp>
 
 #include <atria/meta/utils.hpp>
 
@@ -50,15 +48,11 @@ benchmark_suite_base::~benchmark_suite_base()
   std::cout << std::endl << name_ << " --" << std::endl;
   if (!results_.empty()) {
     auto best_time  = std::get<0>(*results_.begin());
-    auto name_width = xform::transduce(
-      xform::map([] (std::tuple<double, std::string> item) {
-        return std::get<1>(item).size();
-      }),
-      [] (std::size_t acc, std::size_t next) {
-        return std::max(acc, next);
-      },
-      std::size_t{},
-      results_);
+    auto name_width = std::accumulate(
+      results_.begin(), results_.end(), size_t(0),
+      [](size_t width, const std::tuple<double, std::string>& item) {
+        return std::max(std::get<1>(item).size(), width);
+      });
 
     for (auto& result : results_) {
       auto& time = std::get<0>(result);
