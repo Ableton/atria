@@ -27,7 +27,6 @@
 #pragma once
 
 #include <functional>
-#include <atria/meta/utils.hpp>
 
 namespace atria {
 namespace estd {

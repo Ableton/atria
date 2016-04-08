@@ -24,6 +24,8 @@
 #include <atria/xform/transducer/map.hpp>
 #include <atria/xform/transduce.hpp>
 
+#include <atria/meta/utils.hpp>
+
 #include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
 #include <cxxopts.hpp>
