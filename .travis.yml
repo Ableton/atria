@@ -126,16 +126,18 @@ script:
     fi
   - |
     if [[ "${DOCUMENTATION}" == "true" ]]; then
-      cd ..
-      doxygen doxy/doxygen.config
-      # Suppress output to avoid leaking the token when the command fails
-      git clone https://arximboldi:${GH_TOKEN}@github.com/ableton/atria --depth 1 --branch=gh-pages gh-pages &>/dev/null
-      rm -rf gh-pages/{search,*.png,*.css,*.js,*.html}
-      cp -R output-doc/* gh-pages/
-      pushd gh-pages
-      git add --all .
-      git commit --allow-empty -m "Update to ${TRAVIS_COMMIT:0:7}"
-      # Suppress output to avoid leaking the token
-      travis_retry git push origin gh-pages &>/dev/null
-      popd
+      if [[ "${TRAVIS_PULL_REQUEST}" == "false" && "${TRAVIS_BRANCH}" == "master" ]]; then
+        cd ..
+        doxygen doxy/doxygen.config
+        # Suppress output to avoid leaking the token when the command fails
+        git clone https://arximboldi:${GH_TOKEN}@github.com/ableton/atria --depth 1 --branch=gh-pages gh-pages &>/dev/null
+        rm -rf gh-pages/{search,*.png,*.css,*.js,*.html}
+        cp -R output-doc/* gh-pages/
+        pushd gh-pages
+        git add --all .
+        git commit --allow-empty -m "Update to ${TRAVIS_COMMIT:0:7}"
+        # Suppress output to avoid leaking the token
+        travis_retry git push origin gh-pages &>/dev/null
+        popd
+        fi
     fi
