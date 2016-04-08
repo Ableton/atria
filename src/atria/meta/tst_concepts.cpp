@@ -76,14 +76,14 @@ TEST(simple_concept, can_be_evaluated_like_aconcept_lite)
 {
   EXPECT_TRUE(Example_concept<example_model>());
   // This is expected to fail to compile
-  //   EXPECT_FALSE(Example_concept<ExampleNonModel>());
+  //   EXPECT_FALSE(Example_concept<example_non_model>());
 }
 
 TEST(simple_concept, can_be_used_with_concept_assert)
 {
   ABL_ASSERT_CONCEPT(Example_concept, example_model);
   // This is expected to fail to compile
-  //   ABL_ASSERT_CONCEPT(Example_concept, ExampleNonModel);
+  //   ABL_ASSERT_CONCEPT(Example_concept, example_non_model);
 }
 
 /*!
@@ -131,12 +131,12 @@ TEST(concept, can_use_check_with_concept_spec)
   EXPECT_TRUE(check<Example_concept_two_spec(example_model)>());
   // This should fail to compiler, rising an error in the line of
   // the specification that is not met.
-  //   EXPECT_FALSE(check<Example_concept_two<void>(ExampleNonModel)>());
+  //   EXPECT_FALSE(check<Example_concept_two<void>(example_non_model)>());
 }
 
 /*!
  * Finally, an example of specifying a SFINAE-friendly concept in two
- * steps, which migth seem clearer to some.
+ * steps, which might seem clearer to some.
  */
 struct Example_concept_spec
 {
