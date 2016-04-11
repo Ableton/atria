@@ -124,6 +124,8 @@ script:
     else
       ctest -V
     fi
+
+after_success:
   - |
     if [[ "${DOCUMENTATION}" == "true" ]]; then
       if [[ "${TRAVIS_PULL_REQUEST}" == "false" && "${TRAVIS_BRANCH}" == "master" ]]; then
