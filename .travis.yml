@@ -103,6 +103,7 @@ install:
 
 before_script:
   - git config --global user.name "Travis bot"
+  - git config --global user.email $USER@$HOSTNAME
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir build && cd build
   - ${COMPILER} --version
