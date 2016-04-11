@@ -30,6 +30,7 @@
 #include <atria/xform/state_traits.hpp>
 #include <atria/estd/memory.hpp>
 #include <atria/meta/pack.hpp>
+#include <atria/meta/utils.hpp>
 #include <string>
 #include <stdexcept>
 

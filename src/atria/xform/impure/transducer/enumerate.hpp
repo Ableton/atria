@@ -27,6 +27,7 @@
 #pragma once
 
 #include <atria/xform/transducer_impl.hpp>
+#include <atria/meta/utils.hpp>
 
 namespace atria {
 namespace xform {

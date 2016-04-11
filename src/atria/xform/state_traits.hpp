@@ -28,6 +28,7 @@
 
 #include <atria/estd/type_traits.hpp>
 #include <atria/estd/utility.hpp>
+#include <atria/meta/utils.hpp>
 
 namespace atria {
 namespace xform {
