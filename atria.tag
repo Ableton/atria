@@ -4,16 +4,8 @@
     <name>functional.hpp</name>
     <path>/home/travis/build/Ableton/atria/src/atria/estd/</path>
     <filename>functional_8hpp</filename>
-    <includes id="utils_8hpp" name="utils.hpp" local="no" imported="no">atria/meta/utils.hpp</includes>
     <namespace>atria</namespace>
     <namespace>atria::estd</namespace>
-    <member kind="function">
-      <type>auto</type>
-      <name>invoke</name>
-      <anchorfile>namespaceatria_1_1estd.html</anchorfile>
-      <anchor>aa0499895bf4cb63f3c77fef8f21de904</anchor>
-      <arglist>(F &amp;&amp;f, ArgTypes &amp;&amp;...args) -&gt; decltype(detail::INVOKE(std::forward&lt; F &gt;(f), std::forward&lt; ArgTypes &gt;(args)...))</arglist>
-    </member>
   </compound>
   <compound kind="file">
     <name>memory.hpp</name>
@@ -40,7 +32,6 @@
     <name>type_traits.hpp</name>
     <path>/home/travis/build/Ableton/atria/src/atria/estd/</path>
     <filename>type__traits_8hpp</filename>
-    <includes id="utils_8hpp" name="utils.hpp" local="no" imported="no">atria/meta/utils.hpp</includes>
     <class kind="struct">atria::estd::nonesuch</class>
     <namespace>atria</namespace>
     <namespace>atria::estd</namespace>
@@ -234,6 +225,7 @@
     <path>/home/travis/build/Ableton/atria/src/atria/funken/detail/</path>
     <filename>access_8hpp</filename>
     <includes id="type__traits_8hpp" name="type_traits.hpp" local="no" imported="no">atria/estd/type_traits.hpp</includes>
+    <includes id="utils_8hpp" name="utils.hpp" local="no" imported="no">atria/meta/utils.hpp</includes>
     <namespace>atria</namespace>
     <namespace>atria::funken</namespace>
   </compound>
@@ -850,8 +842,6 @@
     <name>benchmark.hpp</name>
     <path>/home/travis/build/Ableton/atria/src/atria/testing/</path>
     <filename>benchmark_8hpp</filename>
-    <includes id="map_8hpp" name="map.hpp" local="no" imported="no">atria/xform/transducer/map.hpp</includes>
-    <includes id="transduce_8hpp" name="transduce.hpp" local="no" imported="no">atria/xform/transduce.hpp</includes>
     <includes id="type__traits_8hpp" name="type_traits.hpp" local="no" imported="no">atria/estd/type_traits.hpp</includes>
     <class kind="struct">atria::testing::benchmark_settings</class>
     <class kind="class">atria::testing::benchmark_suite</class>
@@ -1044,6 +1034,7 @@
     <includes id="state__traits_8hpp" name="state_traits.hpp" local="no" imported="no">atria/xform/state_traits.hpp</includes>
     <includes id="memory_8hpp" name="memory.hpp" local="no" imported="no">atria/estd/memory.hpp</includes>
     <includes id="pack_8hpp" name="pack.hpp" local="no" imported="no">atria/meta/pack.hpp</includes>
+    <includes id="utils_8hpp" name="utils.hpp" local="no" imported="no">atria/meta/utils.hpp</includes>
     <class kind="class">atria::xform::any_state</class>
     <class kind="struct">atria::xform::state_traits&lt; any_state &gt;</class>
     <namespace>atria</namespace>
@@ -1272,6 +1263,7 @@
     <path>/home/travis/build/Ableton/atria/src/atria/xform/impure/transducer/</path>
     <filename>impure_2transducer_2enumerate_8hpp</filename>
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
+    <includes id="utils_8hpp" name="utils.hpp" local="no" imported="no">atria/meta/utils.hpp</includes>
     <namespace>atria</namespace>
     <namespace>atria::xform</namespace>
   </compound>
@@ -1282,6 +1274,7 @@
     <includes id="transducer__impl_8hpp" name="transducer_impl.hpp" local="no" imported="no">atria/xform/transducer_impl.hpp</includes>
     <includes id="state__wrapper_8hpp" name="state_wrapper.hpp" local="no" imported="no">atria/xform/state_wrapper.hpp</includes>
     <includes id="constantly_8hpp" name="constantly.hpp" local="no" imported="no">atria/prelude/constantly.hpp</includes>
+    <includes id="utils_8hpp" name="utils.hpp" local="no" imported="no">atria/meta/utils.hpp</includes>
     <namespace>atria</namespace>
     <namespace>atria::xform</namespace>
     <member kind="function">
@@ -1586,6 +1579,7 @@
     <filename>state__traits_8hpp</filename>
     <includes id="type__traits_8hpp" name="type_traits.hpp" local="no" imported="no">atria/estd/type_traits.hpp</includes>
     <includes id="utility_8hpp" name="utility.hpp" local="no" imported="no">atria/estd/utility.hpp</includes>
+    <includes id="utils_8hpp" name="utils.hpp" local="no" imported="no">atria/meta/utils.hpp</includes>
     <class kind="struct">atria::xform::state_traits</class>
     <namespace>atria</namespace>
     <namespace>atria::xform</namespace>
@@ -3576,13 +3570,6 @@
       <anchorfile>namespaceatria_1_1estd.html</anchorfile>
       <anchor>ac286f275998780a3a3ce9fe2795db6aa</anchor>
       <arglist></arglist>
-    </member>
-    <member kind="function">
-      <type>auto</type>
-      <name>invoke</name>
-      <anchorfile>namespaceatria_1_1estd.html</anchorfile>
-      <anchor>aa0499895bf4cb63f3c77fef8f21de904</anchor>
-      <arglist>(F &amp;&amp;f, ArgTypes &amp;&amp;...args) -&gt; decltype(detail::INVOKE(std::forward&lt; F &gt;(f), std::forward&lt; ArgTypes &gt;(args)...))</arglist>
     </member>
   </compound>
   <compound kind="namespace">

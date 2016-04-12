@@ -150,7 +150,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class </span>...T&gt;</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <span class="keyword">auto</span> operator() (T&amp;&amp; ...xs)</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    -&gt; <a class="code" href="utils_8hpp.html#accee07a5d877fc2ed91dd358dfd2c222">ABL_DECLTYPE_RETURN</a>(</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      <a class="code" href="namespaceatria_1_1estd.html#aa0499895bf4cb63f3c77fef8f21de904">estd::invoke</a>(f, <a class="code" href="namespaceatria_1_1estd.html#aa0499895bf4cb63f3c77fef8f21de904">estd::invoke</a>(g, std::forward&lt;T&gt;(xs)...)))</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      estd::invoke(f, estd::invoke(g, std::forward&lt;T&gt;(xs)...)))</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;};</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> ...Fns&gt;</div>
@@ -193,8 +193,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;} <span class="comment">// namespace atria</span></div>
 <div class="ttc" id="utils_8hpp_html_accee07a5d877fc2ed91dd358dfd2c222"><div class="ttname"><a href="utils_8hpp.html#accee07a5d877fc2ed91dd358dfd2c222">ABL_DECLTYPE_RETURN</a></div><div class="ttdeci">#define ABL_DECLTYPE_RETURN(body_expr)</div><div class="ttdoc">Utility for defining generic functions with a deduced return type, that are composed of a single expr...</div><div class="ttdef"><b>Definition:</b> <a href="utils_8hpp_source.html#l00109">utils.hpp:109</a></div></div>
 <div class="ttc" id="utils_8hpp_html"><div class="ttname"><a href="utils_8hpp.html">utils.hpp</a></div></div>
-<div class="ttc" id="namespaceatria_1_1estd_html_abccbc22bdad41d01de217a42e0d077ff"><div class="ttname"><a href="namespaceatria_1_1estd.html#abccbc22bdad41d01de217a42e0d077ff">atria::estd::decay_t</a></div><div class="ttdeci">typename std::decay&lt; T &gt;::type decay_t</div><div class="ttdoc">Similar to C++14 std::decay_t. </div><div class="ttdef"><b>Definition:</b> <a href="type__traits_8hpp_source.html#l00055">type_traits.hpp:55</a></div></div>
-<div class="ttc" id="namespaceatria_1_1estd_html_aa0499895bf4cb63f3c77fef8f21de904"><div class="ttname"><a href="namespaceatria_1_1estd.html#aa0499895bf4cb63f3c77fef8f21de904">atria::estd::invoke</a></div><div class="ttdeci">auto invoke(F &amp;&amp;f, ArgTypes &amp;&amp;...args) -&gt; decltype(detail::INVOKE(std::forward&lt; F &gt;(f), std::forward&lt; ArgTypes &gt;(args)...))</div><div class="ttdoc">Like C++17 std::invoke </div><div class="ttdef"><b>Definition:</b> <a href="functional_8hpp_source.html#l00133">functional.hpp:133</a></div></div>
+<div class="ttc" id="namespaceatria_1_1estd_html_abccbc22bdad41d01de217a42e0d077ff"><div class="ttname"><a href="namespaceatria_1_1estd.html#abccbc22bdad41d01de217a42e0d077ff">atria::estd::decay_t</a></div><div class="ttdeci">typename std::decay&lt; T &gt;::type decay_t</div><div class="ttdoc">Similar to C++14 std::decay_t. </div><div class="ttdef"><b>Definition:</b> <a href="type__traits_8hpp_source.html#l00054">type_traits.hpp:54</a></div></div>
 <div class="ttc" id="type__traits_8hpp_html"><div class="ttname"><a href="type__traits_8hpp.html">type_traits.hpp</a></div></div>
 <div class="ttc" id="namespaceatria_1_1prelude_html_a76571986e0dbf8a149a1ae55ede5bfde"><div class="ttname"><a href="namespaceatria_1_1prelude.html#a76571986e0dbf8a149a1ae55ede5bfde">atria::prelude::comp</a></div><div class="ttdeci">auto comp(F &amp;&amp;f) -&gt; F &amp;&amp;</div><div class="ttdoc">Right-to left function composition. </div><div class="ttdef"><b>Definition:</b> <a href="comp_8hpp_source.html#l00080">comp.hpp:80</a></div></div>
 <div class="ttc" id="namespaceatria_html"><div class="ttname"><a href="namespaceatria.html">atria</a></div><div class="ttdoc">C++ amazing templates and reusable implementations awesomeness. </div><div class="ttdef"><b>Definition:</b> <a href="__doc_8hpp_source.html#l00035">_doc.hpp:35</a></div></div>
@@ -208,7 +207,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 </div>
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 8 2016 15:43:46 for Atria by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Apr 12 2016 10:43:07 for Atria by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.10
 </small></address>

@@ -112,11 +112,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">benchmark.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;<a class="el" href="map_8hpp_source.html">atria/xform/transducer/map.hpp</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="transduce_8hpp_source.html">atria/xform/transduce.hpp</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="type__traits_8hpp_source.html">atria/estd/type_traits.hpp</a>&gt;</code><br />
+<div class="textblock"><code>#include &lt;<a class="el" href="type__traits_8hpp_source.html">atria/estd/type_traits.hpp</a>&gt;</code><br />
 <code>#include &lt;ableton/build_system/Warnings.hpp&gt;</code><br />
 <code>#include &lt;boost/range/irange.hpp&gt;</code><br />
+<code>#include &lt;boost/range/numeric.hpp&gt;</code><br />
 <code>#include &lt;boost/range/algorithm/for_each.hpp&gt;</code><br />
 <code>#include &lt;chrono&gt;</code><br />
 <code>#include &lt;set&gt;</code><br />
@@ -196,11 +195,11 @@ template&lt;typename T &gt; </td></tr>
 <div class="line">  {                                                             <a class="code" href="namespaceatria_1_1testing.html#a163ec995e873324e3c8c33396e0e799c">\</a></div>
 <div class="line"><a class="code" href="namespaceatria_1_1testing.html#a163ec995e873324e3c8c33396e0e799c">    return ::atria::testing::benchmark_main</a>(argc, argv, fn);    \</div>
 <div class="line">  }                                                             \</div>
-<div class="ttc" id="namespaceatria_1_1testing_html_a163ec995e873324e3c8c33396e0e799c"><div class="ttname"><a href="namespaceatria_1_1testing.html#a163ec995e873324e3c8c33396e0e799c">atria::testing::benchmark_main</a></div><div class="ttdeci">int benchmark_main(int argc, char const *const *argv, FnT &amp;&amp;fn)</div><div class="ttdoc">Creates a benchmark_runner and passes it to fn, returning a zero (success) code. </div><div class="ttdef"><b>Definition:</b> <a href="benchmark_8hpp_source.html#l00293">benchmark.hpp:293</a></div></div>
+<div class="ttc" id="namespaceatria_1_1testing_html_a163ec995e873324e3c8c33396e0e799c"><div class="ttname"><a href="namespaceatria_1_1testing.html#a163ec995e873324e3c8c33396e0e799c">atria::testing::benchmark_main</a></div><div class="ttdeci">int benchmark_main(int argc, char const *const *argv, FnT &amp;&amp;fn)</div><div class="ttdoc">Creates a benchmark_runner and passes it to fn, returning a zero (success) code. </div><div class="ttdef"><b>Definition:</b> <a href="benchmark_8hpp_source.html#l00291">benchmark.hpp:291</a></div></div>
 </div><!-- fragment -->
 <p>Utility macro to define a benchmark running program. </p>
 
-<p>Definition at line <a class="el" href="benchmark_8hpp_source.html#l00307">307</a> of file <a class="el" href="benchmark_8hpp_source.html">benchmark.hpp</a>.</p>
+<p>Definition at line <a class="el" href="benchmark_8hpp_source.html#l00305">305</a> of file <a class="el" href="benchmark_8hpp_source.html">benchmark.hpp</a>.</p>
 
 </div>
 </div>
@@ -213,7 +212,7 @@ template&lt;typename T &gt; </td></tr>
 </div>
 </div>
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 8 2016 15:43:46 for Atria by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Apr 12 2016 10:43:07 for Atria by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.10
 </small></address>

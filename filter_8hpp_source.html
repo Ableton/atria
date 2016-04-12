@@ -146,7 +146,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  {</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordflow">return</span> [=](<span class="keyword">auto</span>&amp;&amp; s, <span class="keyword">auto</span>&amp;&amp; ...is) <span class="keyword">mutable</span></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    {</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="namespaceatria_1_1estd.html#aa0499895bf4cb63f3c77fef8f21de904">estd::invoke</a>(predicate, is...)</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;      <span class="keywordflow">return</span> estd::invoke(predicate, is...)</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        ? <a class="code" href="namespaceatria_1_1xform.html#a52fea8a48eaf32278634f831a495d251">call</a>(step, ABL_FORWARD(s), ABL_FORWARD(is)...)</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        : <a class="code" href="namespaceatria_1_1xform.html#a7b5d683f19ef370bc5e121c89f861c89">skip</a>(step, ABL_FORWARD(s), ABL_FORWARD(is)...);</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    };</div>
@@ -169,7 +169,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> State, <span class="keyword">typename</span> ...Inputs&gt;</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">auto</span> operator() (State&amp;&amp; s, Inputs&amp;&amp; ...is)</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      -&gt; <a class="code" href="utils_8hpp.html#accee07a5d877fc2ed91dd358dfd2c222">ABL_DECLTYPE_RETURN</a>(</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <a class="code" href="namespaceatria_1_1estd.html#aa0499895bf4cb63f3c77fef8f21de904">estd::invoke</a>(predicate, is...)</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        estd::invoke(predicate, is...)</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;          ? <a class="code" href="namespaceatria_1_1xform.html#a52fea8a48eaf32278634f831a495d251">call</a>(step, std::forward&lt;State&gt;(s), std::forward&lt;Inputs&gt;(is)...)</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;          : <a class="code" href="namespaceatria_1_1xform.html#a7b5d683f19ef370bc5e121c89f861c89">skip</a>(step, std::forward&lt;State&gt;(s), std::forward&lt;Inputs&gt;(is)...))</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  };</div>
@@ -194,7 +194,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;} <span class="comment">// namespace atria</span></div>
 <div class="ttc" id="namespaceatria_1_1xform_html_a52fea8a48eaf32278634f831a495d251"><div class="ttname"><a href="namespaceatria_1_1xform.html#a52fea8a48eaf32278634f831a495d251">atria::xform::call</a></div><div class="ttdeci">auto call(ReducingFnT &amp;&amp;step, StateT &amp;&amp;state, InputTs &amp;&amp;...ins) -&gt; estd::enable_if_t&lt;              is_skip_state&lt; estd::decay_t&lt; StateT &gt; &gt;</div><div class="ttdoc">Call the next reducing function in a transducer that could otherwise skip calling the next reducing f...</div><div class="ttdef"><b>Definition:</b> <a href="skip_8hpp_source.html#l00276">skip.hpp:276</a></div></div>
 <div class="ttc" id="utils_8hpp_html_accee07a5d877fc2ed91dd358dfd2c222"><div class="ttname"><a href="utils_8hpp.html#accee07a5d877fc2ed91dd358dfd2c222">ABL_DECLTYPE_RETURN</a></div><div class="ttdeci">#define ABL_DECLTYPE_RETURN(body_expr)</div><div class="ttdoc">Utility for defining generic functions with a deduced return type, that are composed of a single expr...</div><div class="ttdef"><b>Definition:</b> <a href="utils_8hpp_source.html#l00109">utils.hpp:109</a></div></div>
-<div class="ttc" id="namespaceatria_1_1estd_html_aa0499895bf4cb63f3c77fef8f21de904"><div class="ttname"><a href="namespaceatria_1_1estd.html#aa0499895bf4cb63f3c77fef8f21de904">atria::estd::invoke</a></div><div class="ttdeci">auto invoke(F &amp;&amp;f, ArgTypes &amp;&amp;...args) -&gt; decltype(detail::INVOKE(std::forward&lt; F &gt;(f), std::forward&lt; ArgTypes &gt;(args)...))</div><div class="ttdoc">Like C++17 std::invoke </div><div class="ttdef"><b>Definition:</b> <a href="functional_8hpp_source.html#l00133">functional.hpp:133</a></div></div>
 <div class="ttc" id="transducer__impl_8hpp_html"><div class="ttname"><a href="transducer__impl_8hpp.html">transducer_impl.hpp</a></div></div>
 <div class="ttc" id="skip_8hpp_html"><div class="ttname"><a href="skip_8hpp.html">skip.hpp</a></div></div>
 <div class="ttc" id="structatria_1_1xform_1_1transducer__impl_html"><div class="ttname"><a href="structatria_1_1xform_1_1transducer__impl.html">atria::xform::transducer_impl</a></div><div class="ttdoc">Utility to write simple transducers easily. </div><div class="ttdef"><b>Definition:</b> <a href="transducer__impl_8hpp_source.html#l00060">transducer_impl.hpp:60</a></div></div>
@@ -211,7 +210,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 </div>
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 8 2016 15:43:46 for Atria by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Apr 12 2016 10:43:07 for Atria by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.10
 </small></address>

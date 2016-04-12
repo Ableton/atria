@@ -105,14 +105,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#define-members">Macros</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#define-members">Macros</a>  </div>
   <div class="headertitle">
 <div class="title">functional.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;functional&gt;</code><br />
-<code>#include &lt;<a class="el" href="utils_8hpp_source.html">atria/meta/utils.hpp</a>&gt;</code><br />
 </div>
 <p><a href="functional_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -131,13 +129,9 @@ Macros</h2></td></tr>
 <tr class="separator:a90f2c2c56f14d78b376e5331487ad60e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a7d6c39ffecb66669507d7304346e8a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>ABL_DEFINE_CPP14_OPERATOR_2</b>(name,  op)                                                  </td></tr>
 <tr class="separator:a7a7d6c39ffecb66669507d7304346e8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:aa0499895bf4cb63f3c77fef8f21de904"><td class="memTemplParams" colspan="2">template&lt;class F , class... ArgTypes&gt; </td></tr>
-<tr class="memitem:aa0499895bf4cb63f3c77fef8f21de904"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceatria_1_1estd.html#aa0499895bf4cb63f3c77fef8f21de904">invoke</a> (F &amp;&amp;f, ArgTypes &amp;&amp;...args) -&gt; decltype(detail::INVOKE(std::forward&lt; F &gt;(f), std::forward&lt; ArgTypes &gt;(args)...))</td></tr>
-<tr class="memdesc:aa0499895bf4cb63f3c77fef8f21de904"><td class="mdescLeft">&#160;</td><td class="mdescRight">Like C++17 <code>std::invoke</code>  <a href="namespaceatria_1_1estd.html#aa0499895bf4cb63f3c77fef8f21de904">More...</a><br /></td></tr>
-<tr class="separator:aa0499895bf4cb63f3c77fef8f21de904"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acef6b3a33624fcb4de4ba1c56f4707bf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acef6b3a33624fcb4de4ba1c56f4707bf"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ABL_ESTD_FUNCTIONAL_DECLTYPE_RETURN</b>(body_expr)&#160;&#160;&#160;decltype(body_expr) { return (body_expr); }</td></tr>
+<tr class="separator:acef6b3a33624fcb4de4ba1c56f4707bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a class="anchor" id="a90f2c2c56f14d78b376e5331487ad60e"></a>
@@ -184,7 +178,7 @@ Functions</h2></td></tr>
 <div class="line">    }                                                                   \</div>
 <div class="line">  };                                                                    \</div>
 </div><!-- fragment -->
-<p>Definition at line <a class="el" href="functional_8hpp_source.html#l00035">35</a> of file <a class="el" href="functional_8hpp_source.html">functional.hpp</a>.</p>
+<p>Definition at line <a class="el" href="functional_8hpp_source.html#l00034">34</a> of file <a class="el" href="functional_8hpp_source.html">functional.hpp</a>.</p>
 
 </div>
 </div>
@@ -224,7 +218,7 @@ Functions</h2></td></tr>
 <div class="line">    }                                                                   \</div>
 <div class="line">  };                                                                    \</div>
 </div><!-- fragment -->
-<p>Definition at line <a class="el" href="functional_8hpp_source.html#l00058">58</a> of file <a class="el" href="functional_8hpp_source.html">functional.hpp</a>.</p>
+<p>Definition at line <a class="el" href="functional_8hpp_source.html#l00057">57</a> of file <a class="el" href="functional_8hpp_source.html">functional.hpp</a>.</p>
 
 </div>
 </div>
@@ -237,7 +231,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 8 2016 15:43:46 for Atria by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Apr 12 2016 10:43:07 for Atria by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.10
 </small></address>

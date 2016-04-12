@@ -147,7 +147,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... ArgTs&gt;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <span class="keyword">auto</span> operator() (ArgTs&amp;&amp; ...args)</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    -&gt; <a class="code" href="utils_8hpp.html#accee07a5d877fc2ed91dd358dfd2c222">ABL_DECLTYPE_RETURN</a>(</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;      !<a class="code" href="namespaceatria_1_1estd.html#aa0499895bf4cb63f3c77fef8f21de904">estd::invoke</a>(fn, std::forward&lt;ArgTs&gt;(args)...))</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;      !estd::invoke(fn, std::forward&lt;ArgTs&gt;(args)...))</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;};</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> FnT&gt;</div>
@@ -166,7 +166,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="ttc" id="utils_8hpp_html_accee07a5d877fc2ed91dd358dfd2c222"><div class="ttname"><a href="utils_8hpp.html#accee07a5d877fc2ed91dd358dfd2c222">ABL_DECLTYPE_RETURN</a></div><div class="ttdeci">#define ABL_DECLTYPE_RETURN(body_expr)</div><div class="ttdoc">Utility for defining generic functions with a deduced return type, that are composed of a single expr...</div><div class="ttdef"><b>Definition:</b> <a href="utils_8hpp_source.html#l00109">utils.hpp:109</a></div></div>
 <div class="ttc" id="structatria_1_1prelude_1_1complement__t_html"><div class="ttname"><a href="structatria_1_1prelude_1_1complement__t.html">atria::prelude::complement_t</a></div><div class="ttdef"><b>Definition:</b> <a href="complement_8hpp_source.html#l00038">complement.hpp:38</a></div></div>
 <div class="ttc" id="utils_8hpp_html"><div class="ttname"><a href="utils_8hpp.html">utils.hpp</a></div></div>
-<div class="ttc" id="namespaceatria_1_1estd_html_aa0499895bf4cb63f3c77fef8f21de904"><div class="ttname"><a href="namespaceatria_1_1estd.html#aa0499895bf4cb63f3c77fef8f21de904">atria::estd::invoke</a></div><div class="ttdeci">auto invoke(F &amp;&amp;f, ArgTypes &amp;&amp;...args) -&gt; decltype(detail::INVOKE(std::forward&lt; F &gt;(f), std::forward&lt; ArgTypes &gt;(args)...))</div><div class="ttdoc">Like C++17 std::invoke </div><div class="ttdef"><b>Definition:</b> <a href="functional_8hpp_source.html#l00133">functional.hpp:133</a></div></div>
 <div class="ttc" id="type__traits_8hpp_html"><div class="ttname"><a href="type__traits_8hpp.html">type_traits.hpp</a></div></div>
 <div class="ttc" id="namespaceatria_html"><div class="ttname"><a href="namespaceatria.html">atria</a></div><div class="ttdoc">C++ amazing templates and reusable implementations awesomeness. </div><div class="ttdef"><b>Definition:</b> <a href="__doc_8hpp_source.html#l00035">_doc.hpp:35</a></div></div>
 <div class="ttc" id="namespaceatria_1_1prelude_html_a7458009df9fab4d7899bbda48dd9713d"><div class="ttname"><a href="namespaceatria_1_1prelude.html#a7458009df9fab4d7899bbda48dd9713d">atria::prelude::complement</a></div><div class="ttdeci">auto complement(FnT &amp;&amp;fn) -&gt; complement_t&lt; estd::decay_t&lt; FnT &gt; &gt;</div><div class="ttdoc">Similar to clojure.core/complement$1. </div><div class="ttdef"><b>Definition:</b> <a href="complement_8hpp_source.html#l00055">complement.hpp:55</a></div></div>
@@ -180,7 +179,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 </div>
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 8 2016 15:43:46 for Atria by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Apr 12 2016 10:43:07 for Atria by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.10
 </small></address>

@@ -23,7 +23,6 @@ var searchData=
   ['into_2ehpp',['into.hpp',['../into_8hpp.html',1,'']]],
   ['into_5fvector',['into_vector',['../namespaceatria_1_1xform.html#ad21b8bf7db847c2dd1ad4e426b938f85',1,'atria::xform']]],
   ['into_5fvector_2ehpp',['into_vector.hpp',['../into__vector_8hpp.html',1,'']]],
-  ['invoke',['invoke',['../namespaceatria_1_1estd.html#aa0499895bf4cb63f3c77fef8f21de904',1,'atria::estd']]],
   ['is_5fdetected',['is_detected',['../namespaceatria_1_1estd.html#a16a19bd6407910d9725dcd05536f5901',1,'atria::estd']]],
   ['is_5fdetected_5fconvertible',['is_detected_convertible',['../namespaceatria_1_1estd.html#ac286f275998780a3a3ce9fe2795db6aa',1,'atria::estd']]],
   ['is_5fdetected_5fexact',['is_detected_exact',['../namespaceatria_1_1estd.html#a54efded7d5471a1b8d88f5c2422a767e',1,'atria::estd']]],

@@ -152,7 +152,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">auto</span> operator() (State&amp;&amp; s, Inputs&amp;&amp; ...is)</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      -&gt; decltype(step(std::forward&lt;State&gt;(s)))</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    {</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;      <a class="code" href="namespaceatria_1_1estd.html#aa0499895bf4cb63f3c77fef8f21de904">estd::invoke</a>(action, std::forward&lt;Inputs&gt;(is)...);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;      estd::invoke(action, std::forward&lt;Inputs&gt;(is)...);</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;      <span class="keywordflow">return</span> step(std::forward&lt;State&gt;(s));</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    }</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  };</div>
@@ -173,7 +173,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;} <span class="comment">// namespace xform</span></div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;} <span class="comment">// namespace atria</span></div>
-<div class="ttc" id="namespaceatria_1_1estd_html_aa0499895bf4cb63f3c77fef8f21de904"><div class="ttname"><a href="namespaceatria_1_1estd.html#aa0499895bf4cb63f3c77fef8f21de904">atria::estd::invoke</a></div><div class="ttdeci">auto invoke(F &amp;&amp;f, ArgTypes &amp;&amp;...args) -&gt; decltype(detail::INVOKE(std::forward&lt; F &gt;(f), std::forward&lt; ArgTypes &gt;(args)...))</div><div class="ttdoc">Like C++17 std::invoke </div><div class="ttdef"><b>Definition:</b> <a href="functional_8hpp_source.html#l00133">functional.hpp:133</a></div></div>
 <div class="ttc" id="transducer__impl_8hpp_html"><div class="ttname"><a href="transducer__impl_8hpp.html">transducer_impl.hpp</a></div></div>
 <div class="ttc" id="structatria_1_1xform_1_1transducer__impl_html"><div class="ttname"><a href="structatria_1_1xform_1_1transducer__impl.html">atria::xform::transducer_impl</a></div><div class="ttdoc">Utility to write simple transducers easily. </div><div class="ttdef"><b>Definition:</b> <a href="transducer__impl_8hpp_source.html#l00060">transducer_impl.hpp:60</a></div></div>
 <div class="ttc" id="namespaceatria_html"><div class="ttname"><a href="namespaceatria.html">atria</a></div><div class="ttdoc">C++ amazing templates and reusable implementations awesomeness. </div><div class="ttdef"><b>Definition:</b> <a href="__doc_8hpp_source.html#l00035">_doc.hpp:35</a></div></div>
@@ -188,7 +187,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 </div>
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 8 2016 15:43:46 for Atria by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Apr 12 2016 10:43:07 for Atria by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.10
 </small></address>
