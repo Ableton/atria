@@ -8,7 +8,7 @@ branches:
 
 matrix:
   include:
-    - env: COMPILER=clang++-3.7 STD=11 STDLIB=libc++ CONFIGURATION=Debug
+    - env: DOCUMENTATION=true COMPILER=clang++-3.7 STD=11 STDLIB=libc++ CONFIGURATION=Debug
       addons: &clang37
         apt:
           sources:
@@ -40,7 +40,11 @@ matrix:
     - env: COMPILER=g++-5 STD=14 CONFIGURATION=Release
       addons: *gcc5
 
-env: COMPILER=clang++-3.7 STDLIB=libc++ VALGRIND=true
+env:
+  matrix: COMPILER=clang++-3.7 STDLIB=libc++ VALGRIND=true
+  global:
+    - secure: "mDpSOuQ4tVkmqZPmqpd4VmRcHJmRlU2P4u9RlqVFnmpf1DO9lT8KlGB1sqr6qHJaGN6IYi6gDMhD3F8qNOW1ZlYO++76c/wSnLwVP/fx17uugcj21O4za61WqW3Xhkz/q8SNE7+HtXhcv4YTJ3+3UqLl9Qg/tb9K9q6bcLQonsvV74I8P+EPPuURM/Vkq/c6aoj7uqmB4YtKEtQ9LuswiyY2zl+Wa1oUL4BenbA4xMLAVbY2GoFH68TIUe4sW8geo11u+x1Ek2iv4Ca110KdfhJk/0aRwY32KQ0kZYn1minxTEtMck5RfSnxOfIt/7LJh+KXyNdfGhLguXrxiF1c8de6SyZadP5XeA1E4dZQX7aO7N7uKcDu2z5pMnvlCuBtvMtDveMtklykbtXTegdX1BIcobLY9SY2GCwB0svTbQuAvOPEJDWf8+iOfEnvlEK0Zav25iRlVZ/nmfYnp3IIMquy2KO1GDRS6S7yq8/0A59DiZNaq9QPGEM3hV+fZuIyvW1vstjlpE62/lXwTeryV3q6QY/6K1jIto7m/aNAr+XzkgvzRkHLzhF1Lo3L881CQFlP6uIlTS7F/Mx2qPgoElYTdOMgQqCe5gORMGyiVYs4GmBwYsz00qjnYmZD+I8DzHp+uihO5haMAM14VtdWdZ1GOga5FOXkMayHyGGmYWs="
+
 addons:
   apt:
     sources:
@@ -63,6 +67,14 @@ install:
   - CMAKE_URL="http://www.cmake.org/files/v3.1/cmake-3.1.0-Linux-x86_64.tar.gz"
   - mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
   - export PATH=${DEPS_DIR}/cmake/bin:${PATH}
+
+  # Install doxygen
+  - |
+    if [[ "${DOCUMENTATION}" == "true" ]]; then
+      DOXYGEN_URL="http://ftp.stack.nl/pub/users/dimitri/doxygen-1.8.10.linux.bin.tar.gz"
+      mkdir doxygen && travis_retry wget --quiet -O - ${DOXYGEN_URL} | tar --strip-components=1 -xz -C doxygen
+      export PATH=${DEPS_DIR}/doxygen/bin:${PATH}
+    fi
 
   # Install boost
   - BOOST_URL="http://sourceforge.net/projects/boost/files/boost/1.58.0/boost_1_58_0.tar.gz"
@@ -90,6 +102,8 @@ install:
     fi
 
 before_script:
+  - git config --global user.name "Travis bot"
+  - git config --global user.email $USER@$HOSTNAME
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir build && cd build
   - ${COMPILER} --version
@@ -110,4 +124,23 @@ script:
            && ${VALGRIND_CMD} ./atria-benchmark-xform -i 1 -m 1 -s 10
     else
       ctest -V
+    fi
+
+after_success:
+  - |
+    if [[ "${DOCUMENTATION}" == "true" ]]; then
+      if [[ "${TRAVIS_PULL_REQUEST}" == "false" && "${TRAVIS_BRANCH}" == "master" ]]; then
+        cd ..
+        doxygen doxy/doxygen.config
+        # Suppress output to avoid leaking the token when the command fails
+        git clone https://arximboldi:${GH_TOKEN}@github.com/ableton/atria --depth 1 --branch=gh-pages gh-pages &>/dev/null
+        rm -rf gh-pages/{search,*.png,*.css,*.js,*.html}
+        cp -R output-doc/* gh-pages/
+        pushd gh-pages
+        git add --all .
+        git commit --allow-empty -m "Update to ${TRAVIS_COMMIT:0:7}"
+        # Suppress output to avoid leaking the token
+        travis_retry git push origin gh-pages &>/dev/null
+        popd
+        fi
     fi

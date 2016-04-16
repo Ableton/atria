@@ -26,13 +26,12 @@
 
 #pragma once
 
-#include <atria/xform/transducer/map.hpp>
-#include <atria/xform/transduce.hpp>
 #include <atria/estd/type_traits.hpp>
 
 #include <ableton/build_system/Warnings.hpp>
 ABL_DISABLE_WARNINGS
 #include <boost/range/irange.hpp>
+#include <boost/range/numeric.hpp>
 #include <boost/range/algorithm/for_each.hpp>
 ABL_RESTORE_WARNINGS
 
@@ -133,21 +132,20 @@ protected:
     if (settings_.verbose)
       std::cout << "    ... " << name << std::endl;
 
-    auto minimum   = [] (double x, double y) { return std::min(x, y); };
     auto iteration = [&] (unsigned) { unoptimize(test_fn()); };
-    auto measure   = [&] (unsigned) {
-      return timeit([&] {
+    auto measure   = [&] (double fastest, unsigned) {
+      const auto measured_time = timeit([&] {
         boost::for_each(boost::irange(0u, settings_.iterations), iteration);
       }).count();
+      return std::min(fastest, measured_time);
     };
 
     results_.insert(
       std::make_tuple(
-        xform::transduce(
-          xform::map(measure),
-          minimum,
+        boost::accumulate(
+          boost::irange(0u, settings_.measurements),
           std::numeric_limits<double>::max(),
-          boost::irange(0u, settings_.measurements)),
+          measure),
         std::move(name)));
   }
 

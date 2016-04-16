@@ -26,7 +26,6 @@
 
 #pragma once
 
-#include <atria/meta/utils.hpp>
 #include <type_traits>
 
 namespace atria {

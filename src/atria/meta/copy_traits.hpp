@@ -33,7 +33,7 @@ namespace atria {
 namespace meta {
 
 /*!
- * Metafunction that given a metafunction `TraitChekMf` to check
+ * Metafunction that given a metafunction `TraitCheckMf` to check
  * whether a type has a trait, and another `TraitAddMf` to add it to a
  * type, returns `TraitAddMf<DestT>` if `TraitCheckMf<OrigT>`, else
  * `OrigT`.

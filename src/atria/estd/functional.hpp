@@ -27,7 +27,6 @@
 #pragma once
 
 #include <functional>
-#include <atria/meta/utils.hpp>
 
 namespace atria {
 namespace estd {
@@ -99,29 +98,32 @@ ABL_DEFINE_CPP14_OPERATOR_1(bit_not, ~)
 
 namespace detail {
 
+#define ABL_ESTD_FUNCTIONAL_DECLTYPE_RETURN(body_expr)  \
+  decltype(body_expr) { return (body_expr); }
+
 template <class F, class... Args>
 inline auto INVOKE(F&& f, Args&&... args)
-  -> ABL_DECLTYPE_RETURN(
+  -> ABL_ESTD_FUNCTIONAL_DECLTYPE_RETURN(
     std::forward<F>(f)(std::forward<Args>(args)...))
 
 template <class Base, class T, class Derived>
 inline auto INVOKE(T Base::*pmd, Derived&& ref)
-  -> ABL_DECLTYPE_RETURN(
+  -> ABL_ESTD_FUNCTIONAL_DECLTYPE_RETURN(
     std::forward<Derived>(ref).*pmd)
 
 template <class PMD, class Pointer>
 inline auto INVOKE(PMD pmd, Pointer&& ptr)
-  -> ABL_DECLTYPE_RETURN(
+  -> ABL_ESTD_FUNCTIONAL_DECLTYPE_RETURN(
     (*std::forward<Pointer>(ptr)).*pmd)
 
 template <class Base, class T, class Derived, class... Args>
 inline auto INVOKE(T Base::*pmf, Derived&& ref, Args&&... args)
--> ABL_DECLTYPE_RETURN(
+-> ABL_ESTD_FUNCTIONAL_DECLTYPE_RETURN(
   (std::forward<Derived>(ref).*pmf)(std::forward<Args>(args)...))
 
 template <class PMF, class Pointer, class... Args>
 inline auto INVOKE(PMF pmf, Pointer&& ptr, Args&&... args)
-  -> ABL_DECLTYPE_RETURN(
+  -> ABL_ESTD_FUNCTIONAL_DECLTYPE_RETURN(
     ((*std::forward<Pointer>(ptr)).*pmf)(std::forward<Args>(args)...))
 
 } // namespace detail
@@ -131,8 +133,10 @@ inline auto INVOKE(PMF pmf, Pointer&& ptr, Args&&... args)
  */
 template <class F, class... ArgTypes>
 auto invoke(F&& f, ArgTypes&&... args)
-  -> ABL_DECLTYPE_RETURN(
+  -> ABL_ESTD_FUNCTIONAL_DECLTYPE_RETURN(
     detail::INVOKE(std::forward<F>(f), std::forward<ArgTypes>(args)...))
+
+#undef ABL_ESTD_FUNCTIONAL_DECLTYPE_RETURN
 
 } // namespace estd
 } // namespace atria
