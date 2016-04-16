@@ -79,7 +79,7 @@ struct transducer_rf_gen
     template <typename StateT, typename... InputTs>
     auto operator() (StateT&& s, InputTs&& ...ins)
       -> estd::enable_if_t<
-      !std::is_same<estd::decay_t<StateT>, any_state>{},
+      !std::is_same<estd::decay_t<StateT>, any_state>::value,
         any_state>
     {
       xformed = comp(xform, from_any_state<StateT>{})(step);
@@ -89,7 +89,7 @@ struct transducer_rf_gen
     template <typename StateT, typename... InputTs>
     auto operator() (StateT&& s, InputTs&& ...ins)
       -> estd::enable_if_t<
-      std::is_same<estd::decay_t<StateT>, any_state>{},
+      std::is_same<estd::decay_t<StateT>, any_state>::value,
         any_state>
     {
       return xformed(std::forward<StateT>(s), std::forward<InputTs>(ins)...);

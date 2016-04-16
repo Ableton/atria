@@ -30,13 +30,13 @@ namespace meta {
 TEST(copy_traits, copy_decay)
 {
   static_assert(std::is_same<copy_decay_t<const float, int>,
-                             const int>{}, "");
+                             const int>::value, "");
   static_assert(std::is_same<copy_decay_t<const float&, int>,
-                             const int&>{}, "");
+                             const int&>::value, "");
   static_assert(std::is_same<copy_decay_t<float, int>,
-                             int>{}, "");
+                             int>::value, "");
   static_assert(std::is_same<copy_decay_t<float&&, int>,
-                             int&&>{}, "");
+                             int&&>::value, "");
 }
 
 } // namespace meta

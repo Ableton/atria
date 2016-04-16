@@ -57,7 +57,7 @@ template <typename T>
 using repeat_t = transducer_impl<detail::repeat_rf_gen, T>;
 
 /*!
- * Generator transducer produces the values passed as parameter
+ * Generator transducer produces the value passed as parameter
  * infinitely.
  */
 template <typename ValueT>
@@ -68,20 +68,14 @@ constexpr auto repeat(ValueT&& r)
     std::forward<ValueT>(r) };
 }
 
-template <typename ValueT, typename ...ValueTs>
-constexpr auto repeat(ValueT&& r, ValueTs&& ...rs)
-  -> ABL_DECLTYPE_RETURN(
-    comp(repeat(std::forward<ValueT>(r)),
-         repeat(std::forward<ValueTs>(rs))...))
-
 /*!
  * Generator transducer produces the values passed as parameter
  * up to `n` times.
  */
-template <typename IntegralT, typename ...ValueTs>
-constexpr auto repeatn(IntegralT&& n, ValueTs&& ...rs)
+template <typename IntegralT, typename ValueT>
+constexpr auto repeatn(IntegralT&& n, ValueT&& r)
   -> ABL_DECLTYPE_RETURN(
-    comp(repeat(std::forward<ValueTs>(rs)...),
+    comp(repeat(std::forward<ValueT>(r)),
          take(std::forward<IntegralT>(n))))
 
 } // namespace xform

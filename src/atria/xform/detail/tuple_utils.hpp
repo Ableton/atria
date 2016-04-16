@@ -61,8 +61,8 @@ struct tuple_all_neq_t<Max, Max>
 template <typename Tuple1T, typename Tuple2T>
 bool tuple_all_neq(Tuple1T&& t1, Tuple2T&& t2)
 {
-  constexpr auto size1 = std::tuple_size<estd::decay_t<Tuple1T> >{};
-  constexpr auto size2 = std::tuple_size<estd::decay_t<Tuple2T> >{};
+  constexpr auto size1 = std::tuple_size<estd::decay_t<Tuple1T> >::value;
+  constexpr auto size2 = std::tuple_size<estd::decay_t<Tuple2T> >::value;
   static_assert(size1 == size2, "");
 
   using impl_t = tuple_all_neq_t<0u, (size1 > size2 ? size2 : size1)>;

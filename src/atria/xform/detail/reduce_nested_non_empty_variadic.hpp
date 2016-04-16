@@ -66,16 +66,25 @@ auto reduce_nested_non_empty_variadic_impl(estd::index_sequence<Indices...>,
   return state;
 }
 
+template <typename T>
+struct prop_const_on_range_value_impl
+{
+  using type = estd::remove_reference_t<decltype(*std::begin(std::declval<T>()))>;
+};
+
+template <typename T>
+using prop_const_on_range_value_t = typename prop_const_on_range_value_impl<T>::type;
+
 template <typename ReducingFnT,
           typename StateT,
           typename ...InputRangeTs>
 auto reduce_nested_non_empty_variadic(ReducingFnT&& step, StateT&& state, InputRangeTs&& ...ranges)
   -> ABL_DECLTYPE_RETURN(
     reduce_nested_non_empty_variadic_impl(
-      estd::make_index_sequence<sizeof...(InputRangeTs)> {},
+      estd::make_index_sequence<sizeof...(InputRangeTs)>{},
       meta::pack<meta::copy_decay_t<
         InputRangeTs,
-        estd::remove_reference_t<decltype(*std::begin(ranges))> >...>{},
+        prop_const_on_range_value_t<InputRangeTs&&> >...>{},
       std::forward<ReducingFnT>(step),
       std::forward<StateT>(state),
       std::forward<InputRangeTs>(ranges)...))

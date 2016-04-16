@@ -39,7 +39,7 @@ namespace detail {
 
 template <typename ResultT, typename ArgT>
 auto from_any_state(ArgT&& s)
-  -> estd::enable_if_t<std::is_same<estd::decay_t<ArgT>, any_state>{},
+  -> estd::enable_if_t<std::is_same<estd::decay_t<ArgT>, any_state>::value,
                        estd::decay_t<ResultT> >
 {
   return std::forward<ArgT>(s).template as<ResultT>();
@@ -47,7 +47,7 @@ auto from_any_state(ArgT&& s)
 
 template <typename ResultT, typename ArgT>
 auto from_any_state(ArgT&& s)
-  -> estd::enable_if_t<!std::is_same<estd::decay_t<ArgT>, any_state>{},
+  -> estd::enable_if_t<!std::is_same<estd::decay_t<ArgT>, any_state>::value,
                        ArgT&&>
 {
   return std::forward<ArgT>(s);

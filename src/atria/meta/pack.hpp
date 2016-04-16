@@ -64,7 +64,7 @@ struct pack
 template <typename... Ts1, typename... Ts2>
 constexpr bool operator== (const pack<Ts1...>&, const pack<Ts2...>&)
 {
-  return std::is_same<pack<Ts1...>, pack<Ts2...> >{};
+  return std::is_same<pack<Ts1...>, pack<Ts2...> >::value;
 }
 
 /*!
@@ -73,7 +73,7 @@ constexpr bool operator== (const pack<Ts1...>&, const pack<Ts2...>&)
 template <typename... Ts1, typename... Ts2>
 constexpr bool operator!= (const pack<Ts1...>&, const pack<Ts2...>&)
 {
-  return !std::is_same<pack<Ts1...>, pack<Ts2...> >{};
+  return !std::is_same<pack<Ts1...>, pack<Ts2...> >::value;
 }
 
 namespace detail {

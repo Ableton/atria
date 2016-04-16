@@ -57,25 +57,22 @@ namespace xform {
  */
 template<typename ReducingFnGenT,
          typename ...ParamTs>
-struct transducer_impl : std::tuple<ParamTs...>
+struct transducer_impl
 {
-  using base_t = std::tuple<ParamTs...>;
+private:
+  using tuple_t = std::tuple<ParamTs...>;
+  tuple_t tup_;
 
-  // Constructors need to be semi-manually defined.  Otherwise
-  // confusion arises because of the way Clang's std::tuple uses
-  // enable_if to dispatch to the right move constructors.
-  //
-  //    using base_t::base_t;
-
-  transducer_impl() = default;
-  transducer_impl(const transducer_impl&) = default;
-  transducer_impl(transducer_impl&&) = default;
+public:
+  constexpr transducer_impl() = default;
+  constexpr transducer_impl(const transducer_impl&) = default;
+  constexpr transducer_impl(transducer_impl&&) = default;
   transducer_impl& operator=(const transducer_impl&) = default;
   transducer_impl& operator=(transducer_impl&&) = default;
 
-  template <typename ...Ts>
-  transducer_impl(Ts ...ts)
-    : base_t(std::move(ts)...)
+  template <typename T, typename ...Ts>
+  explicit constexpr transducer_impl(T t, Ts ...ts) noexcept
+    : tup_(std::move(t), std::move(ts)...)
   {}
 
   template<typename ReducingFnT>
@@ -97,7 +94,7 @@ struct transducer_impl : std::tuple<ParamTs...>
     >
   {
     return { std::forward<ReducingFnT>(step),
-             std::get<indexes_t>(*this)... };
+             std::get<indexes_t>(tup_)... };
   }
 };
 

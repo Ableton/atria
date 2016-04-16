@@ -173,8 +173,8 @@ template <typename C, typename R, typename T, typename U>
 auto state_wrapper_rewrap(transducer_tag<C, R>, T&& s, U&& x)
   -> estd::decay_t<T>
 {
-  static_assert(std::is_same<estd::decay_t<U>, C>{} ||
-                std::is_same<estd::decay_t<U>, any_state>{},
+  static_assert(std::is_same<estd::decay_t<U>, C>::value ||
+                std::is_same<estd::decay_t<U>, any_state>::value,
                 "Yo! you are rewrapping with the wrong thing!");
   return wrap_state<transducer_tag<C, R> >(
     state_rewrap(state_unwrap(std::forward<T>(s)), std::forward<U>(x)),

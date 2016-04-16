@@ -66,19 +66,21 @@ struct no_tag {};
 template <typename TagT   = no_tag,
           typename StateT = void,
           typename DataT  = void>
-struct state_wrapper : std::tuple<StateT, DataT>
+struct state_wrapper
 {
   using tag = TagT;
-  using base_t = std::tuple<StateT, DataT>;
+  using tuple_t = std::tuple<StateT, DataT>;
 
-  state_wrapper(const state_wrapper&) = default;
-  state_wrapper(state_wrapper&&) = default;
+  tuple_t tup;
+
+  constexpr state_wrapper(const state_wrapper&) = default;
+  constexpr state_wrapper(state_wrapper&&) = default;
   state_wrapper& operator=(const state_wrapper&) = default;
   state_wrapper& operator=(state_wrapper&&) = default;
 
   template <typename T, typename U>
-  state_wrapper(T&& st, U&& data)
-    : base_t(std::forward<T>(st), std::forward<U>(data))
+  constexpr state_wrapper(T&& st, U&& data) noexcept
+    : tup(std::forward<T>(st), std::forward<U>(data))
   {}
 };
 
@@ -134,7 +136,7 @@ auto state_wrapper_complete(TagT, T&& s)
 template <typename TagT, typename T>
 auto state_wrapper_unwrap(TagT, T&& s)
   -> ABL_DECLTYPE_RETURN(
-    std::get<0>(std::forward<T>(s)))
+    std::get<0>(std::forward<T>(s).tup))
 
 /*!
  * Utility function for easy overloading of `state_traits::unwrap_all`
@@ -182,7 +184,7 @@ auto state_wrapper_data(T&& s)
 template <typename TagT, typename T>
 auto state_wrapper_data(TagT, T&& s)
   -> ABL_DECLTYPE_RETURN(
-    std::get<1>(std::forward<T>(s)))
+    std::get<1>(std::forward<T>(s).tup))
 
 /*!
  * Utility function that returns whether the `DataT` associated with a

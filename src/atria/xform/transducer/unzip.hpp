@@ -141,7 +141,7 @@ struct unzip_rf_gen
     template <typename ResultT, typename StateT, typename InputT, typename... InputTs>
     auto impl(meta::pack<ResultT>, StateT&& s, InputT&&, InputTs&& ...is)
       -> estd::enable_if_t<
-      std::is_same<estd::decay_t<InputT>, last_input_tag>{},
+      std::is_same<estd::decay_t<InputT>, last_input_tag>::value,
         ResultT>
     {
       return step(std::forward<StateT>(s),
@@ -151,7 +151,7 @@ struct unzip_rf_gen
     template <typename ResultT, typename StateT, typename InputT, typename... InputTs>
     auto impl(meta::pack<ResultT> r, StateT&& s, InputT&& i, InputTs&& ...is)
       -> estd::enable_if_t<
-      !std::is_same<estd::decay_t<InputT>, last_input_tag>{},
+      !std::is_same<estd::decay_t<InputT>, last_input_tag>::value,
         ResultT>
     {
       return impl_apply(
