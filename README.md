@@ -55,7 +55,7 @@ feedback is very welcome.
   
 ## Build Tools
 
-CMake 3.1.0 or higher is required.
+CMake 3.1.0 or higher.
 
 ## Documentation
 
