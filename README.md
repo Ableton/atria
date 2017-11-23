@@ -52,6 +52,10 @@ feedback is very welcome.
 
 * `atria::testing` provides testing tools and frameworks for writing
   spies, mocks, micro-benchmarks and more.
+  
+## Build Tools
+
+CMake 3.1.0 or higher is required.
 
 ## Documentation
 
