@@ -3,9 +3,6 @@ Atria
 
 *Atria is a toolkit for modern C++ development*.
 
-[![Build Status](https://travis-ci.org/Ableton/atria.svg?branch=master)]
-(https://travis-ci.org/Ableton/atria)
-
 It provides core components that extend the standard library
 capabilities.  It provides various libraries of general interest, in
 the spirit of the STL, Boost, Adobe Source Libraries, or Facebook's
